@@ -1,0 +1,46 @@
+<div class="card card-outline card-primary">
+    <div class="card-header">
+      <h3 class="card-title"> {{'wallet-cards.verify-card-title' | translate }}</h3>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+          <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+          <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div [collapse]="isCollapsed" [isAnimated]="true">
+      <div class="card-body">
+        <form [formGroup]="verifyCardForm" class="form-horizontal clearfix">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group row">
+                <label class="col-4 col-form-label text-sm-right"> {{'wallet-cards.verify-card-auth-code' | translate }}:</label>
+                <div class="col-4">
+                  <input class="form-control" id="authCode" type="text" formControlName="authCode"
+                    [ngClass]="{ 'is-invalid': formSubmitError && verifyCardForm.get('authCode').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf="verifyCardForm.get('authCode').errors?.required">
+                      {{'wallet-cards.verify-card-auth-code' | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <hr />
+        <div class="clearfix">
+          <div class="pull-right">
+            <button type="button" class="btn btn-primary btn-sm mr-2" (click)="verifyCard()">Submit</button>
+            <button type="button" class="btn btn-warning btn-sm" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

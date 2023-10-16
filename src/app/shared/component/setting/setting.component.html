@@ -1,0 +1,111 @@
+<main-header></main-header>
+<div style="background: #f0f2f6; margin-top: 80px;">
+  <div class="container mt-3 pb-3" style="min-height: 500px;">
+    <div class="row py-4">
+      <div class="col-3">
+        <div class="row">
+          <div class="col-12 mb-4 pl-0">
+            <h3 class="heading">{{'admin-agency-management-edit.title-local' | translate }}</h3>
+          </div>
+        </div>
+        <div class="row">
+          <form [formGroup]="settingForm">
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" id="hahnAir" formControlName="hahnAir">
+              <label class="custom-control-label" for="hahnAir">{{'admin-agency-management-edit.title-hahnair' |
+                translate }}</label>
+            </div>
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" id="aero" formControlName="aero">
+              <label class="custom-control-label" for="aero">{{'admin-agency-management-edit.title-aero' | translate
+                }}</label>
+            </div>
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" id="et" formControlName="et">
+              <label class="custom-control-label" for="et">{{'admin-agency-management-edit.title-et' | translate
+                }}</label>
+            </div>
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" id="qr" formControlName="qr">
+              <label class="custom-control-label" for="qr">QR</label>
+            </div>
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" id="floAir" formControlName="floAir">
+              <label class="custom-control-label" for="floAir">FloAir</label>
+            </div>
+            <div class="row">
+              <button class="search-hotel btn btn-danger" (click)="saveSetting()">
+                {{'admin-agency-management-edit.button-update' | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-9">
+        <div class="row">
+          <div class="col-12 mb-4">
+            <h3 class="heading">{{'admin-agency-management-edit.title-flight-agent' | translate }}</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <kendo-grid [data]="gridView" kendoGridSelectBy="id" [pageSize]="10" [pageable]="true" [skip]="skip"
+              [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (pageChange)="pageChange($event)">
+              <ng-template kendoGridToolbarTemplate>
+                <input placeholder="{{'admin-agency-management.label-search-column' | translate }}" kendoTextBox (input)="onFilter($event)"/>
+                <span *ngIf="isLoading">
+                  <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+                  </div><span ngPreserveWhiteSpaces>&emsp;{{'admin-agency-management.label-loading' | translate
+                    }}</span>
+                </span>
+                <button kendoGridExcelCommand type="button" icon="file-excel">{{'admin-agency-management.label-excel' |
+                  translate }}</button>
+                <button kendoGridPDFCommand icon="file-pdf">{{'admin-agency-management.label-pdf' | translate
+                  }}</button>
+              </ng-template>
+              <kendo-grid-column title="#" [width]="40" [columnMenu]="false">
+                <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                  <div style="text-align: center;">{{rowIndex + 1}}</div>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="name" title="{{'admin-agency-management.title-agency' | translate }}"
+                [width]="200">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div class="customer-name">{{ dataItem?.agentName }}</div>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="name" title="{{'admin-agency-management.title-owner' | translate }}"
+                                 [width]="200">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div class="customer-name">{{ dataItem?.owner }}</div>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="Options" title="{{'admin-agency-management.title-options' | translate }}"
+                [width]="200">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <span *ngFor="let item of dataItem?.flightSupplierOptions;index as i;first as isFirst">
+                    <span *ngIf="item?.searchEnable">
+                      <span *ngIf="!isFirst">,&nbsp;</span>
+                      <span class="customer-name">{{ item?.supplierName }}</span>
+                    </span>
+                  </span>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column title="{{'admin-agency-management.title-action' | translate }}" [width]="80"
+                [class]="{'text-center': true}" [resizable]="false">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <button class="btn btn-warning btn-sm mr-1" (click)="editAgency(dataItem?.agentId)"><i
+                      class="icon fa fa-pencil" style="color: white;" aria-hidden="true"></i></button>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-excel fileName="FlightSystemConfigure.xlsx"></kendo-grid-excel>
+              <kendo-grid-pdf fileName="FlightSystemConfigure.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+            </kendo-grid>
+            <div kendoDialogContainer></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<main-footer></main-footer>

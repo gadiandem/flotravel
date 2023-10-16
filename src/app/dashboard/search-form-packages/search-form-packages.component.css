@@ -1,0 +1,26 @@
+.btn-outline-info {
+    color: rgb(10, 48, 73) !important;
+    border-color: rgb(10, 48, 73) !important;
+  }
+
+  .btn-outline-info:not(:disabled):not(.disabled).active, .btn-outline-info:not(:disabled):not(.disabled):active, .show>.btn-outline-info.dropdown-toggle {
+    background-color: rgb(10, 48, 73) !important;
+    color: #fff !important;
+  }
+  ::ng-deep .bs-datepicker-container {
+    padding: 0px !important;
+  }
+
+  .k-dateinput {
+    font-size: 18px;
+    background-color: #eeeeee !important;
+  }
+  .k-dateinput-wrap {
+    background-color: #eeeeee !important;
+  }
+  ::ng-deep .k-input-inner{
+    width: 100% !important;
+    border: none !important;
+    height: 100% !important;
+    background-color: transparent;
+  }

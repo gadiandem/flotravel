@@ -1,0 +1,356 @@
+<div class="container-fluid">
+  <div *ngIf="!loading" class="row mt-14">
+    <div class="col-md-7 offset-1">
+      <div class="card card-outline card-primary">
+        <div class="card-header">
+          <h3 class="card-title">{{'signup.title' | translate }} </h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+              <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+              <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div [collapse]="isCollapsed" [isAnimated]="true">
+          <div class="card-body">
+            <div>
+              <div class="box-body">
+                <form [formGroup]="registerForm" class="clearfix">
+                  <div class="form-group row mt-1">
+                    <div class="col-md-12">
+                      <h4 class="text-center">{{'signup.label-agency' | translate }}</h4>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="agent">{{'signup.label-create-agent' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="agent" id="agent"
+                        [ngClass]="{ 'is-invalid': (formSubmitError && registerForm.get('agent').errors) || registerForm.get('agent').errors?.agentNameExist }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('agent').errors?.required">
+                          {{'signup.invalid-agent' | translate }}
+                        </span>
+                        <div *ngIf="registerForm.get('agent').errors?.agentNameExist">
+                          {{'signup.incorrect-agent' | translate }}
+                        </div>
+                      </span>
+                      <div
+                        *ngIf="!registerForm.get('agent').errors && !registerForm.get('agent').errors?.agentNameExist">
+                        <span class="text-green">{{'signup.correct-agent' | translate }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="existingAgent">{{'signup.label-select-agent' | translate }}</label>
+                      <select class="form-control" id="type" formControlName="existingAgent"
+                      [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('existingAgent').errors }">
+                        <option value="">{{'signup.label-select-agent' | translate }}</option>
+                        <option *ngFor="let agent of existingAgencies" [value]="agent?.id">{{agent?.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                      <h4 class="text-center">{{'signup.label-user' | translate }}</h4>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="email">{{'signup.label-email' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="email" id="email" autocomplete="off"
+                        [ngClass]="{ 'is-invalid': (formSubmitError && registerForm.get('email').errors) || registerForm.get('email').errors?.emailExists }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('email').errors?.required">
+                          {{'signup.invalid-email' | translate }}
+                        </span>
+                        <span *ngIf="registerForm.get('email').errors?.email">
+                          {{'signup.incorrect-email' | translate }}
+                        </span>
+                        <div *ngIf="registerForm.get('email').errors?.emailExists">
+                          {{'signup.email-exists' | translate }}
+                        </div>
+                      </span>
+                      <div *ngIf="!registerForm.get('email').errors && !registerForm.get('email').errors?.emailExists">
+                        <span class="text-green">{{'signup.correct-email' | translate }}</span>
+                      </div>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="firstName">{{'signup.label-first-name' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="firstName" id="firstName"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('firstName').errors }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('firstName').errors?.required">
+                          {{'signup.invalid-first-name' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="lastName"> {{'signup.label-last-name' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="lastName" id="lastName"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('lastName').errors }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('lastName').errors?.required">
+                          {{'signup.invalid-last-name' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="dateOfBirth"> {{'signup.label-DoB' | translate }}</label>
+                      <div class="input-group">
+                        <input class="form-control" placeholder="{{'signup.DoB-placeholder' | translate }}" name="dp"
+                          formControlName="dateOfBirth" bsDatepicker [bsConfig]="dateConfig"
+                          [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('dateOfBirth').errors }">
+                      </div>
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('dateOfBirth').errors?.required">
+                          {{'signup.invalid-DoB' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div formGroupName="passwordGroup" class="row">
+                    <!-- <div class="col-12"> -->
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label>{{'signup.label-password' | translate }}</label>
+                      <input class="form-control" type="password" formControlName="password" autocomplete="false"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('passwordGroup.password').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('passwordGroup.password').errors?.required">
+                          {{'signup.invalid-password' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label> {{'signup.label-repeat-password' | translate }}</label>
+                      <input class="form-control" type="password" formControlName="confirmPassword" autocomplete="off"
+                        [ngClass]="{ 'is-invalid': formSubmitError && (registerForm.get('passwordGroup.confirmPassword').errors || registerForm.get('passwordGroup').errors) }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('passwordGroup.confirmPassword').errors?.required">
+                          {{'signup.invalid-repeat-password' | translate }}
+                        </span>
+                        <span *ngIf="registerForm.get('passwordGroup').errors?.match">
+                          {{'signup.incorrect-repeat-password' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <!-- </div> -->
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="mobile"> {{'signup.label-phone-number' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="mobile" id="mobile"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('mobile').errors }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('mobile').errors?.required">
+                          {{'signup.invalid-phone-number' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="address"> {{'signup.label-address' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="address" id="address"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('address').errors }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('address').errors?.required">
+                          {{'signup.invalid-address' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="country">{{'signup.label-country' | translate }}</label>
+                      <!-- <input class="form-control" type="text" formControlName="country" id="country"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('country').errors }"> -->
+                      <input [(ngModel)]="searchCountry" [typeaheadItemTemplate]="customItemTemplate"
+                        typeaheadOptionField="name" [typeahead]="country$" [typeaheadAsync]="true"
+                        [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectResidenceCountry($event.item)"
+                        type="text" class="form-control" formControlName="country" placeholder=""
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('country').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('country').errors?.required">
+                          {{'signup.invalid-country' | translate }}
+                        </span>
+                      </span>
+                      <ng-template #customItemTemplate let-model="item" let-index="index">
+                        {{model.name}} - {{model?.code}}
+                      </ng-template>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="city"> {{'signup.label-city' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="city" id="city"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('city').errors }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('city').errors?.required">
+                          {{'signup.invalid-city' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="state">{{'signup.label-state' | translate }}</label>
+                      <select name="state" id="state" class="form-control" formControlName="state"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('state').errors }">
+                        <option value="">{{'signup.select-state-option' | translate }}</option>
+                        <option *ngFor="let state of stateList; let i = index" [value]="state.code">{{state.name}}
+                        </option>
+                      </select>
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('state').errors?.required">
+                          {{'signup.invalid-state' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="postalCode"> {{'signup.label-postal-code' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="postalCode" id="postalCode"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('postalCode').errors }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('postalCode').errors?.required">
+                          {{'signup.invalid-postal-code' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="state">{{'signup.label-currency' | translate }}</label>
+                      <input formControlName="currency" [typeahead]="currencies"
+                        [typeaheadItemTemplate]="currencyTemplate" typeaheadOptionField="code"
+                        [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="" class="form-control"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('currency').errors }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('currency').errors?.required">
+                          {{'signup.invalid-currency' | translate }}
+                        </span>
+                      </span>
+                      <ng-template #currencyTemplate let-model="item" let-index="index">
+                        {{model?.code}} - {{model?.name}}
+                      </ng-template>
+                    </div>
+                    <div class="form-group col-sm-6 col-xs-12">
+                      <label for="language"> {{'signup.label-language' | translate }}</label>
+                      <select name="language" id="language" class="form-control" formControlName="language"
+                        [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('language').errors }">
+                        <option value=""> {{'signup.select-language-option' | translate }}</option>
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                      </select>
+                      <span class="invalid-feedback">
+                        <span *ngIf="registerForm.get('language').errors?.required">
+                          {{'signup.invalid-language' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </form>
+                <p></p>
+                <h5>{{'signup.pre-contract-info' | translate }}</h5><br>{{'signup.consent-info' | translate }}<br>
+                <ul>
+                  <li>{{'signup.user-agreement' | translate }} <a style="cursor: pointer; color: #007bff;"
+                      (click)="privacyDetail()">{{'signup.privacy-policy-link' | translate }}</a></li>
+                  <li>{{'signup.user-info-agreement' | translate }} <a style="cursor: pointer; color: #007bff;"
+                      (click)="privacyDetail()">{{'signup.privacy-policy-link' | translate }}</a></li>
+                </ul>
+                <p></p>
+                <div class="icheck-primary">
+                  <input type="checkbox" id="remember">
+                  <label for="remember">
+                    {{'signup.checkbox-accept' | translate }}
+                  </label>
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary" (click)="register()">
+                    {{'signup.button-create-account' | translate }}
+                  </button>
+                  <div class="pull-right">
+                    <a routerLink="../login">{{'signup.button-login-page' | translate }} </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-3">
+        <app-info-pannel></app-info-pannel>
+      </div> -->
+  </div>
+
+  <!--skeleton loading-->
+  <div *ngIf="loading" class="we-body my-5 pt-5 pb-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h5 class="mt-4 mb-0" style="font-size: 26px;">
+            <ngx-skeleton-loader
+              [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '20%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+          </h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 order-2 order-md-1 mt-4">
+          <div class="shadow-box p-3">
+            <h5 class="text-danger border-bottom pb-2 mb-3">
+              <ngx-skeleton-loader
+                [theme]="{'background-color': '#ccc',  'width': '20%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+            </h5>
+            <div class="px-md-4">
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc',  'width': '15%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-12" *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+                  <div class="form-group">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="col-12 col-md-8">
+                  <div class="form-group">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="col-12 col-md-8">
+                  <div class="form-group">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="col-12 col-md-8">
+                  <div class="form-group">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="col-12 col-md-8">
+                  <div class="form-group">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                  <div class="form-group mb-3" style="margin-top:-10px;">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc','width': '35%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="col-8 mr-auto">
+                  <div class="form-group">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

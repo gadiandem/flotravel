@@ -1,0 +1,175 @@
+<main role="main">
+  <div class="container mt-1 pt-5 pb-5">
+  <div class="tab-pane fade m-1 m-md-0 active show">
+    <form [formGroup]="searchForm" class="flight-search" (ngSubmit)="searchPackage()">
+      <div class="row" style="cursor: pointer;">
+        <div class="col-lg-4 col-12">
+          <label class="mb-0 font-weight-light">{{'flotravel-logs-list.label-date' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+            </div>
+            <kendo-datepicker #datepickerCreatedDate class="form-control" formControlName="createdDate"
+              calendarType="classic" (click)="onOpenDatepicker($event, datepickerCreatedDate)"
+              (valueChange)="onValueChange($event)"
+              [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('createdDate').errors }"
+              format="dd-MM-yyyy"></kendo-datepicker>
+            <span class="invalid-feedback">
+              <span *ngIf="searchForm.get('createdDate').errors?.required">
+                {{'dashboard-flights.invalid-departing' | translate }}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <label class="mb-0 font-weight-light">{{'flotravel-logs-list.label-service' | translate }}</label>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+              </div>
+              <select  name="service" formControlName="service" class="form-control custom-select" [ngClass]="{ 'is-invalid': searchForm.get('service').errors }">
+                <option value="Hotel" selected>{{'flotravel-logs-list.button-hotel' | translate }}</option>
+                <option value="Flight">{{'flotravel-logs-list.button-flight' | translate }}</option>
+                <option value="Packages">{{'flotravel-logs-list.button-packages' | translate }}</option>
+                <option value="Special Packages">{{'flotravel-logs-list.button-special-packages' | translate }}</option>
+                <option value="Insurance">{{'flotravel-logs-list.button-insurance' | translate }}</option>
+              </select>
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('service').errors?.required">
+                  Please select a service.
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-12">
+          <label class="mb-0 font-weight-light invisible ">.</label><br>
+          <input type="submit" name="submit" class="btn btn-danger" value="{{'flotravel-logs-list.label-search' | translate }}" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- <div class="container mt-1 pt-2 pb-2">
+    <div class="tab-pane fade active show">
+      <form [formGroup]="userForm" class="flight-search" (ngSubmit)="searchByUser()">
+        <div class="row pt-2" style="cursor: pointer;">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-6">
+                <input class="form-control" type="text" formControlName="username" size="50"
+                  placeholder="{{'flotravel-logs-list.label-username' | translate }}"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('username').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('username').errors?.required">
+                    {{'flight-checkout.invalid-fname' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="col-md-6">
+                <input type="submit" name="submit" class="btn btn-danger"
+                  value="{{'flotravel-logs-list.label-search' | translate }}" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div> -->
+  <div class="container mt-1 pt-2 pb-2">
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [pageSize]="10" [pageable]="true"
+          [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="{{'flotravel-logs-list.label-search-column' | translate }}" kendoTextBox
+              (input)="onFilter($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;{{'flotravel-logs-list.label-loading' | translate }}</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel"
+              style="float:right;">{{'flotravel-logs-list.label-excel' | translate }}</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">{{'flotravel-logs-list.label-pdf' |
+              translate }}</button>
+          </ng-template>
+          <kendo-grid-column-group title="{{'flotravel-logs-list.label-logs-list' | translate }}" [columnMenu]="false">
+            <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+          <!--  <kendo-grid-column field="id" title="{{'flotravel-logs-list.title-ID' | translate }}" [width]="100"
+              [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.id}}</div>
+              </ng-template>
+            </kendo-grid-column> -->
+            <kendo-grid-column field="traceId" title="{{'flotravel-logs-list.title-user' | translate }}" [width]="80"
+              [columnMenu]="false">
+               <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.user}}</div>
+              </ng-template>
+            </kendo-grid-column>
+          <!--  <kendo-grid-column field="traceId" title="{{'flotravel-logs-list.title-trace-id' | translate }}"
+            [width]="150" [resizable]="true">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div ngPreserveWhitespaces> {{ dataItem.traceId }} </div>
+            </ng-template>
+          </kendo-grid-column> -->
+            <!-- <kendo-grid-column field="logger" title="{{'flotravel-logs-list.title-logger' | translate }}" [width]="70">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="customer-name" ngPreserveWhitespaces>
+                    {{ dataItem.logger }} </div>
+              </ng-template>
+            </kendo-grid-column> -->
+            <kendo-grid-column field="dated" title="{{'flotravel-logs-list.title-dated' | translate }}(GMT)" [width]="90">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{ dataItem.dated }}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="level" title="{{'flotravel-logs-list.title-level' | translate }}" [width]="70">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{ dataItem.level }}</div>
+              </ng-template>
+            </kendo-grid-column>
+          <kendo-grid-column field="service" title="{{'flotravel-logs-list.title-service' | translate }}" [width]="70">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{ dataItem.service }}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="service" title="{{'flotravel-logs-list.title-trace-id' | translate }}" [width]="120">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{ dataItem.traceId }}</div>
+              </ng-template>
+            </kendo-grid-column>
+           <!-- <kendo-grid-column field="message" title="{{'flotravel-logs-list.title-message' | translate }}"
+              [width]="180" [class]="{'text-center': false}" [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{ dataItem.message | slice:0:100 }} </div>
+              </ng-template>
+            </kendo-grid-column> -->
+            <!-- <kendo-grid-column field="errorMessage" title="{{'flotravel-logs-list.title-error' | translate }}" [width]="180" [class]="{'text-center': true}"
+               [resizable]="true">
+               <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{ dataItem.errorMessage }} </div>
+              </ng-template>
+            </kendo-grid-column>  -->
+            <kendo-grid-column title="{{'flotravel-logs-list.title-action' | translate }}" [width]="60"
+              [class]="{'text-center': true}" [columnMenu]="false" filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <button class="btn btn-warning btn-sm mr-1"
+                    (click)="viewDetail(dataItem)">{{'flotravel-logs-list.title-detail' | translate }}</button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+          <kendo-grid-pdf fileName="FlotravelLogsList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="FlotravelLogsList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</main>

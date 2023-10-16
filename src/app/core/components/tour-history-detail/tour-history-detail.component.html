@@ -1,0 +1,99 @@
+<div style="background: #f0f2f6;">
+  <main-header></main-header>
+  <main role="main">
+    <div class="container mt-3 pt-3 pb-5">
+      <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;{{'tour-history-detail.label-loading' | translate }}</span>
+      </div>
+      <div class="row" *ngIf="!isLoading">
+        <div class="col-md-8">
+          <alert *ngIf="extraDetail?.bookingStatus ==='CANCELLED'" type="danger" ngPreserveWhitespaces>
+            {{'tour-history-detail.label-cancelled' | translate }}
+          </alert>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'tour-history-detail.label-booking-details' | translate }}</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'tour-history-detail.label-id' | translate }}</label>&emsp;
+                {{tourId}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'tour-history-detail.label-reservation' | translate }}</label>&emsp;{{extraDetail?.bookingStatus}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'tour-history-detail.label-contact-details' | translate }}</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'tour-history-detail.label-email' | translate }}</label>&emsp;{{extraDetail?.payer?.email}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'tour-history-detail.label-fname' | translate }}</label>&emsp;{{extraDetail?.payer?.firstName}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'tour-history-detail.label-lname' | translate }}</label>&emsp;{{extraDetail?.payer?.lastName}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'tour-history-detail.label-tran-details' | translate }}</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'tour-history-detail.label-order-no' | translate }}</label>&emsp;{{extraDetail?.orderId}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'tour-history-detail.label-trace-number' | translate }} </label>&emsp;{{extraDetail?.traceNumber}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'tour-history-detail.label-tour-remarks' | translate }}</h5>
+            </div>
+            <div class="col-12" ngPreserveWhitespaces>
+              <span [innerHTML]="extraDetail?.bookingRemarks"></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card mb-3" style="border-radius: 0px;">
+            <img class="img-fluid" [src]="extraDetail?.extraPackage?.imgUrl" [title]="extraDetail?.extraPackage?.name" style="width:100%" />
+            <div class="card-body">
+              <h5 class="card-title">{{'tour-history-detail.label-booking-for' | translate }} {{extraDetail?.extraPackage?.name}}</h5>
+              <p>{{'tour-history-detail.label-duration' | translate }} {{extraDetail?.extraPackage?.duration}} <span ngPreserveWhitespaces>( {{extraDetail?.extraDetail?.fromTime}} &emsp;<i class="fa fa-arrow-right"></i>&emsp;
+                {{extraDetail?.extraDetail?.toTime}})</span></p>
+              <p ngPreserveWhitespaces>{{'tour-history-detail.label-date' | translate }} &emsp;{{extraDetail?.dateBooking}}</p>
+              <h6>{{extraDetail?.extraDetail?.title}}  <small class="float-right text-danger">
+                  {{extraDetail?.amount | currency:currency:'symbol':'.0-2'}}
+                  x 1 {{'tour-history-detail.label-days' | translate }} </small></h6>
+              <span escapse="false" [innerHTML]="extraDetail?.extraDetail?.description"></span>
+            </div>
+            <div class="card-footer text-muted">
+              <span>{{'tour-history-detail.label-total-trip' | translate }} {{extraDetail?.amount | currency:currency:'symbol':'.0-2'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="!isLoading && !(extraDetail.bookingStatus ==='CANCELLED')">
+        <button type="button" class="btn btn-danger" (click)="openModalWithComponent()"  [disabled]="extraDetail.refundedAmount > 0">{{'tour-history-detail.label-cancel-booking' | translate }} </button>
+      </div>
+    </div>
+  </main>
+</div>
+<main-footer></main-footer>

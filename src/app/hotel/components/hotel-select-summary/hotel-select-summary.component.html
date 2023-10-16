@@ -1,0 +1,37 @@
+<div class="hotel-item shadow-box blue-bg mb-3">
+  <div class="row d-flex p-3">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between">
+        <h5 class="text-danger mb-1">{{'Hotel Selected'}}</h5>
+        <a class="text-danger" [routerLink]="changeLink">{{'hotel-summary.label-change' | translate }} </a>
+      </div>
+    </div>
+    <div class="col-md-4 hotel-img-item ">
+      <img *ngIf="!selectedHotel?.provider || selectedHotel?.provider === hotelProvider.NUITEE" class="img-fluid hotel-img"
+      [errorImage]="defaultData" [defaultImage]="defaultData" [lazyLoad]="selectedHotel?.image?.baseUrl + '/800x640/' + selectedHotel?.image?.name" [useSrcset]="true" alt="{{selectedHotel?.name}}">
+      <img *ngIf="selectedHotel?.provider && selectedHotel?.provider !== hotelProvider.NUITEE" class="img-fluid hotel-img"
+      [errorImage]="defaultData" [defaultImage]="defaultData" [lazyLoad]="selectedHotel?.image?.baseUrl + '/800x640/' + selectedHotel?.image?.name" [useSrcset]="true" alt="{{selectedHotel?.name}}">
+    </div>
+    <div class="col-md-8 pl-md-0 pt-3 pt-md-0">
+      <div class="row">
+        <div class="col-8">
+          <h5 class="hotel-title">{{selectedHotel?.name}}</h5>
+          <p style="font-size: 12px;"><i class="fa fa-map-marker"></i>{{selectedHotel?.address}}</p>
+          <div class="d-none d-md-block">
+            <div style="color:#666666;font-size: 14px;font-weight: bold;">{{numberOfNight + 1}} {{'hotel-summary.label-days-due' | translate }}, {{numberOfNight}} {{'hotel-summary.label-nights' | translate }}</div>
+            <p style="color:#666666;margin-bottom:10px;line-height: 15px;">
+              {{searchHotelListRequest?.destination}}</p>
+
+            <div style="color:#666666;font-size: 14px;font-weight: bold;">{{selectedRoom?.rooms?.rooms[0]?.roomDescription}} </div>
+            <p style="color:#666666;margin-bottom:10px;line-height: 15px;">
+              {{selectedHotel.title}} </p>
+          </div>
+        </div>
+        <div class="col-4 text-right">
+          <span class="hotel-price mt-md-2">{{(selectedRoom?.totalPrice || selectedHotel?.minPrice) | currency:currency:'symbol':'.0-2'}}</span>
+          <div style="margin-bottom:15px">{{'hotel-summary.label-tax' | translate }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,377 @@
+<main role="main" class="margin-top: 200px">
+  <div class="we-body">
+    <div class="container">
+      <div class="row">
+        <!-- <div class="col-12">
+            <h5 class="mt-4 mb-0" style="font-size: 26px;">dhbchufnv vufn uehvnh euygbeihuv</h5>
+            <h3 class="" style="font-size:18px;">cuwb gbgbufhn en ieuhb nuhne uinefu hnbigehn eiu</h3>
+          </div> -->
+        <div class="col-md-8 order-2 order-md-1 mt-4">
+          <div *ngIf="user == null" class="shadow-box p-3 mb-3" (click)="openModalWithComponent()"
+            style="cursor: pointer;">
+            <span>
+              <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+                <i class="fa fa-lock"></i> &nbsp; Sign in to earn 2867 Points
+              </h3>
+            </span>
+          </div>
+          <div class="shadow-box p-3 mb-2" *ngIf="isAgent" style="display: none;">
+            <app-agency-booking (userSelected)="useSelected($event)" (agencyBooking)="agencyBooking($event)">
+            </app-agency-booking>
+          </div>
+          <form [formGroup]="customersForm">
+            <div class="shadow-box p-3">
+              <h5 class="text-danger border-bottom pb-2 mb-3">Customer Info</h5>
+              <div class="px-4">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="male" type="radio" value="MALE" formControlName="gender"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('gender').errors }">
+                        <label class="form-check-label" for="male"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('gender').errors }">Male</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="female" type="radio" value="FEMALE" formControlName="gender"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('gender').errors }">
+                        <label class="form-check-label" for="female"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('gender').errors }">Female</label>
+                      </div>
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('gender').errors?.required">
+                          Please select your gender.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4 col-8">
+                    <div class="form-group">
+                      <label>First Name</label>
+                      <input class="form-control" type="text" formControlName="firstName"
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('firstName').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('firstName').errors?.required">
+                          Please enter your First Name.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-4">
+                    <div class="form-group">
+                      <label>Middle Name</label>
+                      <input class="form-control" type="text" formControlName="middleName" />
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-8">
+                    <div class="form-group">
+                      <label>Surname</label>
+                      <input class="form-control" type="text" formControlName="lastName"
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('lastName').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('lastName').errors?.required">
+                          Please enter your Last Name.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-12">
+                    <div class="form-group">
+                      <label>Birth Date</label>
+                      <!-- <input class="form-control" type="text" formControlName="birthDate"
+                                [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('birthDate').errors }" /> -->
+                      <input type="text" class="form-control fromdate" formControlName="birthDate" bsDatepicker
+                        [maxDate]="maxDate">
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('birthDate').errors?.required">
+                          Please enter your BirthDate.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-8 mr-auto">
+                    <div class="form-group">
+                      <label>Country</label>
+                      <input [(ngModel)]="country" [typeaheadItemTemplate]="customItemTemplate"
+                        typeaheadOptionField="code" [typeahead]="sugFlyFrom$" [typeaheadAsync]="true"
+                        [typeaheadOptionsLimit]="7" type="text" class="form-control" formControlName="country"
+                        placeholder=""
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('country').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('country').errors?.required">
+                          Please Select your Country.
+                        </span>
+                      </span>
+                      <ng-template #customItemTemplate let-model="item" let-index="index">
+                        {{model.name}}, {{model.code}}
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-8">
+                    <div class="form-group">
+                      <label>Mobile</label>
+                      <input class="form-control" placeholder="In case we have to reach you." type="text"
+                        formControlName="phoneNo"
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('phoneNo').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('phoneNo').errors?.required">
+                          Please enter your phoneNo.
+                        </span>
+                        <span *ngIf="customersForm.get('phoneNo').errors?.pattern">This
+                          field must contain only digits</span>
+                        <span *ngIf="customersForm.get('phoneNo').errors?.minlength">
+                          Phone number incorect.
+                        </span>
+                        <span *ngIf="customersForm.get('phoneNo').errors?.maxlength">
+                          Phone number incorect.
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-check mb-3" style="margin-top:-10px;">
+                      <input class="form-check-input" type="checkbox" id="isNotify" formControlName="isNotify">
+                      <label class="form-check-label" for="isNotify"> Receive alert / news / notifications
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-8 mr-auto">
+                    <div class="form-group">
+                      <label>Passport</label>
+                      <input class="form-control" placeholder="" type="text" formControlName="passport"
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('passport').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('passport').errors?.required">
+                          Please Enter your passport.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="shadow-box p-3 mt-4" *ngIf="isAgent" style="display: none;">
+            <app-payment-type [isAgent]="isAgent" *ngIf="merchantExist" (vcnPayment)="paymentTypeUpdate($event)">
+            </app-payment-type>
+            <div *ngIf="!merchantExist" class="shadow-box p-3  mb-3" (click)="updateProfile()" style="cursor: pointer;">
+              <span>
+                <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+                  <i class="fa fa-lock"></i> &nbsp; This account not have Merchant please update this
+                </h3>
+              </span>
+            </div>
+          </div>
+          <form [formGroup]="cardPaymentForm" *ngIf="!isVcnPayment">
+            <div class="shadow-box p-3 mt-4">
+              <div class="text-danger" ngPreserveWhitespaces>
+                <i class="fa fa-credit-card"></i>&emsp;
+                <i class="fa fa-check"></i> We use secure transmission
+                &emsp;<i class="fa fa-check"></i> We protect your personal information
+              </div>
+              <div class="row pt-3">
+                <div class="col-md-6 mb-3">
+                  <div class="card-container"></div>
+                </div>
+                <div class="col-md-6">
+                  <div card container=".card-container" [messages]="messages" [placeholders]="placeholders"
+                    [masks]="masks">
+                    <div class="card-info">
+                      <div class="form-group">
+                        <label for="card_number">Card Number</label>
+                        <input class="form-control" id="card_number" type="text" formControlName="cardNo"
+                          placeholder="xxxx xxxx xxxx xxxx" card-number
+                          [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardNo').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="cardPaymentForm.get('cardNo').errors?.required">
+                            Please enter your card number.
+                          </span>
+                        </span>
+                      </div>
+                      <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input class="form-control" id="full_name" type="text" formControlName="cardName" card-name
+                          [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="cardPaymentForm.get('cardName').errors?.required">
+                            Please enter your card holder.
+                          </span>
+                        </span>
+                      </div>
+                      <div class="row">
+                        <div class="col-12 col-md-6">
+                          <div class="form-group">
+                            <label for="expire_time">Expiry Month/Year</label>
+                            <input class="form-control" id="expire_time" type="text" formControlName="expiry"
+                              placeholder="mm/yy" card-expiry
+                              [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('expiry').errors }" />
+                            <span class="invalid-feedback">
+                              <span *ngIf="cardPaymentForm.get('expiry').errors?.required">
+                                Please enter your expire time.
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                          <div class="form-group">
+                            <label for="cvv">CVC</label>
+                            <input class="form-control" id="cvv" type="text" placeholder="xxx" formControlName="cvv"
+                              card-cvc
+                              [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cvv').errors }" />
+                            <span class="invalid-feedback">
+                              <span *ngIf="cardPaymentForm.get('cvv').errors?.required">
+                                Please enter your CVV.
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <form [formGroup]="userForm">
+            <div class="shadow-box p-3 my-4">
+              <div class="text-danger mb-3" style="font-size: 20px;">Important information about your booking</div>
+              <p>Please enter the email address where you would like to receive your confirmation.</p>
+              <div class="row">
+                <div class="col-12 col-md-8">
+                  <div class="form-group">
+                    <label for="email">your@email.com</label>
+                    <input class="form-control" id="email" placeholder="In case we have to reach you." type="text"
+                      formControlName="email"
+                      [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('email').errors }" />
+                    <span class="invalid-feedback">
+                      <span *ngIf="userForm.get('email').errors?.required">
+                        Please enter your email.
+                      </span>
+                      <span *ngIf="userForm.get('email').errors?.email">
+                        Please enter valid email.
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <p class="mb-3">Please note that you will need to forward the voucher that you receive to the
+                    customer's email address for them to download and follow the instructions. Please note that the
+                    Flocash distribution partner for Trace Me Vip is Worldwide Insurance Solution LLC.
+                  </p>
+                </div>
+              </div>
+              <div *ngIf="user == null" class="row">
+                <div class="col-12 col-md-8">
+                  <div class="p-4 mb-4" style="background: #eee;">
+                    <p>Enter a password to create an account using the email address above.</p>
+                    <div formGroupName="passwordGroup">
+                      <div class="row">
+                        <div class="col-10">
+                          <div class="form-group">
+                            <label>Create Password</label>
+                            <input class="form-control" type="password" formControlName="password" autocomplete="false"
+                              [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('passwordGroup.password').errors }" />
+                            <span class="invalid-feedback">
+                              <span *ngIf="userForm.get('passwordGroup.password').errors?.required">
+                                Please enter your password.
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="col-10">
+                          <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input class="form-control" type="password" formControlName="confirmPassword"
+                              [ngClass]="{ 'is-invalid': formSubmitError && (userForm.get('passwordGroup.confirmPassword').errors || userForm.get('passwordGroup').errors) }" />
+                            <span class="invalid-feedback">
+                              <span *ngIf="userForm.get('passwordGroup.confirmPassword').errors?.required">
+                                Please enter your confirm password.
+                              </span>
+                              <span *ngIf="userForm.get('passwordGroup').errors?.match">
+                                The confirmation does not match the password.
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-check mb-3" style="margin-top:-10px;">
+                          <input class="form-check-input" type="checkbox" id="createAccount"
+                            formControlName="createAccount">
+                          <label class="form-check-label" for="createAccount"> User above email to create new account
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="text-muted">We have included all charges provided to us by the property. However, charges
+                  can
+                  vary, for example, based on length of stay or the room you book.</div><br> -->
+              <div class="row">
+                <div class="col-12">
+                  <button class="btn btn-danger" type="submit" [disabled]="isPayment" (click)="buyNow()">Buy Now
+                    &emsp;<i class="fa fa-arrow-right"></i></button>
+                </div>
+              </div>
+              <div><br><i class="fa fa-lock"></i> We use secure transmission and encrypted storage to protect your
+                personal information.</div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-4 order-1 order-md-2 mt-4 pl-md-0">
+          <div class="card shadow-box mb-3 rounded-0">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="title"> {{selectedProduct?.pricedProduct?.productInformation?.productDisplay?.productname}}
+                  </h3>
+                  <div style="color:#ffda23" ngPreserveWhitespaces>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5>Travel time</h5>
+              <p ngPreserveWhitespaces>{{searchHepstarReq?.startDate | date}} &emsp; <i class="fa fa-arrow-right"></i>
+                &emsp;{{searchHepstarReq?.endDate | date}}</p>
+              <h6>Highlight: <span class="float-right text-danger">
+                  {{selectedProduct?.pricedProduct?.productInformation?.productDisplay?.highlight?.text}}
+                </span>
+              </h6>
+              <!-- <div *ngIf="selectedProduct?.pricedProduct?.productInformation?.productDisplay?.details as detail">
+                <h6 *ngIf="detail?.item1"><span class="float-right text-danger" [innerHTML]="detail?.item1">
+                  </span>
+                </h6>
+                <h6 *ngIf="detail?.item2"><span class="float-right text-danger" [innerHTML]="detail?.item2">
+                  </span>
+                </h6>
+                <h6 *ngIf="detail?.item3"><span class="float-right text-danger" [innerHTML]="detail?.item3">
+                  </span>
+                </h6>
+                <h6 *ngIf="detail?.item4"><span class="float-right text-danger" [innerHTML]="detail?.item4">
+                  </span>
+                </h6>
+                <h6 *ngIf="detail?.item5"><span class="float-right text-danger" [innerHTML]="detail?.item5">
+                  </span>
+                </h6>
+              </div> -->
+              <!-- <span>{{selectedQuote?.productCode}}</span> -->
+            </div>
+            <div class="card-footer text-muted">
+              Total Price:
+              <span class="float-right text-danger">
+                {{(+selectedProduct?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.totalAmount?.amount || 0) |
+                currency:currency:'symbol':'.2'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

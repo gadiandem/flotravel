@@ -1,0 +1,87 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-banks.bank-title' | translate }}</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <form [formGroup]="addBankForm" class="form-horizontal clearfix">
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-banks.label-bank-name' | translate }}</label>
+              <div class="col-8">
+                <input class="form-control" id="bankName" type="text" formControlName="bankName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('bankName').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('bankName').errors?.required">
+                    {{'wallet-banks.invalid-bank-name' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-banks.label-code' | translate }}</label>
+              <div class="col-8">
+                <input class="form-control" id="swiftSortcode" type="text" formControlName="swiftSortcode"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('swiftSortcode').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('swiftSortcode').errors?.required">
+                    {{'wallet-banks.invalid-code' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-banks.label-account-no' | translate }}</label>
+              <div class="col-8">
+                <input class="form-control" id="accountNumber" type="text" formControlName="accountNumber"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('accountNumber').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('accountNumber').errors?.required">
+                    {{'wallet-banks.invalid-account-no' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-banks.label-account-name' | translate }}</label>
+              <div class="col-8">
+                <input class="form-control" id="accountName" type="text" formControlName="accountName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('accountName').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('accountName').errors?.required">
+                    {{'wallet-banks.invalid-account-name' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr />
+      <div class="clearfix">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary btn-sm mr-2" (click)="addBank()"> {{'wallet-banks.button-save' | translate }}</button>
+          <button type="button" class="btn btn-warning btn-sm" (click)="cancel()"> {{'wallet-banks.button-cancel' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<!--<app-hotel-search-box-simulator [searchHotelListRequest]="searchHotelListRequest" [fetching]="isLoading"
+                      (searchHotelBox)="shoppingHotel($event)"></app-hotel-search-box-simulator> -->
+<div *ngIf="!isLoading" class="container">
+  <div class="row mt-2">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter" (click)="showFormFilter()">{{'hotel-list.label-sort-filter' | translate }}</span>
+        <span class="float-right show-map" (click)="showMap()">{{'hotel-list.label-show-map' | translate }}</span>
+      </div>
+      <div *ngIf="mapOpen" class="mb-4 text-center border we-map" style="background: #CAE5CD;">
+        <img alt="map" class="img-fluid" src="assets/google-map.jpg">
+      </div>
+    </div>
+    <div id="sortFilter" class="col-md-3 we-sort-filter">
+      <app-hotel-sidebar-simulator [hotelShoppingList]="hotelShoppingList" (hotelListViewChange)="updateHotelListView($event)"></app-hotel-sidebar-simulator>
+    </div>
+    <div class="col-md-7">
+      <div *ngIf="!isLoading && !fetchFailed" class="hotels-list">
+        <div *ngIf="hotelListView.length === 0">
+          <alert type="danger" ngPreserveWhitespaces>
+            {{'hotel-list.invalid-hotel' | translate }}
+          </alert>
+        </div>
+        <app-hotel-list-item-simulator [hotelList] = "hotelListView" [pageCurrent]="p"
+                             [numberOfNight]="numberOfNight" (selectedHotel)="gotoDetail($event)"></app-hotel-list-item-simulator>
+      </div>
+      <pagination-controls *ngIf="!isLoading && !fetchFailed" (pageChange)="p = $event" directionLinks="true"
+                           autoHide="true">
+      </pagination-controls>
+    </div>
+    <div class="col-md-2">
+      <img class="sticky mt-5 w-100 d-none d-md-block" style="height: auto; margin-top: 0px !important;top: 65px;" src="assets/ads.jpg">
+    </div>
+  </div>
+</div>
+<!--loading skeleton-->
+<app-hotel-list-skeleton *ngIf="isLoading"></app-hotel-list-skeleton>

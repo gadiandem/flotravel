@@ -1,0 +1,142 @@
+<form [formGroup]="editProfileForm" class="form-horizontal clearfix">
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right">{{'wallet-contact-details.title-address' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="address" type="text" formControlName="address"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('address').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('address').errors?.required">
+          {{'wallet-contact-details.invalid-address' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right">{{'wallet-contact-details.title-country' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="country" type="text" formControlName="country"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('country').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('country').errors?.required">
+          {{'wallet-contact-details.invalid-country' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right"> {{'wallet-contact-details.title-state' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="state" type="text" formControlName="state"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('state').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('state').errors?.required">
+          {{'wallet-contact-details.invalid-state' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right">{{'wallet-contact-details.title-city' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="city" type="text" formControlName="city"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('city').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('city').errors?.required">
+          {{'wallet-contact-details.invalid-city' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right">  {{'wallet-contact-details.title-postalcode' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="postalCode" type="text" formControlName="postalCode"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('postalCode').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('postalCode').errors?.required">
+          {{'wallet-contact-details.invalid-postalcode' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right">{{'wallet-contact-details.title-number' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="phoneNumber" type="text" formControlName="phoneNumber"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('phoneNumber').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('phoneNumber').errors?.required">
+          {{'wallet-contact-details.invalid-number' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right">{{'wallet-contact-details.title-email' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="email" type="email" formControlName="email"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('email').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('email').errors?.required">
+          {{'wallet-contact-details.invalid-email' | translate }}
+        </span>
+        <span *ngIf="editProfileForm.get('email').errors?.email">
+          {{'wallet-contact-details.incorrect-email' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right"> {{'wallet-contact-details.title-currency' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="currency" type="text" formControlName="currency"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('currency').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('currency').errors?.required">
+          {{'wallet-contact-details.invalid-currency' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right">{{'wallet-contact-details.title-language' | translate }}</label>
+    <div class="col-8">
+      <select name="language" id="language" class="form-control" formControlName="language"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('language').errors }">
+        <option value="">{{'wallet-contact-details.option-language' | translate }}</option>
+        <option value="en">{{'wallet-contact-details.title-english' | translate }}</option>
+        <option value="fr">{{'wallet-contact-details.title-french' | translate }}</option>
+      </select>
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('language').errors?.required">
+          {{'wallet-contact-details.invalid-language' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right"> {{'wallet-contact-details.title-account-type' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="accountType" type="text" formControlName="accountType" readonly />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label text-sm-right"> {{'wallet-contact-details.title-business-name' | translate }}</label>
+    <div class="col-8">
+      <input class="form-control" id="businessName" type="text" formControlName="businessName"
+        [ngClass]="{ 'is-invalid': formSubmitError && editProfileForm.get('businessName').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editProfileForm.get('businessName').errors?.required">
+          {{'wallet-contact-details.invalid-business-name' | translate }}.
+        </span>
+      </span>
+    </div>
+  </div>
+  <hr />
+  <div class="clearfix">
+    <div class="pull-right">
+      <button type="button" class="btn btn-primary btn-sm mr-2" (click)="updateSetting()">{{'wallet-contact-details.button-submit' | translate }}</button>
+      <button type="button" class="btn btn-warning btn-sm" (click)="closeEditMode()">{{'wallet-contact-details.button-cancel' | translate }}</button>
+    </div>
+  </div>
+</form>

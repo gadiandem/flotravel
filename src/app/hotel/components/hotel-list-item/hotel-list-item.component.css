@@ -1,0 +1,39 @@
+agm-map {
+  height:200px; /* height is required */
+}
+
+.hotel-image {
+  max-height: 200px;
+}
+
+.custom-control-label {
+  margin: 0px 0px 0px 0px;
+  font: 12px Roboto;
+  font-weight: normal !important;
+  padding-top: 5px;
+}
+.hotel-img {
+  float: left;
+  width: 100%;
+  height: auto;
+  background-size: cover;
+  background-position: center center;
+}
+
+.hotel-img-item {
+  overflow: hidden;
+  max-height: 180px;
+}
+
+.hotel-price, .room-price, .flight-price {
+  font-size: 24px;
+  font-weight: 400;
+}
+.hotel-description{
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.hotel-session-price{
+    padding-left: 5px;
+    padding-right: 10px;
+}

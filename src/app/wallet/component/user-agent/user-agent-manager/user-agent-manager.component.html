@@ -1,0 +1,52 @@
+<div class="card card-outline card-primary">
+    <div class="card-header">
+      <h3 class="card-title">{{'wallet-user-agents.manager-label-title' | translate }}
+      </h3>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+          <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+          <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div [collapse]="isCollapsed" [isAnimated]="true">
+      <div class="card-body">
+        <div class="clearfix">
+          <div class="pull-left">
+            <button type="button" class="btn btn-success btn-sm mr-2" (click)="next()">
+              <i class="fa fa-plus" aria-hidden="true"></i> {{'wallet-user-agents.manager-create-account' | translate }}
+            </button>
+          </div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{'wallet-user-agents.manager-email' | translate }}</th>
+              <th scope="col">{{'wallet-user-agents.manager-name' | translate }}</th>
+              <th scope="col">{{'wallet-user-agents.manager-status' | translate }}</th>
+              <th scope="col">{{'wallet-user-agents.manager-role' | translate }}</th>
+              <th scope="col">{{'wallet-user-agents.manager-action' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>	</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>
+                <a routerLink="" class="mr-2"><i class="fa fa-edit fa-lg"></i></a>
+                <a routerLink=""><i class="fa fa-refresh fa-lg"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  

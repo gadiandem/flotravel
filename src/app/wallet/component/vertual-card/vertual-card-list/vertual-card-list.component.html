@@ -1,0 +1,58 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-virtual-card-table.label-title' | translate }}</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <div *ngIf="fetching" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;{{'wallet-virtual-card-table.label-loading' | translate }}</span>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{'wallet-virtual-card-table.label-pan' | translate }}</th>
+              <th scope="col">{{'wallet-virtual-card-table.label-balance' | translate }}</th>
+              <th scope="col">{{'wallet-virtual-card-table.label-expire-month' | translate }}</th>
+              <th scope="col">{{'wallet-virtual-card-table.label-expire-year' | translate }}</th>
+              <th scope="col">{{'wallet-virtual-card-table.label-status' | translate }}</th>
+              <th scope="col">{{'wallet-virtual-card-table.label-block' | translate }}</th>
+              <th scope="col">{{'wallet-virtual-card-table.label-action' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="vcnListView.length === 0">
+              <p>{{'wallet-virtual-card-table.label-no-vcn' | translate }}</p>
+            </tr>
+            <tr *ngFor="let vcn of vcnListView; let i= index">
+              <td>{{vcn?.pan}}</td>
+              <td>{{vcn?.balance}}</td>
+              <td>{{vcn?.expireMonth}}</td>
+              <td>{{vcn?.expireYear}}</td>
+              <td>{{vcn?.status}}</td>
+              <td></td>
+              <td style="cursor: pointer;" (click)="openModalWithComponent()">
+                <a class="smallFont">{{'wallet-virtual-card-table.label-detail' | translate }} </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <form [formGroup]="getVertualCardListForm" class="form-horizontal clearfix">
+          <ngb-pagination class="d-flex justify-content-center mt-2" [collectionSize]="collectionSize" [page]="page"
+            [pageSize]="pageSize" (pageChange)="refreshCountries($event)">
+          </ngb-pagination>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

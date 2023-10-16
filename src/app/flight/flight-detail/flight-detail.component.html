@@ -1,0 +1,35 @@
+<div class="container" style="margin-top: 150px; margin-bottom: 100px">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-md-6">
+        <div *ngFor="let segment of flight.flightSegments; let i = index" class="m-3 pl-3" style="border-left:1px solid #eee072;">
+          <div class="flight-cart-start-dep"></div>
+          <p><strong>{{'flight-list.label-from' | translate }}</strong> {{segment?.depAirportCode}}:&emsp;{{segment?.depAirportName}}<br>
+            <strong>{{'flight-list.label-to' | translate }}</strong> {{segment?.arrAirportCode}}:&emsp;{{segment?.arrAirportName}}</p>
+          <p>{{segment?.airline.split('-')[1]}}<br>
+            {{segment?.aircraft}} {{'flight-list.label-aircraft' | translate }} {{segment?.flightNumber}} |
+            {{'flight-list.label-breakfast' | translate }}<br>
+            {{segment?.marketingName}}<br>
+            {{segment?.depDateTime}} -> {{segment?.arrDateTime}}<br>
+            ({{segment?.duration}})</p>
+          <p><strong>{{'flight-list.label-distance' | translate }}</strong> {{segment?.distance}}</p>
+          <div class="flight-cart-end-dep"></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="p-3" *ngIf="flight?.offerItemList[0]?.weightAllowance">
+          <p><strong>{{'flight-detail.label-party' | translate }}</strong><span>&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+            {{'flight-detail.label-weight' | translate }}&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+            <span>{{flight.flightSegments[0].airline.split('-')[1]}}</span></p>
+        </div>
+        <div class="p-3" *ngIf="flight?.offerItemList[0]?.pieceAllowances">
+          <p><strong>{{'flight-detail.label-party' | translate }}</strong><span>&nbsp;{{flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+          <p><strong>{{'flight-detail.label-quantitiy' | translate }}</strong><span>&nbsp;{{flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+          <p><strong>{{'flight-detail.label-bags' | translate }}</strong><span>&nbsp;{{flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+            <!-- Maximum Weight:&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br> -->
+            <!-- <span>{{flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

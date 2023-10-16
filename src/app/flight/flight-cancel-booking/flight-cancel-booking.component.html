@@ -1,0 +1,83 @@
+<div *ngIf="!isLoading" class="container my-md-5 mt-5 pt-5 pb-3 col-lg-8 offset-lg-2">
+  <div class="hotel-item shadow-box1 bg-white py-2 mb-3">
+    <div class="row d-flex p-3 py-4">
+
+      <div class="col-md-4">
+        <img [src]="'http://pics.avs.io/300/300/' + bookingDetail?.departureFlight?.flightSegments[0]?.airline.split('-')[0] + '.png'"
+             class="img-fluid rounded" style="height: 195px !important;">
+      </div>
+      <div class="col-md-8 pt-3 pt-md-0 ">
+        <div class="row">
+          <div class="col-md-9">
+            <div *ngIf="bookingDetail?.returnFlight">
+              <h5 class="hotel-title" style="font-weight: 700">{{bookingDetail?.departureFlight?.depAirportCode}}-{{bookingDetail?.departureFlight?.arrAirportCode}}</h5>
+              <div class="my-2">
+                <span>{{'Depart '}}{{bookingDetail?.departureFlight?.depDateTime | date: 'd, MMM'}}</span> -
+                <span>{{'Return '}}{{bookingDetail?.returnFlight?.depDateTime | date: 'd, MMM'}}</span>
+              </div>
+            </div>
+            <div *ngIf="!(bookingDetail?.returnFlight)">
+              <h5 class="hotel-title" style="font-weight: 700">{{bookingDetail?.departureFlight?.depAirportCode}}-{{bookingDetail?.departureFlight?.arrAirportCode}}</h5>
+              <div class="my-2">
+                <span>{{'Depart '}}{{bookingDetail?.departureFlight?.depDateTime | date: 'd, MMM'}}</span>
+              </div>
+              <div *ngIf="bookingDetail?.nextFlights">
+                <div *ngFor="let flight of bookingDetail?.nextFlights">
+                  <h5 class="hotel-title" style="font-weight: 700" >
+                    {{flight?.depAirportCode}}-{{flight?.arrAirportCode}}
+                  </h5>
+                  <div class="my-2">
+                    <span>{{'Depart '}}{{flight?.depDateTime | date: 'd, MMM'}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>{{bookingDetail?.bookingStatus}}</div>
+            <hr>
+            <div class="fs-5 fw-bold text-dark mt-4">{{'hotel-cancellation.label-rules' | translate }}</div>
+            <p class="small">{{'hotel-cancellation.label-cancellation-rule-1' | translate }}</p>
+            <p class="small">{{'hotel-cancellation.label-cancellation-rule-2' | translate }}</p>
+            <div class="fs-6 fw-bold text-dark">
+              {{typeFlight}} {{'hotel-cancellation.label-booking-ref' | translate }} {{bookingDetail?.orderViewRSInfo?.bookingRefId}}, {{'hotel-cancellation.label-date' | translate }} {{bookingDetail.createDate | date:  'd MMM'}}
+            </div>
+            <div class="bcancel-btn d-block text-center fw-bold px-3 py-2 mt-3 mb-4" [attr.aria-expanded]="!isCollapsed" (click)="showStatementCancel()">
+              <img class="mr-1" src="assets/booking-cancellation-btn-icon.PNG" width="20" height="auto" alt="">{{'hotel-cancellation.label-cancel' | translate }} 
+            </div>
+            <div id="collapsed" [collapse]="isCollapsed" [isAnimated]="true" class="collapse text-dark">
+              <form [formGroup]="cancellationForm" (ngSubmit)="cancel()">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input formControlName="reason" class="form-control bcancel-btn d-block text-center fw-bold px-3 py-2 mt-3"
+                           placeholder="{{'hotel-cancel.label-reason' | translate }}"
+                           [ngClass]="{ 'is-invalid': formSubmitError && cancellationForm.get('reason').errors }"/>
+                    <span class="invalid-feedback">
+                      <span *ngIf="cancellationForm.get('reason').errors?.required">
+                        {{'hotel-cancel.invalid-reason' | translate }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-danger mb-4" (click)="cancel()">{{'hotel-cancellation.label-cancel' | translate }} </button>
+              </form>
+            </div>
+            <div class="fs-5 fw-bold text-dark">{{'hotel-cancellation.label-support' | translate }}</div>
+            <p>{{'hotel-cancellation.label-contact' | translate }}</p>
+            <div class="fw-bold">{{'hotel-cancellation.label-itinerary' | translate }}</div>
+            <div>{{bookingDetail.orderId}}</div>
+            <div class="d-flex justify-content-between pr-lg-5 mt-5">
+              <div>{{'hotel-cancellation.label-modify' | translate }}</div>
+              <div class="mx-3">{{'hotel-cancellation.label-cancel' | translate }} </div>
+              <div>{{'hotel-cancellation.label-invoice' | translate }} </div>
+            </div>
+          </div>
+          <div class="col-md-3 text-right d-flex flex-column justify-content-end">
+            <div style="color:#007864;" data-toggle="collapse" data-target="#collapse0">
+              {{'hotel-cancellation.label-view-details' | translate }} </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<app-flight-summary-skeleton *ngIf="isLoading"></app-flight-summary-skeleton>

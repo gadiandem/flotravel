@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card" style="width: 100%;">
+      <div class="card-header">
+        {{editUser? 'Edit' : 'Create'}} User
+      </div>
+      <div class="card-body">
+        <form [formGroup]="userForm">
+          <div class="row">
+            <div class="form-group col-md-4 col-6">
+              <label for="email">Email</label>
+              <input class="form-control" id="email" formControlName="email"
+                [ngClass]="{ 'is-invalid': formUserError && userForm.get('email').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="userForm.get('email').errors?.required">
+                  Please enter your email.
+                </span>
+                <span *ngIf="userForm.get('email').errors?.email">
+                  Please enter valid email.
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4 col-6">
+              <label for="email">Password</label>
+              <input class="form-control" id="password" type="password"
+                formControlName="password" autocomplete="false"
+                [ngClass]="{ 'is-invalid': formUserError && userForm.get('password').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="userForm.get('password').errors?.required">
+                  Please enter your password
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4 col-6">
+              <label for="mobile">Mobile</label>
+              <input class="form-control" id="mobile" formControlName="mobile"
+                [ngClass]="{ 'is-invalid': formUserError && userForm.get('mobile').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="userForm.get('mobile').errors?.required">
+                  Please enter your mobile
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4 col-6">
+              <label for="firstName">First Name</label>
+              <input class="form-control" id="firstName" formControlName="firstName"
+                [ngClass]="{ 'is-invalid': formUserError && userForm.get('firstName').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="userForm.get('firstName').errors?.required">
+                  Please enter your firstName
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4 col-6">
+              <label for="lastName">Last Name</label>
+              <input class="form-control" id="lastName" formControlName="lastName"
+                [ngClass]="{ 'is-invalid': formUserError && userForm.get('lastName').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="userForm.get('lastName').errors?.required">
+                  Please enter your lastName
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4 col-6">
+              <label for="userGroup">UserGroup</label>
+              <select class="form-control" id="userGroup" formControlName="userGroup"
+                [ngClass]="{ 'is-invalid': formUserError && userForm.get('userGroup').errors }">
+                <option *ngFor="let opt of userGroups" [value]="opt.id">{{opt.value}}</option>
+              </select>
+              <span class="invalid-feedback">
+                <span *ngIf="userForm.get('userGroup').errors?.required">
+                  Please select your userGroup
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="card">
+                <img class="card-img-top img-thumbnail" src="{{profilePreview.value || 'assets/no-image.png'}}"
+                  (error)="onImgError($event)" alt="">
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="form-group">
+                <label for="userProfile">Profile</label>
+                <input class="form-control" id="userProfile" formControlName="profileImg" #profilePreview
+                  [ngClass]="{ 'is-invalid': formUserError && userForm.get('profileImg').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('profileImg').errors?.required">
+                    Please fill photo profile.
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </form>
+        <button class="btn btn-primary mb-1 mr-1" (click)="submit()">Save</button>
+        <button class="btn btn-danger mb-1" (click)="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

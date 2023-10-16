@@ -1,0 +1,55 @@
+<div class="tab-pane fade py-3 m-3 m-md-0 pt-lg-4 active show">
+  <form [formGroup]="searchForm" (ngSubmit)="searchTour()">
+    <div class="form-group">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="icon fa fa-map-marker"></i><span class="d-none d-md-block">&nbsp;Going To</span>
+          </span>
+        </div>
+        <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$" formControlName="destination"
+          [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="select($event.item)"
+          class="form-control" placeholder="City to Travel"
+          [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+        <span class="invalid-feedback">
+          <span *ngIf="searchForm.get('destination').errors?.required">
+            Please enter your destination.
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <kendo-daterange class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="m-0">From</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="icon fa fa-calendar-check-o"></i>
+              </span>
+            </div>
+            <kendo-dateinput format="dd-MM-yyyy" style="width: 75%; font-size:20;" kendoDateRangeStartInput
+              [(value)]="startTime" placeholder="Check-in Date"></kendo-dateinput>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="m-0">To</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="icon fa fa-calendar-check-o"></i>
+              </span>
+            </div>
+            <kendo-dateinput format="dd-MM-yyyy" style="width: 75%;font-size:20;" kendoDateRangeEndInput
+              [(value)]="endTime" placeholder="Check-out Date">
+            </kendo-dateinput>
+          </div>
+        </div>
+      </div>
+    </kendo-daterange>
+    <input type="submit" name="submit" class="search-tour btn btn-danger" value="Find Extras" />
+  </form>
+</div>

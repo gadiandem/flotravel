@@ -1,0 +1,10 @@
+<div>
+  <tabset>
+    <tab heading="Hotel" [active]="value === 'Hotel'" (selectTab)="selectTab($event)">
+      <app-hotel-rule-list name="Hotel"></app-hotel-rule-list>
+    </tab>
+    <tab heading="Flight" [active]="value === 'Flight'" (selectTab)="selectTab($event)">
+      <app-flight-rule-list name="Flight"></app-flight-rule-list>
+    </tab>
+  </tabset>
+</div>

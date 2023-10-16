@@ -1,0 +1,41 @@
+<div *ngFor="let hotel of hotelList |  paginate: { itemsPerPage: 10, currentPage: p }">
+  <div class="row hotel-item py-3 mb-3">
+    <!-- <div class="row d-flex p-3"> -->
+    <div class="col-md-4">
+      <div class="hotel-img-item">
+        <img *ngIf="!hotel?.provider || hotel?.provider === hotelProvider.NUITEE" class="hotel-img" [errorImage]="defaultData" [defaultImage]="defaultData"
+             [lazyLoad]="hotel?.image?.baseUrl+ '/' + hotel?.image?.name" [useSrcset]="true" alt="{{hotel?.name}}"/>
+        <img *ngIf="(hotel?.provider && (hotel?.provider !== hotelProvider.NUITEE))" class="hotel-img" [errorImage]="defaultData" [defaultImage]="defaultData"
+             [lazyLoad]="hotel?.hotelPictureUrl" [useSrcset]="true" alt="{{hotel?.name}}"/>
+      </div>
+      <div class="pt-2 d-none d-md-block">{{hotel?.name}}</div>
+      <!-- </div> -->
+    </div>
+    <div class="col-md-8 pt-3 pt-md-0 ">
+      <div class="row">
+        <div class="col-7 col-md-8 hotel-description">
+          <h5 class="hotel-title">{{hotel?.name}}</h5>
+          <p style="font-size: 12px;"><i class="fa fa-map-marker"></i> {{hotel?.address}}
+          </p>
+          <div class="d-none d-md-block">
+            <div style="color:#666666;font-size: 14px;font-weight: bold;">{{hotel?.title || 'Save 25% For Bookings All Year'}}</div>
+            <p style="color:#666666;font-size: 11px;margin-bottom:10px;line-height: 15px;">
+              {{hotel?.hotelFeatures}}</p>
+          </div>
+         <!-- <div style="color:#007864; font-size: 11px; margin-bottom:10px;">{{'hotel-list.label-cancellation' |
+            translate }}</div> -->
+          <div style="color:#666666; font-size: 12px;"><b>{{hotel?.starRating}}/5</b>
+            {{'hotel-list.label-reviews' | translate }}
+          </div>
+        </div>
+        <div class="col-5 col-md-4 text-right hotel-session-price">
+          <span class="hotel-price mt-md-2">{{hotel?.minPrice + (flightMinPrice || 0) | currency:currency:'symbol':'.0-2'}}</span>
+          <div style="margin-bottom:15px">{{'hotel-list.label-for' | translate }} {{numberOfNight}} {{'hotel-list.label-night' | translate }}</div>
+          <button class="btn btn-danger" (click)="selectHotel(hotel)"
+            style="white-space: nowrap !important;">{{'hotel-list.button-book-now' | translate }}</button>
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
+  </div>
+</div>

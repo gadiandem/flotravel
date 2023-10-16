@@ -1,0 +1,62 @@
+<div class="shadow-box p-3 mt-3" *ngIf="productExist">
+  <div>
+  <h3 style="font-weight: 600;"> {{refundProtect?.pricedProduct?.productInformation?.productDisplay?.productname}} </h3>
+  <p style="font-weight: 400; font-size: 14px;" [innerHTML]="refundProtect?.pricedProduct?.productInformation?.productDisplay?.description"> </p>
+ </div>
+  <form [formGroup]="refundProtectForm">
+    <div  class="form-group row">
+      <div id="myAnswers" class="col-12">
+        <div id="chooseButton" class="fixtures select-answers pt-3">
+          <h6> {{'flight-add-on.refund-option' | translate }}</h6>
+          <div class="blue-bg p-3 chpage">
+            <div class="d-flex justify-content-between align-items-center pbox form-check">
+              <label style="font-size: 14px;" class="form-check-label m-0" for="redund_yes" *ngIf="refundProtect?.pricedProduct?.productInformation?.productDisplay?.highlight as highlight">
+                <input class="form-check-input" id="redund_yes" type="radio" value="YES" formControlName="refund">&nbsp;
+                {{refundProtect?.pricedProduct?.productInformation?.productDisplay?.optin}}
+                <!-- {{highlight?.highlightproduct + ', ' + highlight?.text || 'Yes, I need the Protection Plan (Travellers aged 66 years old and above are not covered)'}} -->
+              </label>
+              <div class="product-price">
+                <p class="m-0"><span class="fw-bold priceb">{{currency || refundProtect?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.currency}}&nbsp;
+                  {{refundProtect?.pricedProduct?.customerPriceBreakdowns?.customerPriceBreakdowns[0]?.baseAmount?.amount || 0}}</span></p>
+                <p class="m-0"><span style="display: inline;">{{'flight-add-on.label-per-person' | translate }}</span></p>
+              </div>
+            </div>
+            <div class="solicitation">
+              <ul class="m-0 p-0 flex-md-wrap list-unstyled mt-2" *ngIf="refundProtect?.pricedProduct?.productInformation?.productDisplay?.details as detail">
+                <!-- <li><i class="fas fa-check"></i> {{'flight-add-on.refund-point-one' | translate }}</li>
+                <li><i class="fas fa-check"></i> {{'flight-add-on.refund-point-two' | translate }}</li>
+                <li><i class="fas fa-check"></i> {{'flight-add-on.refund-point-three' | translate }}</li>
+                <li><i class="fas fa-check"></i> {{'flight-add-on.refund-point-four' | translate }}</li> -->
+                <li *ngIf="detail?.item1" ><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item1"></span></li>
+                <li *ngIf="detail?.item2"><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item2"></span></li>
+                <li *ngIf="detail?.item3"><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item3"></span></li>
+                <li *ngIf="detail?.item4"><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item4"></span></li>
+                <li *ngIf="detail?.item5"><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item5"></span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="my-2" style="font-weight: 700; padding-left: 10px">
+            <a (click)="openTermsAndConditionComponent()" style="color: #007bff; text-decoration: none;background-color: transparent; cursor: pointer;"
+             class="alert-link"> {{'flight-add-on.label-terms' | translate }}</a>
+          </div>
+          <div class="bg-light p-3 mt-3">
+            <label style="font-size: 14px; " class="form-check-label m-0" for="redund_no">
+              <input class="form-check-input mx-1" id="redund_no" type="radio" value="NO" formControlName="refund" [checked]="true"> &nbsp;
+              &nbsp; &nbsp; &nbsp;{{refundProtect?.pricedProduct?.productInformation?.productDisplay?.optout}}
+              <!-- &nbsp; &nbsp; &nbsp; No, I don't need the Protection Plan
+              (Travellers aged 66 years old and above are not covered) -->
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+<div class="shadow-box p-3 mt-3"  *ngIf="!fetching && !fetchFailed && !productExist" >
+  <div *ngIf="!productExist">
+    <alert type="danger" ngPreserveWhitespaces>
+      {{'flight-add-on.refund-unavailable' | translate }}
+    </alert>
+  </div>
+</div>
+</div>

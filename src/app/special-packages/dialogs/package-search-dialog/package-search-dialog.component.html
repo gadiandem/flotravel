@@ -1,0 +1,58 @@
+<div class="modal-body">
+    <form [formGroup]="searchForm" (ngSubmit)="searchPackages()">
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="icon fa fa-map-marker"></i><span class="d-none d-md-block">&nbsp;Where To?</span>
+              </span>
+            </div>
+            <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+              formControlName="destination" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit" type="search"
+              (typeaheadOnSelect)="select($event.item)" class="form-control" placeholder="City or Station"
+              [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="searchForm.get('destination').errors?.required">
+                Please enter your City or Station.
+              </span>
+              <span *ngIf="searchForm.get('destination').errors?.minlength">
+                City or Station must be longer than 3 characters.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-5">
+            <div class="form-group">
+              <!-- <label class="m-0">When</label> -->
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i>&nbsp;When?</span>
+                </div>
+                <input type="text" class="form-control fromdate" formControlName="startDate" bsDatepicker
+                  [bsConfig]="bsConfig" [minDate]="minDate"
+                  [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('startDate').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="searchForm.get('startDate').errors?.required">
+                    Please Select Time.
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <button type="button" class="btn btn-outline-info  ml-2" [ngClass]="(minDay < 1) ? 'active' : ''" (click)="selectDayCount(0, 1)">&lt;1Day</button>
+            <button type="button" class="btn btn-outline-info  ml-2" [ngClass]="(minDay <= 7 && minDay >= 1) ? 'active' : ''" (click)="selectDayCount(1, 7)">1-7 Days</button>
+            <button type="button" class="btn btn-outline-info  ml-2" [ngClass]="(minDay <= 14 && minDay >=8) ? 'active' : ''" (click)="selectDayCount(8, 14)">8-14 Days</button>
+            <button type="button" class="btn btn-outline-info  ml-2" [ngClass]="(minDay <= 21 && minDay >= 15) ? 'active' : ''" (click)="selectDayCount(15,21)">15-21 Days</button>
+            <button type="button" class="btn btn-outline-info  ml-2" [ngClass]="(minDay >= 22) ? 'active' : ''" (click)="selectDayCount(22, 100)">22+ Days</button>
+          </div>
+        </div>
+      </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Close</button>
+    <button type="button" class="btn btn-danger" (click)="submit()" [disabled]="searchForm.invalid">Find Package</button>
+  </div>

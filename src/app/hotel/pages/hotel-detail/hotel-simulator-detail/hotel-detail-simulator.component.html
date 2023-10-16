@@ -1,0 +1,425 @@
+<div class="container">
+  <div *ngIf="fetchFailed" class="mb-5" style="height: 500px; width: 100%;">
+    <alert type="danger" ngPreserveWhitespaces>
+      {{'hotel-detail.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+    </alert>
+    <button type="button" class="btn btn-danger" (click)="fetchHotelDetail()">{{'hotel-detail.label-try-again' | translate }}</button>
+  </div>
+  <div *ngIf="!fetchFailed" class="row hotel-details">
+    <div class="col-md-10 mt-md-4">
+      <div class="shadow-box p-3">
+        <div class="row">
+          <div class="col-md-9">
+            <img class="img-fluid d-block d-md-none mb-4"
+                 [src]="selectedHotel?.hotelPictureUrl" [alt]="selectedHotel?.name">
+            <h2 class="title">{{selectedHotel?.name}}</h2>
+            <div class="address">
+              <span><i class="fa fa-map-marker"></i> &nbsp;{{selectedHotel?.address}}</span><br>
+              <span style="color:#ffda23">
+                      <i *ngFor="let s of  [1, 2, 3, 4]" class="fa fa-star"></i>`
+                    </span> &nbsp;{{starRating}}{{'hotel-detail.label-star-rating' | translate }}
+            </div>
+          </div>
+          <div class="col-md-3 mt-3 mt-md-0">
+            <p class="price"><small>{{'hotel-detail.label-price-from' | translate }}</small> <span
+              style="font-size:22px;">{{minPricePerNight | currency:currency:'symbol':'.0-2'}}</span>{{'hotel-detail.label-per-night' | translate }}
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-8 d-none d-md-block">
+            <div class="col-12">
+              <ngx-gallery *ngIf="galleryOptions && galleryImages?.length" [options]="galleryOptions"
+                           [images]="galleryImages"></ngx-gallery>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mapType' [zoom]='12'
+                       mapTypeControl="true">
+                <agm-marker [latitude]="marker.lat" [longitude]="marker.lng" [title]="marker.label"
+                            [markerDraggable]="marker.draggable">
+                  <agm-info-window>
+                    <strong>{{marker.label}}</strong>
+                  </agm-info-window>
+                </agm-marker>
+              </agm-map>
+              <div style="font-size:16px;margin-top:5px; color: #666;"><i class="fa fa-map-marker"></i>
+                {{selectedHotel?.name}}</div>
+            </div>
+            <div class="col-12 mb-4">
+              <h4 class="heading">{{'hotel-detail.label-hotel-facilities' | translate }}</h4>
+              <ul class="hotel-facilities mb-0" *ngIf="hotelDetailRes">
+                <li *ngFor="let item of hotelDetailRes?.hotelDetailSimulator?.hotelInfo?.fullFacilityDescriptions">{{item?.name}}</li>
+              </ul>
+              <a pageScroll href="#amenities"><strong style="color: rgb(33, 37, 41)">{{'hotel-detail.label-amenities' | translate }}</strong></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section *ngIf="showFlight" class="mt-3">
+        <div class="flights-list">
+          <div class="flight-item shadow-box1 blue-bg mb-3">
+            <div class="row d-flex p-3">
+              <div class="col-md-6">
+                <h6 class="text-danger mb-0">{{'flight-summary.label-trip' | translate }}</h6>
+                <small>{{'flight-summary.label-rules' | translate }}</small>
+              </div>
+              <div class="col-md-6">
+                <small class="font-weight-light" style="color: #444; padding-top: 8px; float: right; font-size: 16px;font-weight:300">
+                  {{'flight-summary.label-trip-cost' | translate }}
+                  <span style="font-weight:400">
+                  {{totalTripPriceFlight | currency: currency :'symbol':'.0-2'}}
+                </span>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  departure flight      -->
+        <div class="flights-list">
+          <div class="flight-item mb-3">
+            <div class="d-flex p-3 pb-0">
+              <h6 class="text-danger d-flex w-100">Your selected departure
+                <small class="font-weight-light ml-auto" style="color: #444; padding-top: 3px;" *ngIf="flightMin?.provider !== 4">
+                  {{flightMin?.depDateTime?.split(' ')[0] | date:'EEE dd, MMM'}} | <a class="text-danger"
+                                                                                      [routerLink]="">{{'flight-departure-selected.label-change' | translate }}</a>
+                </small>
+              </h6>
+            </div>
+            <div class="row">
+              <!-- Module flight ET, hahnAir, aero -->
+              <div  class="col-md-9 col-7" *ngIf="flightMin?.provider !== 4">
+                <div *ngFor="let segment of flightMin?.flightSegments;let i= index;" class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <h5 class="flight-title">{{segment?.depDateTime | date: 'h:mm'}} -
+                        {{getArrivalTime(flightMin) | date: 'h:mm'}}</h5>
+                      <p *ngIf="flightMin?.provider !== 2" class="title">
+                        <img [src]="'http://pics.avs.io/300/300/' + flightMin?.flightSegments[0]?.airline.split('-')[0] + '.png'" style="width:30px;">
+                        {{flightMin?.flightSegments[0]?.airline?.split('-')[1]}}
+                      </p>
+                      <p *ngIf="flightMin?.provider === 2" class="title">
+                        <img [src]="'https://storage.aerocrs.com/375/system/LogoAPI.png'" style="width:30px;">
+                        {{'API Airways'}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{totalDuration(flightMin)}}
+                      <span *ngIf="flightMin?.flightSegments.length === 1">{{'flight-departure-selected.label-direct-flight' | translate}}</span>
+                      <span *ngIf="flightMin?.flightSegments.length === 2">{{'flight-departure-selected.label-one-stop' | translate }}</span>
+                      <span *ngIf="flightMin?.flightSegments.length === 3">{{'flight-departure-selected.label-two-stop' | translate }}</span>
+                    </div>
+                    <p class="text-muted">{{segment?.depAirportCode}} -
+                      {{segment?.arrAirportCode}}</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Module flight simulator -->
+              <div *ngIf="flightMin?.provider === 4" class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-1">
+                      <h5 class="flight-title">{{flightMin?.flightSegments[0]?.depDateTime | date: 'h:mm a'}} -
+                        {{getArrivalTime(flightMin) | date: 'h:mm a'}}</h5>
+                      <p class="title">
+                        <img [src]="'/assets/airlogo.png'" style="width:20px;">
+                        {{flightMin?.flightSegments[0]?.airline}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-1">
+                    <div class="text-muted" style="font-weight: bold;">{{'Direct'}}
+                    </div>
+                    <p class="text-muted">{{flightMin?.depAirportCode}} -
+                      {{getArrivalCode(flightMin)}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-5 px-3 pr-4">
+                <div class="text-right pt-3" style="text-align: right; padding-right: 10px;" *ngFor="let segment of flightMin?.flightSegments;">
+                  <span
+                    class="flight-price">{{flightMin?.offerItemList[0]?.totalAmount / numberOfFlight | currency: currency :'symbol':'.0-2'}}
+                  </span>
+                  <br>
+                  <p style="font-size: 12px;margin-bottom:22px;">{{'flight-departure-selected.label-taxes' | translate }}</p>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="px-3 pb-3">
+                  {{flightMin?.offerItemList[0].className}}
+                  {{flightMin?.offerItemList[0].serviceNames}}
+                </div>
+              </div>
+              <div class="col-md-12 collapsed" (click)="isCollapsed = !isCollapsed">
+                <p class="px-3 py-2 m-0" style="color:#007864; cursor:pointer; border-top:1px solid #ccc; ">
+                  <span>{{'flight-departure-selected.label-more-info' | translate }}</span>
+                  <span class="float-right">{{'flight-departure-selected.label-details' | translate }}</span>
+                </p>
+              </div>
+              <div id="collapse0" class="col-12 collapse" [collapse]="isCollapsed" [isAnimated]="true">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div *ngFor="let segment of flightMin.flightSegments; let i = index" class="m-3 pl-3" style="border-left:1px solid #eee072;">
+                      <div class="flight-cart-start"></div>
+                      <p><strong>{{'flight-details.label-from' | translate }}</strong> {{segment?.depAirportCode}}:&emsp;{{segment?.depAirportName}}<br>
+                        <strong>{{'flight-details.label-to' | translate }}</strong> {{segment?.arrAirportCode}}:&emsp;{{segment?.arrAirportName}}</p>
+                      <p>{{segment?.airline.split('-')[1]}}<br>
+                        {{segment?.aircraft}} {{'flight-details.label-aircraft' | translate }} {{segment?.flightNumber}} |
+                        {{'flight-details.label-breakfast' | translate }}<br>
+                        {{segment?.marketingName}}<br>
+                        {{segment?.duration}}</p>
+                      <p><strong>{{'flight-details.label-distance' | translate }}</strong> {{segment?.distance}} {{segment?.uom}}</p>
+                      <div class="flight-cart-end"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-1" *ngIf="flightMin?.offerItemList[0]?.weightAllowance">
+                      <p><strong>{{'flight-details.applicable-party' | translate}}</strong><span>&nbsp;{{flightMin?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                        {{'flight-details.maximum-weight' | translate}}&nbsp;{{flightMin?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flightMin?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                        <span>{{flightMin.flightSegments[0].airline.split('-')[1]}}</span></p>
+                    </div>
+                    <div class="p-1" *ngIf="flightMin?.offerItemList[0]?.pieceAllowances">
+                      <p><strong>{{'flight-details.applicable-party' | translate}}</strong><span>&nbsp;{{flightMin?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                      <p><strong>{{'flight-details.allowed-bags' | translate}}</strong><span>&nbsp;{{flightMin?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                      <p><strong>{{'flight-details.bag-type' | translate}}</strong><span>&nbsp;{{flightMin?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--   Return flight  -->
+        <div class="flights-list">
+          <div class="flight-item mb-3">
+            <div class="d-flex p-3 pb-0">
+              <h6 class="text-danger d-flex w-100">Your selected return
+                <small class="font-weight-light ml-auto" style="color: #444; padding-top: 3px;" *ngIf="flightMinReturn?.provider !== 4">
+                  {{flightMinReturn?.depDateTime?.split(' ')[0] | date:'EEE dd, MMM'}} | <a class="text-danger"
+                                                                                            [routerLink]="">{{'flight-departure-selected.label-change' | translate }}</a>
+                </small>
+              </h6>
+            </div>
+            <div class="row">
+              <!-- Module flight ET, hahnAir, aero -->
+              <div  class="col-md-9 col-7" *ngIf="flightMinReturn?.provider !== 4">
+                <div *ngFor="let segment of flightMinReturn?.flightSegments;let i= index;" class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <h5 class="flight-title">{{segment?.depDateTime | date: 'h:mm'}} -
+                        {{getArrivalTime(flightMinReturn) | date: 'h:mm'}}</h5>
+                      <p *ngIf="flightMinReturn?.provider !== 2" class="title">
+                        <img [src]="'http://pics.avs.io/300/300/' + flightMinReturn?.flightSegments[0]?.airline.split('-')[0] + '.png'" style="width:30px;">
+                        {{flightMinReturn?.flightSegments[0]?.airline?.split('-')[1]}}
+                      </p>
+                      <p *ngIf="flightMinReturn?.provider === 2" class="title">
+                        <img [src]="'https://storage.aerocrs.com/375/system/LogoAPI.png'" style="width:30px;">
+                        {{'API Airways'}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{totalDuration(flightMin)}}
+                      <span *ngIf="flightMinReturn?.flightSegments.length === 1">{{'flight-departure-selected.label-direct-flight' | translate}}</span>
+                      <span *ngIf="flightMinReturn?.flightSegments.length === 2">{{'flight-departure-selected.label-one-stop' | translate }}</span>
+                      <span *ngIf="flightMinReturn?.flightSegments.length === 3">{{'flight-departure-selected.label-two-stop' | translate }}</span>
+                    </div>
+                    <p class="text-muted">{{segment?.depAirportCode}} -
+                      {{segment?.arrAirportCode}}</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Module flight simulator -->
+              <div *ngIf="flightMinReturn?.provider === 4" class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-1">
+                      <h5 class="flight-title">{{flightMin?.flightSegments[0]?.depDateTime | date: 'h:mm a'}} -
+                        {{getArrivalTime(flightMin) | date: 'h:mm a'}}</h5>
+                      <p class="title">
+                        <img [src]="'/assets/airlogo.png'" style="width:20px;">
+                        {{flightMin?.flightSegments[0]?.airline}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-1">
+                    <div class="text-muted" style="font-weight: bold;">{{'Direct'}}
+                    </div>
+                    <p class="text-muted">{{flightMin?.depAirportCode}} -
+                      {{getArrivalCode(flightMin)}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-5 px-3 pr-4">
+                <div class="text-right pt-3" style="text-align: right; padding-right: 10px;" *ngFor="let segment of flightMinReturn?.flightSegments;">
+                  <span
+                    class="flight-price">{{flightMinReturn?.offerItemList[0]?.totalAmount / numberOfFlightReturn | currency: currency :'symbol':'.0-2'}}
+                  </span>
+                  <br>
+                  <p style="font-size: 12px;margin-bottom:22px;">{{'flight-departure-selected.label-taxes' | translate }}</p>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="px-3 pb-3">
+                  {{flightMinReturn?.offerItemList[0].className}}
+                  {{flightMinReturn?.offerItemList[0].serviceNames}}
+                </div>
+              </div>
+              <div class="col-md-12 collapsed" (click)="isCollapsedReturn = !isCollapsedReturn">
+                <p class="px-3 py-2 m-0" style="color:#007864; cursor:pointer; border-top:1px solid #ccc; ">
+                  <span>{{'flight-departure-selected.label-more-info' | translate }}</span>
+                  <span class="float-right">{{'flight-departure-selected.label-details' | translate }}</span>
+                </p>
+              </div>
+              <div id="collapseReturn0" class="col-12 collapse" [collapse]="isCollapsedReturn" [isAnimated]="true">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div *ngFor="let segment of flightMinReturn.flightSegments; let i = index" class="m-3 pl-3" style="border-left:1px solid #eee072;">
+                      <div class="flight-cart-start"></div>
+                      <p><strong>{{'flight-details.label-from' | translate }}</strong> {{segment?.depAirportCode}}:&emsp;{{segment?.depAirportName}}<br>
+                        <strong>{{'flight-details.label-to' | translate }}</strong> {{segment?.arrAirportCode}}:&emsp;{{segment?.arrAirportName}}</p>
+                      <p>{{segment?.airline.split('-')[1]}}<br>
+                        {{segment?.aircraft}} {{'flight-details.label-aircraft' | translate }} {{segment?.flightNumber}} |
+                        {{'flight-details.label-breakfast' | translate }}<br>
+                        {{segment?.marketingName}}<br>
+                        {{segment?.duration}}</p>
+                      <p><strong>{{'flight-details.label-distance' | translate }}</strong> {{segment?.distance}} {{segment?.uom}}</p>
+                      <div class="flight-cart-end"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-1" *ngIf="flightMinReturn?.offerItemList[0]?.weightAllowance">
+                      <p><strong>{{'flight-details.applicable-party' | translate}}</strong><span>&nbsp;{{flightMinReturn?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                        {{'flight-details.maximum-weight' | translate}}&nbsp;{{flightMinReturn?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flightMinReturn?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                        <span>{{flightMinReturn.flightSegments[0].airline.split('-')[1]}}</span></p>
+                    </div>
+                    <div class="p-1" *ngIf="flightMinReturn?.offerItemList[0]?.pieceAllowances">
+                      <p><strong>{{'flight-details.applicable-party' | translate}}</strong><span>&nbsp;{{flightMinReturn?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                      <p><strong>{{'flight-details.allowed-bags' | translate}}</strong><span>&nbsp;{{flightMinReturn?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                      <p><strong>{{'flight-details.bag-type' | translate}}</strong><span>&nbsp;{{flightMinReturn?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="mt-3">
+        <h4 class="title">{{'hotel-detail.label-choose-room' | translate }}</h4>
+        <div class="d-block d-md-none shadow-box p-2 mb-3">
+          <div class="font-weight-bold mt-1 text-danger"></div>
+          <div class="row">
+            <div class="col-6">
+              <div class="font-weight-bold">{{'hotel-detail.label-check-in' | translate }}</div>
+              {{hotelShoppingReq?.checkinDate | date}}
+            </div>
+            <div class="col-6">
+              <div class="font-weight-bold">{{'hotel-detail.label-check-out' | translate }}</div>
+              {{hotelShoppingReq?.checkoutDate | date}}
+            </div>
+          </div>
+          <div pageScroll href="#booking-search" class="btn btn-default btn-sm mb-2"
+               style="cursor: pointer;border: 1px solid;">
+            {{'hotel-detail.label-change' | translate }}
+          </div>
+        </div>
+        <div class="d-none d-md-block">
+          <div class="row room-search mb-4">
+            <div class="col-lg-3 col-6">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <i class="icon fa fa-calendar-check-o text-default"
+                   style="font-size: 20px;position: absolute;top: 17px;"></i>
+                <label class="ml-4 mb-0 font-weight-light">{{'hotel-detail.label-check-in' | translate }}</label><br>
+                <div class="ml-4 font-weight-bold">{{hotelShoppingReq?.checkinDate | date}}</div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-6">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <i class="icon fa fa-calendar-check-o text-default"
+                   style="font-size: 20px;position: absolute;top: 17px;"></i>
+                <label class="ml-4 mb-0 font-weight-light">{{'hotel-detail.label-check-out' | translate }}</label><br>
+                <div class="ml-4 font-weight-bold">{{hotelShoppingReq?.checkoutDate | date}}</div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-12">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <i class="icon fa fa-user text-default" style="font-size: 20px;position: absolute;top: 17px;"></i>
+                <label class="ml-4 mb-0 font-weight-light">{{'hotel-detail.label-guests' | translate }}</label><br>
+                <div class="ml-4 font-weight-bold">{{travellerCount}} {{'hotel-detail.label-travellers' | translate }}, {{roomCount}} {{'hotel-detail.label-room' | translate }}</div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-12">
+              <button class="btn btn-danger btn-block p-3 h-100" type="button" name="">{{'hotel-detail.label-search' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="rooms-list">
+        <div *ngFor="let room of hotelDetailRes?.hotelDetailSimulator?.hotelRoomList">
+          <a class="room-item d-block mb-3" (click)="goToSummary(room)">
+            <div class="row">
+              <div class="col-md-4 d-none d-md-block">
+                <div class="hotel-img h-100" [errorImage]="defaultHotelImage" [defaultImage]="defaultHotelImage"
+                     [lazyLoad]="selectedHotel?.hotelPictureUrl" [useSrcset]="true">
+                </div>
+              </div>
+              <div class="col-md-4 d-block d-md-none">
+                <img [src]="selectedHotel?.hotelPictureUrl"
+                     class="img-fluid" alt="">
+              </div>
+              <div class="col-md-8 room-info py-3">
+                <div class="row px-md-0 px-3">
+                  <div class="col-7">
+                    <h5 class="room-title">{{room?.roomType}}, {{room.boardDescription}}</h5>
+                    <small class="hidden-xs"><i class="fa fa-users"></i> {{'hotel-detail.label-sleeps' | translate }} {{travellerCount}}<br><i
+                      class="fa fa-bed"></i>{{hotelShoppingReq?.rooms?.length}} {{'hotel-detail.label-room' | translate }}<span
+                      *ngIf="hotelShoppingReq?.rooms?.length > 1">s</span></small><br><br>
+                    <div style="color:#007864;">{{'hotel-detail.free-cancellation' | translate }} <br><small
+                      class="text-muted">{{'hotel-detail.label-before' | translate }} {{hotelShoppingReq.checkinDate | date}}</small></div>
+                  </div>
+                  <div class="col-5 pr-3">
+                    <div class="text-right pr-1 px-md-3">
+                      <del class="room-price-cancel">
+                        {{room?.pricePerNight | currency:currency:'symbol':'.0-2'}}
+                      </del> &nbsp;
+                      <span class="room-price">{{(+room?.pricePerNight * (1 - (+room.discount)/100) * this.numberOfRoom) | currency:currency:'symbol':'.0-2'}}</span>
+                      <div>{{'hotel-detail.label-one-night' | translate }}</div>
+                      <button class="btn btn-danger mt-2" (click)="goToSummary(room)">{{'hotel-detail.button-reserve' | translate }}</button>
+                      <div style="font-size:10px;">{{'hotel-detail.label-2-minutes' | translate }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-overview' | translate }} </h4>
+        <p>{{selectedHotel?.hotelFeatures}}</p>
+      </div>
+      <div class="mt-3 p-3 shadow-box" id="amenities">
+        <h4 class="title">{{'package-hotel.label-full-facilities-description' | translate }} </h4>
+        <ul>
+          <li *ngFor="let facility of hotelDetailRes?.hotelDetailSimulator?.hotelInfo?.fullFacilityDescriptions">{{facility?.name}}</li>
+        </ul>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-rating' | translate }} </h4>
+        <p>{{selectedHotel?.starRating || 5}}</p>
+      </div>
+      <div class="mt-3 mb-5 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-remarks' | translate }} </h4>
+        <p>{{hotelDetailRes?.hotelDetailSimulator?.hotelInfo?.remark || 'There is no hotel remark'}}</p>
+      </div>
+
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <img class="sticky mt-5 w-100" style="height: auto; margin-top: 25px !important;top: 65px;"
+           src="assets/ads.jpg" alt="">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,300 @@
+<div class="container-fluid my-5 pt-5 pb-3 shadow-box d-md-block p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0"
+             placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <app-special-package-list-search-box [packageShoppingReq]="searchPackageList" [roomGuests]="roomGuests"
+                                         [travellerCount]="travellerCount" [roomCount]="roomCount"
+                                         (searchRequest)="shoppingPackage($event)"></app-special-package-list-search-box>
+  </div>
+</div>
+<div class="container" *ngIf="!fetching">
+    <div class="row mt-4">
+      <div class="col-12 d-block d-md-none">
+        <div class="font-weight-bold mt-3">{{searchPackageList?.destination}}</div>
+        <div class="my-2">{{searchPackageList?.date | date: 'mediumDate'}}</div>
+        <div class="btn btn-default" style="cursor: pointer;border: 1px solid;" (click)="openModalWithComponent()">
+          CHANGE
+        </div>
+        <div class="font-weight-bold my-4">
+          <span class="sort-filter">SORT & FILTER</span>
+        </div>
+      </div>
+      <div class="col-8 offset-2">
+        <div class="shadow-box1 blue-bg mb-3">
+          <h5 class="text-danger mx-3 pt-3 mb-0">
+            Package
+            <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+              <a class="text-danger" routerLink="/packages/list">Change</a>
+            </small>
+          </h5>
+          <div class="row">
+            <div class="col-md-9 col-7">
+              <div class="row">
+                <div class="col-md-7 col-12">
+                  <div class="px-3 pt-3">
+                    <p class="title"><img [src]="selectedPackage?.hotelImage"
+                                          style="width:50px;"> {{selectedPackage?.name}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                  <div class="text-muted" style="font-weight: bold;">{{selectedPackage?.dayCount}}
+                    day(s), {{selectedPackage?.dayCount - 1}} night(s)
+                  </div>
+                  <p class="text-muted">{{selectedPackage?.cityName}}, {{selectedPackage?.regionName}}</p>
+                </div>
+              </div>
+              <div class="col-12">
+                <h5 class="room-title">
+                      <span>
+                        {{selectedRoom?.roomType}}
+                      </span></h5>
+              </div>
+              <div class="px-3 pb-3">
+                {{selectedRoom?.roomDescription}}
+              </div>
+            </div>
+            <div class="col-md-3 col-5 p-3 pr-4">
+              <div class="text-right">
+                <span
+                  class="flight-price">{{selectedPackage?.price | currency:currency:'symbol':'.0-2'}}</span><br>
+                <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="selectedSupplements.length > 0">
+          <div class="shadow-box1 blue-bg mb-3" *ngFor="let selectedSupplement of selectedSupplements; let i = index">
+            <h5 class="text-danger mx-3 pt-3 mb-0">
+              Supplement
+              <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+                <a class="text-danger" (click)="removeSupplement(i)">Remove</a>
+              </small>
+            </h5>
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <p class="title">{{selectedSupplement?.name}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{selectedSupplement?.shortDescription}}</div>
+                  </div>
+                </div>
+                <div class="px-3 pb-3">
+                  {{selectedSupplement?.description}}
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right">
+                  <span
+                    class="flight-price">{{+selectedSupplement?.price| currency:currency:'symbol':'.0-2'}}</span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="selectedTours.length > 0">
+          <div class="shadow-box1 blue-bg mb-3" *ngFor="let selectedTour of selectedTours; let i = index">
+            <h5 class="text-danger mx-3 pt-3 mb-0">
+              Tour
+              <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+                <a class="text-danger" (click)="removeTour(i)">Remove</a>
+              </small>
+            </h5>
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <p class="title">{{selectedTour?.name}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{selectedTour?.note}}</div>
+                  </div>
+                </div>
+                <div class="px-3 pb-3">
+                  {{selectedTour?.description}}
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right">
+                  <span
+                    class="flight-price">{{+selectedTour?.price| currency:currency:'symbol':'.0-2'}}</span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="selectedTransfers.length > 0">
+          <div class="shadow-box1 blue-bg mb-3" *ngFor="let selectedTransfer of selectedTransfers; let i = index">
+            <h5 class="text-danger mx-3 pt-3 mb-0">
+              Transfer
+              <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+                <a class="text-danger" (click)="removeTransfer(i)">Remove</a>
+              </small>
+            </h5>
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <p class="title">{{selectedTransfer?.transferType}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{selectedTransfer?.note}}</div>
+                  </div>
+                </div>
+                <div class="px-3 pb-3">
+                  Arrival: {{(selectedTransfer?.arrival) ? 'Yes' : 'No'}} <br/>
+                  Departure: {{(selectedTransfer?.departure) ? 'Yes' : 'No'}}
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right">
+                  <span
+                    class="flight-price">{{selectedTransfer?.amount| currency:currency:'symbol':'.0-2'}}</span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-danger px-5 btn-lg mb-4" (click)="continueBooking()">Check Out</button>
+        <div>
+<!--          <div *ngIf="fetching" class="text-center my-4">-->
+<!--            <div class="spinner-border text-primary"></div>-->
+<!--            <span ngPreserveWhitespaces>&emsp;Loading...</span>-->
+<!--          </div>-->
+          <div *ngIf="fetchFailed" class="my-4">
+            <alert type="danger" ngPreserveWhitespaces>
+              There is some erros.&emsp;<strong>{{errorMes}}</strong>
+            </alert>
+            <button type="button" class="btn btn-danger" (click)="fetchOptional()">Try Again</button>
+          </div>
+        </div>
+        <div *ngIf="!fetchFailed">
+          <div class="supplement-list" *ngIf="supplementList.length > 0">
+            <h1 class="supplement-title mb-3" style="font-size:26px;">Choose Supplement</h1>
+            <div class="flight-item mb-3" *ngFor="let supplement of supplementList; let i = index;">
+              <div class="row">
+                <div class="col-md-9 col-7">
+                  <div class="row">
+                    <div class="col-md-7 col-12">
+                      <div class="px-3 pt-3">
+                        <p class="title">{{supplement?.name}}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                      <div class="text-muted" style="font-weight: bold;">{{supplement?.shortDescription}}</div>
+                    </div>
+                  </div>
+                  <div class="px-3 pb-3">
+                    {{supplement?.description}}
+                  </div>
+                </div>
+                <div class="col-md-3 col-5 p-3 pr-4">
+                  <div class="text-right">
+                      <span
+                        class="flight-price">{{+supplement?.price | currency: currency :'symbol':'.0-2'}}</span><br>
+                    <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                    <button class="btn btn-success" (click)="addSupplement(i)">Add</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tour-list" *ngIf="tourList.length > 0">
+            <h1 class="flight-title mb-3" style="font-size:26px;">Choose Tour</h1>
+            <div class="flight-item mb-3" *ngFor="let tour of tourList; let i = index;">
+              <div class="row">
+                <div class="col-md-9 col-7">
+                  <div class="row">
+                    <div class="col-md-7 col-12">
+                      <div class="px-3 pt-3">
+                        <p class="title">{{tour?.name}}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                      <div class="text-muted" style="font-weight: bold;">{{tour?.note}}</div>
+                    </div>
+                  </div>
+                  <div class="px-3 pb-3">
+                    {{tour?.description | truncatetext: 100}}
+                  </div>
+                </div>
+                <div class="col-md-3 col-5 p-3 pr-4">
+                  <div class="text-right">
+                      <span
+                        class="flight-price">{{+tour?.price | currency: currency :'symbol':'.0-2'}}</span><br>
+                    <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                    <button class="btn btn-success" (click)="addTour(i)">Add</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="transfer-list" *ngIf="transferList.length > 0">
+            <h1 class="flight-title mb-3" style="font-size:26px;">Choose Transfer</h1>
+            <div class="flight-item mb-3" *ngFor="let transfer of transferList; let i = index;">
+              <div class="row">
+                <div class="col-md-9 col-7">
+                  <div class="row">
+                    <div class="col-md-7 col-12">
+                      <div class="px-3 pt-3">
+                        <p class="title">{{transfer?.transferType}}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                      <div class="text-muted" style="font-weight: bold;">{{transfer?.note}}</div>
+                    </div>
+                  </div>
+                  <div class="px-3 pb-3">
+                    Arrival: {{(transfer?.arrival) ? 'Yes' : 'No'}} <br/>
+                    Departure: {{(transfer?.departure) ? 'Yes' : 'No'}}
+                  </div>
+                </div>
+                <div class="col-md-3 col-5 p-3 pr-4">
+                  <div class="text-right">
+                      <span
+                        class="flight-price">{{transfer?.amount | currency: currency :'symbol':'.0-2'}}</span><br>
+                    <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                    <button class="btn btn-success" (click)="addTransfer(i)">Add</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="supplementList.length === 0 && tourList.length === 0 && transferList.length === 0">
+            <alert type="danger" ngPreserveWhitespaces>
+              There is no optional for this package
+            </alert>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<app-special-package-summary-skeleton  *ngIf="fetching" ></app-special-package-summary-skeleton>

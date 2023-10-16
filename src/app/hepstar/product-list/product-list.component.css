@@ -1,0 +1,12 @@
+.hotel-img {
+  float: left;
+  width: 100%;
+  height: auto;
+  background-size: cover;
+  background-position: center center;
+}
+
+.hotel-img-item {
+  overflow: hidden;
+  height: 180px;
+}

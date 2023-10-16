@@ -1,0 +1,53 @@
+<main-header></main-header>
+<div style="background: #f0f2f6; margin-top: 100px;">
+   <div class="container mt-5" style="min-height: 500px">
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12 mb-2 pl-0">
+            <h3 class="heading">{{'admin-agency-management-edit.title-flight-agent' | translate }}</h3>
+          </div>
+          <div class="col-12 mb-2 pl-0">
+            <p class="heading">{{'admin-agency-management-edit.label-agency-name' | translate }}  {{ flightAgentSetting?.agentName}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <form [formGroup]="agentSettingForm">
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" value="1" id="hahnAir" formControlName="hahnAir" [attr.disabled]="!hahnAirEnable ? true : null">
+              <label class="custom-control-label pt-1" for="hahnAir">{{'admin-agency-management-edit.title-hahnair' |
+                translate }}</label>
+            </div>
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" value="2" id="aero" formControlName="aero" [attr.disabled]="!aeroEnable ? true : null">
+              <label class="custom-control-label pt-1" for="aero">{{'admin-agency-management-edit.title-aero' | translate
+                }}</label>
+            </div>
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" value="3" id="et" formControlName="et" [attr.disabled]="!etEnable ? true : null">
+              <label class="custom-control-label pt-1" for="et">{{'admin-agency-management-edit.title-et' | translate
+                }}</label>
+            </div>
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" value="5" id="qr" formControlName="qr" [attr.disabled]="!qrEnable ? true : null">
+              <label class="custom-control-label pt-1" for="qr">QR</label>
+            </div>
+            <div class="custom-control custom-checkbox row">
+              <input type="checkbox" class="custom-control-input" value="4" id="floAir" formControlName="floAir" [attr.disabled]="!floAirEnable ? true : null">
+              <label class="custom-control-label pt-1" for="floAir">FloAir</label>
+            </div>
+            <!-- </div> -->
+            <div class="row mt-4 mb-4">
+              <button class="search-hotel btn btn-danger" (click)="saveSetting()">
+                {{'admin-agency-management-edit.button-update' | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+   </div>
+</div>
+<main-footer></main-footer>
+
+

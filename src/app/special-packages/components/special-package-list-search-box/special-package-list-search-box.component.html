@@ -1,0 +1,56 @@
+<form *ngIf="!fetching" [formGroup]="packageShoppingForm" class="hotel-search flight-search" (ngSubmit)="shoppingPackage()">
+  <div id="select-box-close" (click)="closeFormSearch()" class="text-right my-2"><i class="fa fa-times"></i></div>
+  <div class="row" style="cursor: pointer;">
+    <div class="col-lg-3 col-12">
+      <label class="mb-0 font-weight-light">Going To</label>
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+          </div>
+          <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+                 formControlName="destination" [value]="packageShoppingReq?.destination" [typeaheadAsync]="true"
+                 [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="select($event.item)" class="form-control"
+                 placeholder="City or Station" type="search"
+                 [ngClass]="{ 'is-invalid': formSubmitError && packageShoppingForm.get('destination').errors }" />
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-6 pr-3">
+      <label class="mb-0 font-weight-light">Check-in</label>
+      <div class="form-group">
+        <div class="input-group checkinDate">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+          </div>
+          <kendo-datepicker #datepicker class="form-control" [(value)]="startDate" calendarType="classic" (click)="onOpenDatepicker($event, datepicker)" formControlName="startDate" title="Select Date"
+            format="dd-MM-yyyy" placeholder="Check-out Date" [min]="minDate"></kendo-datepicker>
+          <span class="invalid-feedback">
+            <span *ngIf="packageShoppingForm.get('startDate').errors?.required">
+                    Please enter your start date.
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-12">
+      <label class="mb-0 m-0 font-weight-light">Guests</label>
+      <div class="form-group mb-md-0">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+          </div>
+          <input #menuDrop type="text" class="guests-input form-control" (click)="toggleDrop()"
+                 [value]="travellerCount +' travellers, ' + roomCount + ' rooms'" style="background:#fff;">
+          <app-room-guests *ngIf="showDropDown" [roomGuests] = "roomGuests" (roomGuestsNew)="updateRoomGuests($event)"
+                           (showDropDown)="changeShowDropDown($event)" class="guests-dropdown shadow-box p-3"></app-room-guests>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-12">
+      <label class="mb-0 font-weight-light invisible ">.</label><br>
+      <input type="submit" name="submit" class="btn btn-danger" value="Search" />
+    </div>
+  </div>
+</form>
+<app-special-package-search-box-skeleton *ngIf="fetching"></app-special-package-search-box-skeleton>

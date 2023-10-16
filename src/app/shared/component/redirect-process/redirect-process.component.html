@@ -1,0 +1,21 @@
+<main-header></main-header>
+<div *ngIf="fetching" class="container mb-5" style="height: 500px; width: 100%;">
+    <div class="row justify-content-center loading-space pt-5">
+        <div class="spinner-border text-primary"></div>
+        <span class="text-center mt-3" ngPreserveWhitespaces>&emsp; Payment...</span>
+    </div>
+</div>
+<app-redirect-traceme *ngIf="tracemePaymentRes" [tracemePaymentRes]="tracemePaymentRes" [fetching]="fetching"
+    [fetchFailed]="fetchFailed" [errorMes]="errorMes">
+</app-redirect-traceme>
+<app-redirect-gca *ngIf="gcaPaymentRes" [gcaPaymentRes]="gcaPaymentRes" [fetching]="fetching"
+    [fetchFailed]="fetchFailed" [errorMes]="errorMes">
+</app-redirect-gca>
+<app-redirect-package *ngIf="packagePaymentRes" [packagePaymentRes]="packagePaymentRes" [fetching]="fetching"
+    [fetchFailed]="fetchFailed" [errorMes]="errorMes">
+</app-redirect-package>
+<app-redirect-special-package *ngIf="specialPackagePaymentRes" [specialPackagePaymentRes]="specialPackagePaymentRes" [fetching]="fetching"
+    [fetchFailed]="fetchFailed" [errorMes]="errorMes">
+</app-redirect-special-package>
+
+<main-footer></main-footer>

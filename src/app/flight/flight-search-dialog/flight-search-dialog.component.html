@@ -1,0 +1,179 @@
+<div class="modal-content">
+  <form id="flight" [formGroup]="searchForm" (ngSubmit)="submit()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="nav nav-tabs nav-fill border-0 mb-3">
+            <a class="nav-item nav-link rounded-0" [ngClass]="typeFlight === 'ONE_WAY' ? 'active' : ''"
+              (click)="flightTypeChange(1)">One Way</a>
+            <a class="nav-item nav-link rounded-0" [ngClass]="typeFlight === 'ROUND_TRIP' ? 'active' : ''"
+              (click)="flightTypeChange(2)">Round Trip</a>
+            <a class="nav-item nav-link rounded-0" [ngClass]="typeFlight === 'MULTI_CITY' ? 'active' : ''"
+              (click)="flightTypeChange(3)">Multi City</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="m-0">Flying from</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+              </div>
+              <!-- <input id="typeahead-http" type="text" class="form-control" autocomplete="off" formControlName="flyFrom"
+                placeholder="Departure" /> -->
+              <input [(ngModel)]="search1" [typeaheadItemTemplate]="customItemTemplate" typeaheadOptionField="displayName"
+                [typeahead]="suggestions1$" formControlName="flyFrom" [typeaheadAsync]="true" type="search"
+                [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectFlyFrom($event.item)" class="form-control"
+                placeholder="City or Airport">
+              <ng-template #customItemTemplate let-model="item" let-index="index">
+                {{model.displayName}}
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="m-0">Destination</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+              </div>
+              <!-- <input id="typeahead-http" type="text" class="form-control" autocomplete="off"
+                formControlName="destination" placeholder="Arrival" /> -->
+              <input [(ngModel)]="search2" typeaheadOptionField="displayName" [typeaheadItemTemplate]="customItemTemplate"
+                [typeahead]="suggestions2$" formControlName="destination" [typeaheadAsync]="true" type="search"
+                [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectDestination($event.item)" class="form-control"
+                placeholder="City or Airport">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label class="m-0">Departing</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" class="form-control fromdate" formControlName="departuring" bsDatepicker
+                [bsConfig]="bsConfig" (bsValueChange)="onValueChange($event)" [minDate]="minDate">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4 returning" *ngIf="typeFlight === 'ROUND_TRIP'">
+          <div class="form-group">
+            <label class="m-0">Returning</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" class="form-control todate" formControlName="returning" bsDatepicker
+                [bsConfig]="bsConfig">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-5">
+          <div class="form-group">
+            <label class="m-0">Adults</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+              </div>
+              <select formControlName="adults" class="form-control custom-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class="form-group">
+            <label class="m-0">Children <small class="text-danger"><b>(2-12 yrs)</b></small></label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-child"></i></span>
+              </div>
+              <select formControlName="children" class="form-control custom-select">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="new-flight" *ngIf="typeFlight === 'MULTI_CITY'">
+        <div formArrayName="anotherCities">
+          <div class="row" *ngFor="let city of flightsControls; let i = index" [formGroupName]="i">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="m-0">Flying from</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                  </div>
+                  <!-- <input type="text" class="form-control" formControlName="flyFromNext" placeholder="City or Airport"> -->
+                  <input [(ngModel)]="search3" typeaheadOptionField="displayName" [typeaheadItemTemplate]="customItemTemplate"
+                    [typeahead]="suggestions3$" formControlName="flyFromNext" [typeaheadAsync]="true" type="search"
+                    [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectFlyFromNext($event.item)"
+                    class="form-control" placeholder="City or Airport">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="m-0">Destination</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                  </div>
+                  <!-- <input type="text" class="form-control" formControlName="destinationNext"
+                    placeholder="City or Airport"> -->
+                  <input [(ngModel)]="search4" typeaheadOptionField="displayName" [typeaheadItemTemplate]="customItemTemplate"
+                    [typeahead]="suggestions4$" formControlName="destinationNext" [typeaheadAsync]="true" type="search"
+                    [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectDestinationNext($event.item)"
+                    class="form-control" placeholder="City or Airport">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="m-0">Departing</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" class="form-control fromdate" formControlName="departuringNext" bsDatepicker
+                    [bsConfig]="bsConfig" placement="top">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1 d-flex align-items-center align-self-center">
+              <i class="fa fa-times" aria-hidden="true" (click)="removeitem(i)" *ngIf="i >= 1"></i>
+            </div>
+          </div>
+          <div class="add-flight text-right" style="cursor:pointer;" (click)="onAddCity()">
+            <span><i class="fa fa-plus-circle"></i> Add another flight</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+      <input type="submit" name="submit" (click)="submit()" class="search-flight btn btn-danger" value="Find Flights">
+    </div>
+  </form>
+</div>

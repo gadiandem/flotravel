@@ -1,0 +1,188 @@
+<div class="container-fluid mb-md-5 mt-5 pt-4 pb-3 shadow-box d-md-block px-3 p-0">
+  <div class="flight-search-mobile px-3 d-md-none">
+    <p class="d-flex align-items-center justify-content-center">
+      <span class="mr-2">London to Dubai</span>|
+      <span class="mx-2">15 Apr - 20 Apr</span>|
+      <span class="ml-2 change-search btn-danger px-2 rounded" (click)="showFormSearch()">{{'flight-summary.label-changes' | translate }}</span>
+    </p>
+    <div class="d-flex justify-content-between px-3">
+      <span class="flight-search-filters" (click)="showFormFilter()"><i class="fa fa-filter text-info" aria-hidden="true"></i> <span class="font-weight-bold text-dark">&nbsp;{{'flight-summary.label-filters' | translate }}</span></span>
+      <span><span class="font-weight-bold text-dark">{{'flight-summary.label-multi-city' | translate }}</span> {{'flight-summary.label-airline' | translate }}</span>
+    </div>
+  </div>
+  <div id="select-box-mobile" class="d-md-none hotel-search">
+    <div id="select-box-close" class="text-right my-3" (click)="closeFormSearch()"><i class="fa fa-times"></i></div>
+    <div id="select-box-btns" class="btn-group btn-group-toggle d-flex d-md-none mb-3" data-toggle="buttons">
+      <label class="btn btn-secondary active w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="1" autocomplete="off" [checked]="typeFlightIndex == 1" (click)="valueChanged('1')"> {{'flight-summary.label-one-way' | translate }}
+      </label>
+      <label class="btn btn-secondary w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="2" autocomplete="off" [checked]="typeFlightIndex == 2" (click)="valueChanged('2')"> {{'flight-summary.label-round-trip' | translate }}
+      </label>
+      <label class="btn btn-secondary w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="3" autocomplete="off" [checked]="typeFlightIndex == 3" (click)="valueChanged('3')"> {{'flight-summary.label-multi-city' | translate }}
+      </label>
+    </div>
+  </div>
+  <app-flight-search-box [typeFlight]="typeFlight" [searchFlightFormInit]="searchFlightForm"
+     (searchFlightBox)="searchFlight($event)"
+     [fetching]="fetching"></app-flight-search-box>
+</div>
+<div *ngIf="!fetching" class="container">
+    <div class="row">
+      <div class="col-12 d-block d-md-none">
+        <div class="font-weight-bold my-4">
+          <span class="sort-filter" (click)="showFormFilter()">{{'flight-summary.label-sort-filter' | translate }}</span>
+        </div>
+      </div>
+      <div id="sortFilter" class="col-md-2 we-sort-filter">
+        <app-flight-sidebar></app-flight-sidebar>
+      </div>
+      <div *ngIf="fetchFailed && !fetching">
+        <alert type="danger" ngPreserveWhitespaces>
+          {{'flight-summary.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+      </div>
+      <div class="flights-list col-md-8" *ngIf="!fetching && !fetchFailed">
+        <div class="flight-item shadow-box blue-bg mb-3">
+          <div class="row d-flex p-3">
+            <div class="col-md-6">
+              <h6 class="text-danger mb-0">{{'flight-summary.label-trip' | translate }}</h6>
+              <small>{{'flight-summary.label-rules' | translate }}</small>
+            </div>
+            <div class="col-md-6">
+              <small *ngIf="returnFlight?.flight?.provider != 4" class="font-weight-light"
+                     style="color: #444; padding-top: 8px; float: right; font-size: 16px;font-weight:300">
+              {{'flight-summary.label-trip-cost' | translate }} <span style="font-weight:400">
+              {{(offerPrices?.pricedOffer?.totalPrice?.simpleCurrencyPrice?.value
+                || offerPrices?.pricedOffer?.offerItem[0]?.totalPriceDetail?.totalAmount?.simpleCurrencyPrice?.value || 0) | number: '.0-2'}} {{currency}}
+            </span> </small>
+            <small *ngIf="returnFlight?.flight?.provider == 4" class="font-weight-light"
+                     style="color: #444; padding-top: 8px; float: right; font-size: 16px;font-weight:300">
+              {{'flight-summary.label-trip-cost' | translate }} <span style="font-weight:400">
+                       {{ totalTripPrice | number: '.0-2'}} {{currency}}
+            </span> </small>
+            </div>
+          </div>
+        </div>
+        <app-flight-depature-selected [departureFlight]="departureFlight" [currency]="currency" [offerPrices]="offerPrices"></app-flight-depature-selected>
+        <app-flight-return-selected [returnFlight]="returnFlight" [currency]="currency" [offerPrices]="offerPrices" *ngIf="typeFlight === 'ROUND_TRIP'"></app-flight-return-selected>
+        <div class="flight-item shadow-box blue-bg" *ngIf="offerPrices?.serviceDefinitionTypeList">
+          <div class="col-md-6">
+            <h6 class="text-danger mb-0 py-3"> {{'flight-servcice.label-title' | translate }}</h6>
+          </div>
+          <div class="row d-flex" *ngFor="let service of offerPrices?.serviceDefinitionTypeList">
+            <div class="col-md-6">
+              <P class=" mb-0 px-3 mb-2"> <i class="fa fa-circle" style="font-size:12px"></i> {{service?.name?.value}}</P>
+            </div>
+          </div>
+        </div>
+        <div class="flights-list" *ngIf="typeFlight === 'MULTI_CITY'">
+          <div class="flight-item shadow-box blue-bg mb-3" *ngFor="let flight of nextFlights; let i = index;">
+            <div class="d-flex p-3 pb-0">
+              <h6 class="text-danger d-flex w-100">  {{'flight-summary.label-selected-next-flight' | translate }}
+                <small class="font-weight-light ml-auto" style="color: #444; padding-top: 3px;">
+                  {{flight?.flight?.depDateTime?.split(' ')[0] | date:'EEE dd, MMM'}} | <a class="text-danger"
+                                                                                           routerLink="/flight/flightNextCity">{{'flight-summary.label-change' | translate }}</a>
+                </small>
+              </h6>
+            </div>
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div *ngFor="let segment of flight?.flight?.flightSegments;let i= index;" class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <h5 class="flight-title">{{segment?.depDateTime | date: 'h:mm'}} -
+                        {{getArrivalTime(departureFlight?.flight) | date: 'h:mm'}}</h5>
+                      <p class="title"><img [src]="'http://pics.avs.io/300/300/' + segment?.airline.split('-')[0] + '.png'" style="width:30px;">
+                        {{segment?.airline?.split('-')[1]}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{totalDuration(flight?.flight)}}
+                    </div>
+                    <p class="text-muted">{{segment?.depAirportCode}} -
+                      {{getArrivalCode(flight?.flight)}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right" style="text-align: right; padding-right: 10px;">
+                <span
+                  class="flight-price">
+                  {{flight?.offerItem?.totalAmount | currency: currency :'symbol':'.0-2'}}
+                </span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">{{'flight-summary.label-taxes' | translate }}</p>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="px-3 pb-3">
+                <!--  {{'flight-summary.label-terms' | translate }} -->
+                </div>
+              </div>
+              <div class="col-md-12 collapsed" (click)="isCollapsed = !isCollapsed">
+                <p class="px-3 py-2 m-0" style="color:#007864; cursor:pointer; border-top:1px solid #ccc; ">
+                  <span>{{'flight-summary.label-more-info' | translate }}</span>
+                  <span class="float-right">{{'flight-summary.label-details' | translate }}</span>
+                </p>
+              </div>
+              <div id="collapse0" class="col-12 collapse" [collapse]="isCollapsed" [isAnimated]="true">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div *ngFor="let segment of flight?.flight?.flightSegments; let i = index" class="m-3 pl-3"
+                         style="border-left:1px solid #eee072;">
+                      <div class="flight-cart-start"></div>
+                      <p><strong>{{'flight-summary.label-from' | translate }}</strong> {{segment?.depAirportCode}}&emsp;{{segment?.depAirportName}}<br>
+                        <strong>{{'flight-summary.label-to' | translate }}</strong> {{segment?.arrAirportCode}}:&emsp;{{segment?.arrAirportName}}</p>
+                      <p>{{segment?.airline.split('-')[1]}}<br>
+                        {{segment?.aircraft}}{{'flight-summary.label-aircraft' | translate }} {{segment?.flightNumber}}<br>
+                        {{segment?.marketingName}}<br>
+                        {{segment?.depDateTime}} -> {{segment?.arrDateTime}}<br>
+                        ({{segment?.duration}})</p>
+                      <p><strong>Total distance</strong> {{segment.distance}}</p>
+                      <div class="flight-cart-end"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-3" *ngIf="flight?.flight?.offerItemList[0]?.weightAllowance">
+                      <p><strong>ApplicableParty</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                        Maximum Weight:&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                        <span>{{flight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p>
+                    </div>
+                    <div class="p-3" *ngIf="flight?.flight?.offerItemList[0]?.pieceAllowances">
+                      <p><strong>ApplicableParty</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                      <p><strong>TotalQuantity</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                      <p><strong>BagType</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                        <!-- Maximum Weight:&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                        <span>{{flight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                  </div>
+                  <div class="p-3" *ngIf="baggageRules">
+                    <p><strong>Baggage Rules</strong><span>&nbsp;{{baggageRules}}</span><br>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="qrProvider">
+          <div class="col-md-6 col-6" >
+              <button class="btn btn-danger float-left px-5 btn-lg my-4 ml-3" (click)="getServices()">{{'flight-summary.button-services' | translate }}</button>
+          </div>
+          <div class="col-md-6">
+            <button class="btn btn-danger float-right px-5 btn-lg my-4 mr-2"
+                    (click)="goToPayment()">{{'flight-summary.button-continue' | translate }}</button>
+          </div>
+        </div>
+        <div class="row" *ngIf="!qrProvider">
+          <div class="col-md-12">
+            <button class="btn btn-danger float-right px-5 btn-lg my-4 mr-2"
+                    (click)="goToPayment()">{{'flight-summary.button-continue' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!--skeleton loading-->
+<app-flight-summary-skeleton *ngIf="fetching"></app-flight-summary-skeleton>

@@ -1,0 +1,509 @@
+<div class="container-fluid mb-md-5 mt-5 pt-4 pb-3 shadow-box d-md-block px-3 p-0">
+  <div class="flight-search-mobile px-3 d-md-none">
+    <p class="d-flex align-items-center justify-content-center">
+      <span class="mr-2">London to Dubai</span>|
+      <span class="mx-2">15 Apr - 20 Apr</span>|
+      <span class="ml-2 change-search btn-danger px-2 rounded"
+        (click)="showFormSearch()">{{'flight-summary.label-changes' | translate }}</span>
+    </p>
+    <div class="d-flex justify-content-between px-3">
+      <span class="flight-search-filters" (click)="showFormFilter()"><i class="fa fa-filter text-info"
+          aria-hidden="true"></i> <span class="font-weight-bold text-dark">&nbsp;{{'flight-next-city.label-filters' |
+          translate }}</span></span>
+      <span><span class="font-weight-bold text-dark">{{'flight-next-city.label-sort' | translate }}</span>
+        {{'flight-next-city.label-airline' | translate }} </span>
+    </div>
+  </div>
+  <div id="select-box-mobile" class="d-md-none hotel-search">
+    <div id="select-box-close" class="text-right my-3" (click)="closeFormSearch()"><i class="fa fa-times"></i></div>
+    <div id="select-box-btns" class="btn-group btn-group-toggle d-flex d-md-none mb-3" data-toggle="buttons">
+      <label class="btn btn-secondary active w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="1" autocomplete="off" [checked]="typeFlightIndex == 1"
+          (click)="valueChanged('1')"> {{'flight-next-city.label-one-way' | translate }}
+      </label>
+      <label class="btn btn-secondary w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="2" autocomplete="off" [checked]="typeFlightIndex == 2"
+          (click)="valueChanged('2')"> {{'flight-next-city.label-round-trip' | translate }}
+      </label>
+      <label class="btn btn-secondary w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="3" autocomplete="off" [checked]="typeFlightIndex == 3"
+          (click)="valueChanged('3')"> {{'flight-next-city.label-multi-city' | translate }}
+      </label>
+    </div>
+  </div>
+  <div class="container">
+    <app-flight-search-box [typeFlight]="typeFlight" [searchFlightFormInit]="searchFlightForm"
+      (searchFlightBox)="searchFlight()" [fetching]="fetching"></app-flight-search-box>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div class="row">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter" (click)="showFormFilter()">{{'flight-next-city.label-sort-filter' | translate
+          }}</span>
+      </div>
+    </div>
+    <div id="sortFilter" class="col-md-2 we-sort-filter">
+      <app-flight-sidebar></app-flight-sidebar>
+    </div>
+    <div class="col-md-8">
+      <div class="flights-list">
+        <div class="mb-3 shadow-box blue-bg mb-3">
+          <div class="d-flex p-3 pb-0">
+            <h6 class="text-danger d-flex w-100"> {{'flight-next-city.label-selected-departure' | translate }}
+              <small class="font-weight-light ml-auto" style="color: #444; padding-top: 3px;">
+                {{departureFlight?.flight?.depDateTime.split(' ')[0] | date:'EEE dd, MMM'}} | <a class="text-danger"
+                  hrouterLink="/flight">{{'flight-next-city.label-change' | translate }}</a>
+              </small>
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-md-9 col-7">
+              <div class="row">
+                <div class="col-md-7 col-12">
+                  <div class="px-3 pt-3">
+                    <h5 class="flight-title">{{departureFlight?.flight?.flightSegments[0]?.depDateTime | date: 'h:mm'}}
+                      - {{getArrivalTime(departureFlight?.flight) | date: 'h:mm'}}</h5>
+                    <p class="title"><img
+                        [src]="'http://pics.avs.io/300/300/' + departureFlight?.flight?.flightSegments[0]?.airline.split('-')[0] + '.png'"
+                        style="width:30px;">
+                      {{departureFlight?.flight?.flightSegments[0]?.airline.split('-')[1]}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                  <div class="text-muted" style="font-weight: bold;">{{totalDuration(departureFlight?.flight)}}</div>
+                  <p class="text-muted">{{departureFlight?.flight?.flightSegments[0]?.depAirportCode}} -
+                    {{getArrivalCode(departureFlight?.flight)}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-5 p-3 pr-4">
+              <div class="text-right" style="text-align: right; padding-right: 10px;">
+                <span class="flight-price">{{departureFlight?.offerItem.totalAmount | currency:
+                  departureFlight?.offerItem.currency :'symbol':'.0-2'}}</span><br>
+                <p style="font-size: 12px;margin-bottom:3px;">{{'flight-next-city.label-taxes' | translate }}</p>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="px-3 pb-3">
+                <!--  {{'flight-next-city.label-terms' | translate }} -->
+              </div>
+            </div>
+            <div class="col-md-12 collapsed" (click)="isCollapsedD = !isCollapsedD"
+              [attr.aria-expanded]="!isCollapsedD">
+              <p class="px-3 py-2 m-0" style="color:#007864; cursor:pointer; border-top:1px solid #ccc; ">
+                <span>{{'flight-next-city.label-more-info' | translate }}</span>
+                <span class="float-right">{{'flight-next-city.label-details' | translate }}</span>
+              </p>
+            </div>
+            <div id="collapseD" class="col-12 collapse" [collapse]="isCollapsedD" [isAnimated]="true">
+              <div class="row">
+                <div class="col-md-6">
+                  <div *ngFor="let segment of departureFlight?.flight?.flightSegments; let i = index" class="m-3 pl-3"
+                    style="border-left:1px solid #eee072;">
+                    <div class="flight-cart-start-dep"></div>
+                    <p><strong>{{'flight-next-city.label-from' | translate }}</strong>
+                      {{segment?.depAirportCode}}&emsp;{{segment?.depAirportName}}<br>
+                      <strong>{{'flight-next-city.label-to' | translate }}</strong>
+                      {{segment?.arrAirportCode}}:&emsp;{{segment?.arrAirportName}}
+                    </p>
+                    <p>{{segment?.airline.split('-')[1]}}<br>
+                      {{segment?.aircraft}} {{'flight-next-city.label-aircraft' | translate }}
+                      {{segment?.flightNumber}}<br>
+                      {{segment?.marketingName}}<br>
+                      {{segment?.depDateTime}} -> {{segment?.arrDateTime}}<br>
+                      ({{segment?.duration}})</p>
+                    <p><strong>{{'flight-next-city.label-distance' | translate }}</strong> {{segment?.distance}}</p>
+                    <div class="flight-cart-end-dep"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-3" *ngIf="departureFlight?.flight?.offerItemList[0]?.weightAllowance">
+                    <p>
+                      <strong>ApplicableParty</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                      Maximum
+                      Weight:&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                      <span>{{departureFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span>
+                    </p>
+                  </div>
+                  <div class="p-3" *ngIf="departureFlight?.flight?.offerItemList[0]?.pieceAllowances">
+                    <p>
+                      <strong>ApplicableParty</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                    <p>
+                      <strong>TotalQuantity</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                    <p>
+                      <strong>BagType</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                      <!-- Maximum Weight:&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                        <span>{{departureFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div *ngIf="nextFlights?.length > 0">
+          <div class="shadow-box mb-3" *ngFor="let nextFlight of nextFlights; let i = index;">
+            <h5 class="text-danger mx-3 pt-3 mb-0">
+              Your Next departure
+              <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+                {{nextFlight.depDateTime.split(' ')[0] | date:'EEE dd, MMM'}} | <a class="text-danger" routerLink="/flight">Change</a>
+              </small>
+            </h5>
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <h5 class="flight-title">{{nextFlight.depDateTime.split(' ')[1]}} - {{nextFlight.arrDateTime.split(' ')[1]}}</h5>
+                      <p class="title"><img src="assets/flight-logo.jpg" style="width:30px;"> {{nextFlight.flightSegments[0].airline.split('-')[1]}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{nextFlight.flightSegments[0].duration}}</div>
+                    <p class="text-muted">{{nextFlight.flightSegments[0].depAirportCode}} - {{nextFlight.flightSegments[0].arrAirportCode}}</p>
+                  </div>
+                </div>
+                <div class="px-3 pb-3">
+                  There may be an additional feeOpens in a new window based on your payment method. Fee is not reflected
+                  in the ticket price.
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right">
+                  <span class="flight-price">{{nextFlightPrices[i].totalAmount | currency: nextFlightPrices[i].currency :'symbol':'.0-2'}}</span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                </div>
+              </div>
+              <div class="col-md-12 collapsed">
+                <p class="px-3 py-2 m-0" style="color:#007864; cursor:pointer; border-top:1px solid #ccc; ">
+                  <span>Some text here</span>
+                  <span class="float-right">View Details</span>
+                </p>
+              </div>
+              <div id="collapseD" class="col-12 collapse">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="flight-cart-start"></div>
+                    <div class="m-3 pl-3" style="border-left:1px solid #eee072;">
+                      <p><strong>From</strong> Bole Intl. (ADD)<br>
+                        <strong>To</strong> Heathrow</p>
+                      <p>Ethiopian Airlines<br>
+                        AIRBUS INDUSTRIES A3S503 | Breakfast<br>
+                        Economy (v)<br>
+                        1hr 35 hours (Direct)</p>
+                      <p><strong>Total distance</strong> 3688 mi</p>
+                    </div>
+                    <div class="flight-cart-end"></div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-3">
+                      <p><strong>Estimated Bag Fees</strong><br>
+                        Hand baggage: No fee upto 7 kg<br>
+                        Hand baggage: No fee upto 7 kg<br>
+                        Hand baggage: No fee upto 7 kg<br>
+                        Confirm bags fees, weight and size restrictions with <span>Ethopian Airlines</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+      <h1 class="flight-title mb-3" style="font-size:26px;">{{'flight-next-city.label-next-flight' | translate }}</h1>
+      <div class="row mb-4">
+        <div class="col-4" style="padding-right: 0px;">
+          <div class="shadow-box blue-bg p-2 text-center" style="cursor: pointer; background:#eee;">
+            <label class="ml-41 small-date">{{dateBefore | date: 'yyyy-MM-dd'}}</label><br>
+            <div class="ml-41" style="font-weight:bold; ">{{dateBefore | date: 'EEEE'}}</div>
+          </div>
+        </div>
+        <div class="col-4" style="padding-right: 0px;padding-left: 0px;">
+          <div class="shadow-box1 p-2 text-center" style="cursor: pointer; background:#fff; border:1px solid #ccc;">
+            <label class="ml-41 small-date">{{departuringDate | date: 'yyyy-MM-dd'}}</label><br>
+            <div class="ml-41" style="font-weight:bold; ">{{departuringDate | date: 'EEEE'}}</div>
+          </div>
+        </div>
+        <div class="col-4" style="padding-left: 0px;">
+          <div class="shadow-box1 p-2 text-center" style="cursor: pointer; background:#eee;">
+            <label class="ml-41 small-date">{{dateAfter | date: 'yyyy-MM-dd'}}</label><br>
+            <div class="ml-41" style="font-weight:bold;">{{dateAfter | date: 'EEEE'}}</div>
+          </div>
+        </div>
+      </div>
+        <div class="flights-list">
+          <div class="flight-item mb-3" *ngFor="let flight of nextFlight?.flightList; let i = index;">
+            <div class="row">
+              <div class="col-md-5 col-7">
+                <div class="px-3 pt-3">
+                  <h5 class="flight-title">{{flight?.flightSegments[0]?.depDateTime | date: 'h:mm'}} -
+                    {{getArrivalTime(flight) | date: 'h:mm'}}</h5>
+                  <p class="title"><img
+                      [src]="'http://pics.avs.io/300/300/' + flight?.flightSegments[0]?.airline.split('-')[0] + '.png'"
+                      style="width:30px;">
+                    {{flight?.flightSegments[0]?.airline.split('-')[1]}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-3 d-none d-md-block px-3 pt-3">
+                <div class="text-muted" style="font-weight: bold;">{{totalDuration(flight)}}<span
+                    *ngIf="flight.flightSegments.length === 1"> {{'flight-next-city.label-direct-flight' | translate
+                    }}</span></div>
+                <p class="text-muted">{{flight?.flightSegments[0]?.depAirportCode}} -
+                  {{getArrivalCode(flight)}}</p>
+              </div>
+              <div class="col-md-4 col-5">
+                <div class="text-right p-3 pr-4">
+                  <span class="flight-price">{{flight?.offerItemList[0]?.totalAmount | currency:
+                    flight?.offerItemList[0]?.currency :'symbol':'.0-2'}}</span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">{{'flight-next-city.label-taxes' | translate }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <div class="px-3 pb-md-3">
+                  {{flight?.offerItemList[0].serviceNames}}
+                  <!-- {{flight?.offerItemList[0].className}} -->
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="text-right pt-md-0 p-3 pr-4">
+                  <button class="btn btn-danger" (click)="reserve(i)">{{'flight-next-city.label-reserve' | translate
+                    }}</button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 collapsed" (click)="isCollapsed[i] = !isCollapsed[i]"
+                [attr.aria-expanded]="!isCollapsed[i]">
+                <p class="px-3 py-2 m-0" style="background:#eee; color:#007864; cursor:pointer;">
+                  <span>{{'flight-next-city.label-more-info' | translate }}</span>
+                  <span class="float-right">{{'flight-next-city.label-details' | translate }}</span>
+                </p>
+              </div>
+              <div id="collapse{{i}}" class="col-12 collapse" [collapse]="isCollapsed[i]" [isAnimated]="true">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div *ngFor="let segment of flight.flightSegments; let i = index" class="m-3 pl-3"
+                      style="border-left:1px solid #eee072;">
+                      <div class="flight-cart-start"></div>
+                      <p><strong>{{'flight-next-city.label-from' | translate }}</strong>
+                        {{segment?.depAirportCode}}:&emsp;{{segment?.depAirportName}}<br>
+                        <strong>{{'flight-next-city.label-to' | translate }}</strong>
+                        {{segment?.arrAirportCode}}:&emsp;{{segment?.arrAirportName}}
+                      </p>
+                      <p>{{segment?.airline.split('-')[1]}}<br>
+                        {{segment?.aircraft}} {{'flight-next-city.label-aircraft' | translate }}
+                        {{segment?.flightNumber}} |
+                        {{'flight-next-city.label-breakfast' | translate }}<br>
+                        {{segment?.marketingName}}<br>
+                        {{segment?.depDateTime}} -> {{segment?.arrDateTime}}<br>
+                        ({{segment?.duration}})</p>
+                      <p><strong>{{'flight-next-city.label-distance' | translate }}</strong> {{segment?.distance}}</p>
+                      <div class="flight-cart-end"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-3" *ngIf="flight?.offerItemList[0]?.weightAllowance">
+                      <p>
+                        <strong>ApplicableParty</strong><span>&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                        Maximum
+                        Weight:&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                        <span>{{flight.flightSegments[0].airline.split('-')[1]}}</span>
+                      </p>
+                    </div>
+                    <div class="p-3" *ngIf="flight?.offerItemList[0]?.pieceAllowances">
+                      <p>
+                        <strong>ApplicableParty</strong><span>&nbsp;{{flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                      <p>
+                        <strong>TotalQuantity</strong><span>&nbsp;{{flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                      <p>
+                        <strong>BagType</strong><span>&nbsp;{{flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                        <!-- Maximum Weight:&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                        <span>{{flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <img class="sticky mt-5 w-100" style="height: auto; margin-top: 0px !important;top: 65px;"
+        src="assets/ads.jpg">
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<div *ngIf="fetching" class="container">
+  <div class="row mt-4">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter"> <ngx-skeleton-loader
+            [theme]="{'background-color': '#ccc', 'height.px': 17, 'width': '30%'}"></ngx-skeleton-loader></span>
+      </div>
+    </div>
+    <div class="col-md-2 we-sort-filter">
+      <div class="mb-4 d-none d-md-block">
+        <h5 class=" border-bottom pb-2"><ngx-skeleton-loader
+            [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <div class="custom-control pl-0">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30}"></ngx-skeleton-loader>
+        </div>
+      </div>
+      <div class="star-rating mb-4 d-none d-md-block">
+        <h5 class=" border-bottom pl-0 pb-2"><ngx-skeleton-loader
+            [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="2" [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+      </div>
+      <div class="facility mb-4 d-none d-md-block">
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><ngx-skeleton-loader
+            [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="4" [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+      </div>
+      <div class="facility mb-4 d-none d-md-block">
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><ngx-skeleton-loader
+            [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="4" [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="shadow-box blue-bg mb-3">
+        <h5 class="text-danger mx-3 pt-3 mb-0">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+        </h5>
+        <div class="row">
+          <div class="col-md-9 col-7">
+            <div class="row">
+              <div class="col-md-7 col-12">
+                <div class="px-3 pt-3">
+                  <h5 class="flight-title">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc', 'height.px': 25, 'width': '30%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </h5>
+                  <p class="title">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc', 'height.px': 15, 'width': '50%'}"></ngx-skeleton-loader>
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'height.px': 40, 'width': '50%'}"></ngx-skeleton-loader>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-5 p-3 pr-4">
+            <div class="text-right">
+              <span>
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': 'rgb(0, 25, 89)', 'height.px': 25, 'width': '50%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+              </span><br>
+              <p style="font-size: 12px;">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'height.px': 10, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <div class="px-3 pb-3">
+              <ngx-skeleton-loader
+                [theme]="{'background-color': '#ccc', 'height.px': 42, 'width.px': '90%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+            </div>
+          </div>
+          <div class="col-md-12 collapsed">
+            <p class="px-3 py-2 m-0" style="background:#eee; color:#007864; cursor:pointer;">
+              <span><ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'height.px': 17, 'width.px': 93.58 , 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+              <span class="float-right"><ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'height.px': 21, 'width.px': 76.52 , 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <h1 class="flight-title mb-3" style="font-size:26px;">
+        <ngx-skeleton-loader
+          [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '40%'}"></ngx-skeleton-loader>
+      </h1>
+      <div class="row mb-4">
+        <div class="col-4" style="padding-right: 0px;">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-4" style="padding-right: 0px;padding-left: 0px;">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-4" style="padding-left: 0px;">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+        </div>
+      </div>
+      <div class="flights-list">
+        <div class="flight-item mb-3" *ngFor="let flight of [1, 2, 3, 4]; let i = index;">
+          <div class="row">
+            <div class="col-md-5 col-7">
+              <div class="px-3 pt-3">
+                <h5 class="flight-title">
+                  <ngx-skeleton-loader
+                    [theme]="{'background-color': '#ccc', 'height.px': 25, 'width': '30%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </h5>
+                <p class="title">
+                  <ngx-skeleton-loader
+                    [theme]="{'background-color': '#ccc', 'height.px': 15, 'width': '50%'}"></ngx-skeleton-loader>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-3 d-none d-md-block px-3 pt-3">
+              <ngx-skeleton-loader
+                [theme]="{'background-color': '#ccc', 'height.px': 40, 'width': '50%'}"></ngx-skeleton-loader>
+            </div>
+            <div class="col-md-4 col-5">
+              <div class="text-right p-3 pr-4">
+                <span>
+                  <ngx-skeleton-loader
+                    [theme]="{'background-color': 'rgb(0, 25, 89)', 'height.px': 25, 'width': '50%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </span><br>
+                <p style="font-size: 12px;">
+                  <ngx-skeleton-loader
+                    [theme]="{'background-color': '#ccc', 'height.px': 10, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-9">
+              <div class="px-3 pb-md-3">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'height.px': 42, 'width': '90%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-right pt-md-0 p-3 pr-4">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': 'rgb(10, 48, 73)', 'height.px': 38, 'width.px': 80}"></ngx-skeleton-loader>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 collapsed">
+              <p class="px-3 py-2 m-0" style="background:#eee; color:#007864; cursor:pointer;">
+                <span><ngx-skeleton-loader
+                    [theme]="{'background-color': '#ccc', 'height.px': 17, 'width.px': 93.58 , 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+                <span class="float-right"><ngx-skeleton-loader
+                    [theme]="{'background-color': '#ccc', 'height.px': 21, 'width.px': 76.52 , 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <ngx-skeleton-loader
+        [theme]="{'height.px': 600, 'width.px': 160, 'background-color': '#ccc'}"></ngx-skeleton-loader>
+    </div>
+  </div>
+</div>

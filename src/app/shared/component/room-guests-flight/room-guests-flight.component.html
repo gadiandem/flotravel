@@ -1,0 +1,147 @@
+<ul class="p-2 travellerd rounded shadow" aria-labelledby="traveller">
+  <div class="btext">{{'app-room-guests-flight.label-travellers' | translate }}</div>
+  <div class="adult-count mb-3">
+    <div class="row no-gutters">
+      <div class="col">
+        <label  class="m-0">
+          <span class="font-weight-bold">{{'app-room-guests-flight.label-adults' | translate }}</span><br>
+          <div style="color: #737373">{{'app-room-guests-flight.label-18-older' | translate }}</div>
+        </label>
+      </div>
+      <div class="row col">
+        <button class="btn btn-decrement btn-outline-secondary btn-minus" (click)="decrease('adult')" style="min-width: 2.5rem" type="button">
+          <strong>-</strong>
+        </button>
+        <input id="tAdults" class="form-control" type="text" value="1" [(ngModel)]="adultNumber"/>
+        <button class="btn btn-increment btn-outline-secondary btn-plus" (click)="increase('adult')" style="min-width: 2.5rem" type="button">
+          <strong>+</strong>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="children-count mb-3">
+    <div class="row no-gutters">
+      <div class="col">
+        <label  class="m-0">
+          <span class="font-weight-bold">{{'app-room-guests-flight.label-children' | translate }}</span><br>
+          <div style="color: #737373">{{'app-room-guests-flight.label-child-range' | translate }}</div>
+        </label>
+      </div>
+      <div class="row col">
+        <button class="btn btn-decrement btn-outline-secondary btn-minus"  (click)="decrease('children')" style="min-width: 2.5rem" type="button">
+          <strong>-</strong>
+        </button>
+        <input id="tChildren" class="form-control" type="text" [(ngModel)]="childrenNumber"/>
+        <button class="btn btn-increment btn-outline-secondary btn-plus" (click)="increase('children')" style="min-width: 2.5rem" type="button">
+          <strong>+</strong>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group mt-2">
+      <label class="m-0">{{'app-room-guests-flight.label-child-age-one' | translate }}</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-child"></i></span>
+        </div>
+        <select name="child[]" class="form-control custom-select">
+          <option value="0">{{'app-room-guests-flight.label-age' | translate }}</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group mt-2">
+      <label class="m-0">{{'app-room-guests-flight.label-child-age-two' | translate }}</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-child"></i></span>
+        </div>
+        <select name="child[]" class="form-control custom-select">
+          <option value="0">{{'app-room-guests-flight.label-age' | translate }}</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="infants-count mb-3">
+    <div class="row no-gutters">
+      <div class="col">
+        <label  class="m-0">
+          <span class="font-weight-bold">{{'app-room-guests-flight.label-infant' | translate }}</span><br>
+          <div style="color: #737373">{{'app-room-guests-flight.label-infant-two' | translate }}</div>
+        </label>
+      </div>
+      <div class="row col">
+        <button class="btn btn-decrement btn-outline-secondary btn-minus"  (click)="decrease('infant')" style="min-width: 2.5rem" type="button">
+          <strong>-</strong>
+        </button>
+        <input id="tInfants" class="form-control" type="text" [(ngModel)]="infantsNumber"/>
+        <button class="btn btn-increment btn-outline-secondary btn-plus" (click)="increase('infant')" style="min-width: 2.5rem" type="button">
+          <strong>+</strong>
+        </button>
+      </div>
+    </div>
+    <div class="mt-3">
+      <strong class="lh-1">{{'app-room-guests-flight.label-infant-seat' | translate }}</strong>
+    </div>
+    <div class="mt-2">
+      <div class="form-check lapseat">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" checked>
+        <label class="form-check-label m-0" >
+          {{'app-room-guests-flight.label-infant-lap' | translate }}
+        </label>
+      </div>
+      <div class="form-check lapseat">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" >
+        <label class="form-check-label m-0">
+          {{'app-room-guests-flight.label-infant-on-seat' | translate }}
+        </label>
+      </div>
+    </div>
+    <div class="form-group mt-2">
+      <label class="m-0"> {{'app-room-guests-flight.label-infant-one' | translate }}</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-child"></i></span>
+        </div>
+        <select name="child[]" class="form-control custom-select">
+          <option value="0"> {{'app-room-guests-flight.label-age' | translate }}</option>
+          <option value="Under 1"> {{'app-room-guests-flight.label-infant-under-one' | translate }}</option>
+          <option value="1">1</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group mt-2">
+      <label class="m-0">{{'app-room-guests-flight.label-infant-age-two' | translate }}</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-child"></i></span>
+        </div>
+        <select name="child[]" class="form-control custom-select">
+          <option value="0">{{'app-room-guests-flight.label-age' | translate }}</option>
+          <option value="Under 1">{{'app-room-guests-flight.label-infant-under-one' | translate }}</option>
+          <option value="1">1</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="my-3 airltxt">
+    <a href="#">{{'app-room-guests-flight.label-rules' | translate }}</a>
+  </div>
+  <div class="d-flex gap-2 justify-content-between" (click)="updatePassenger()">
+    <button class="btn btn-danger" id="flcancel" type="button">{{'app-room-guests-flight.label-cancel' | translate }}</button>
+    <button class="btn btn-danger" id="fldone" type="button">{{'app-room-guests-flight.label-done' | translate }}</button>
+  </div>
+</ul>

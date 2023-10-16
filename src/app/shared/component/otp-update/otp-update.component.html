@@ -1,0 +1,37 @@
+<div class="container pt-5 pb-5 wd-xl" style="height: auto; text-align: center;">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-10 offset-1 py-5">
+      <alert type="danger" ngPreserveWhitespaces *ngIf="fetchFailed">
+        {{'otp-update.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+      </alert>
+      <div class="card shadow-sm mb-4">
+        <div class="card-header text-center bg-secondary"><a href="#"><img alt="Image" class="img-responsive rounded"
+              src="assets/logo.png" style="height:30px;"></a></div>
+        <div class="card-body">
+          <p class="text-center py-2" ngPreserveWhitespaces><strong>{{'otp-update.label-update-otp' | translate }}</strong></p>
+          <p class="text-left" ngPreserveWhitespaces><strong>{{'otp-update.label-amount' | translate }}:</strong>&nbsp;{{agentVcn?.cardOrder?.amount}}</p>
+          <p class="text-left" ngPreserveWhitespaces><strong>{{'otp-update.label-currency' | translate }}:</strong>&nbsp;{{agentVcn?.cardOrder?.currency}}</p>
+          <p class="text-left" ngPreserveWhitespaces><strong>{{'otp-update.label-status' | translate }}:</strong>&nbsp;{{agentVcn?.cardOrder?.status}}</p>
+          <form [formGroup]="otpForm" class="text-left">
+            <label class="text-muted form-label" style="margin-left: 0">{{'otp-update.label-otp-value' | translate }}</label>
+            <input class="form-control" autocomplete="off" [readOnly]="fetchFailed"
+              formControlName="otpValue" placeholder="{{'otp-update.label-otp-value' | translate }}" type="text"
+              [ngClass]="{ 'is-invalid': formSubmitError && otpForm.get('otpValue').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="otpForm.get('otpValue').errors?.pattern && (otpForm.get('otpValue').dirty || otpForm.get('otpValue').touched)">
+                {{'otp-update.invalid-otp-value' | translate }}</span>
+              <span *ngIf="otpForm.get('otpValue').errors?.required">
+                {{'otp-update.incorrect-otp-value' | translate }}
+              </span>
+            </span>
+            <button class="btn btn-danger btn-block mt-3" type="button" (click)="updateOtp()" [disabled]="fetchFailed">{{'otp-update.button-update-otp' | translate }}</button>
+          </form>
+        </div>
+      </div>
+      <a routerLink="../cart">
+        <h5 class="text-center" ngPreserveWhitespaces><i class="fa fa-arrow-left"></i>&emsp;{{'otp-update.label-go-back' | translate }}
+        </h5>
+      </a>
+    </div>
+  </div>
+</div>

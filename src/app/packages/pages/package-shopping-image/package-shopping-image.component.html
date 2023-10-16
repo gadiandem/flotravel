@@ -1,0 +1,311 @@
+<div class="container-fluid my-md-5 mt-5 pt-5 pb-3 shadow-box p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0" placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <form [formGroup]="packageShoppingForm" class="hotel-search flight-search" (ngSubmit)="shoppingPackage()">
+      <div id="select-box-close" (click)="closeFormSearch()" class="text-right my-2"><i class="fa fa-times"></i></div>
+      <div class="row" style="cursor: pointer;">
+        <div class="col-lg-3 col-12">
+          <label class="mb-0 font-weight-light">Going To</label>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+              </div>
+              <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+                     formControlName="destination" [value]="packageShoppingReq.destination" [typeaheadAsync]="true"
+                     [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="select($event.item)" class="form-control"
+                     placeholder="City or Station"
+                     [ngClass]="{ 'is-invalid': formSubmitError && packageShoppingForm.get('destination').errors }" />
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6 pr-3">
+          <label class="mb-0 font-weight-light">Check-in</label>
+          <div class="form-group">
+            <div class="input-group checkinDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" ngbDatepicker #checkin="ngbDatepicker" class="form-control" formControlName="startDate" [startDate]="minDateStart" [minDate]="minDateStart"
+                     (click)="checkin.toggle()" placeholder="DD/MM/YYYY" (dateSelect)="getStartDate($event)" placement="bottom"
+                     [value]="packageShoppingReq.date |  date:'dd/MM/yyyy'"
+                     [ngClass]="{ 'is-invalid': formSubmitError && packageShoppingForm.get('startDate').errors }"/>
+              <span class="invalid-feedback">
+                <span *ngIf="packageShoppingForm.get('startDate').errors?.required">
+                        Please enter your start date.
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6">
+          <label class="m-0 font-weight-light">Check-out</label>
+          <div class="form-group mb-md-0">
+            <div class="input-group checkoutDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" ngbDatepicker #checkout="ngbDatepicker" class="form-control" formControlName="endDate" [startDate]="startDate" [minDate]="startDate"
+                     (click)="checkout.toggle()" (dateSelect)="getEndDate($event)" placement="bottom"
+                     [value]="packageShoppingReq.endDate |  date:'dd/MM/yyyy'"
+                     [ngClass]="{ 'is-invalid': formSubmitError && packageShoppingForm.get('endDate').errors }"/>
+              <span class="invalid-feedback">
+                <span *ngIf="packageShoppingForm.get('endDate').errors?.required">
+                  Please enter your checkout date.
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-12">
+          <label class="mb-0 m-0 font-weight-light">Guests</label>
+          <div class="form-group mb-md-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+              </div>
+              <input #menuDrop type="text" class="guests-input form-control" (click)="toggleDrop()"
+                     [value]="travellerCount +' travellers, ' + roomCount + ' rooms'" style="background:#fff;">
+              <app-room-guests *ngIf="showDropDown" [roomGuests] = "roomGuests" (roomGuestsNew)="updateRoomGuests($event)"
+                               (showDropDown)="changeShowDropDown($event)" class="guests-dropdown shadow-box p-3"></app-room-guests>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-12">
+          <label class="mb-0 font-weight-light invisible ">.</label><br>
+          <input type="submit" name="submit" class="btn btn-danger" value="Search" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div class="row mt-2">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter" (click)="showFormFilter()">SORT & FILTER</span>
+        <span class="float-right show-map" (click)="showMap()">SHOW MAP</span>
+      </div>
+      <div *ngIf="mapOpen" class="mb-4 text-center border we-map" style="background: #CAE5CD;">
+        <img alt="map" class="img-fluid" src="../../../../assets/google-map.jpg">
+      </div>
+    </div>
+    <div id="sortFilter" class="col-md-2 we-sort-filter">
+      <div class="mb-4 d-none d-md-block">
+        <img alt="map" class="img-fluid" src="../../../../assets/google-map.jpg">
+      </div>
+      <div class="mb-4">
+        <h5 class="border-bottom pb-2"><i class="fa fa-list text-default"></i> Sort & Filter</h5>
+        <div class="custom-control pl-0">
+          <select name="" class="form-control custom-select" (change)="onSortChange($event.target.value)">
+            <option value="priceIncrease">Price( increase)</option>
+            <option value="priceDecrease">Price( Decrease)</option>
+            <option value="popularity">Popularity</option>
+            <option value="new">New First</option>
+            <option value="rating">Rating</option>
+          </select>
+        </div>
+      </div>
+      <!--      <div class="facility mb-4">-->
+      <!--        <h5 class="pb-2 border-bottom pb-2"><i class="fas fa-star-of-life text-default"></i> Region</h5>-->
+      <!--        <div class="custom-control custom-checkbox" *ngFor="let region of regionList">-->
+      <!--          <input type="checkbox" class="custom-control-input" id="{{region?.id}}">-->
+      <!--          <label class="custom-control-label" for="{{region?.id}}">{{region?.name}}</label>-->
+      <!--        </div>-->
+      <!--      </div>-->
+      <div class="star-rating mb-4">
+        <h5 class=" border-bottom pl-0 pb-2"><i class="fa fa-star text-default"></i> Star Rating</h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start5" [checked]="ratingStarFiler.fiveStar"
+                 (change)="fiveStarFilter()">
+          <label class="custom-control-label" for="start5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 star <small>( {{ratingStarCount.fiveStar}}
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start4" [checked]="ratingStarFiler.fourStar"
+                 (change)="fourStarFilter()">
+          <label class="custom-control-label" for="start4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 star <small>( {{ratingStarCount.fourStar}}
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start3" [checked]="ratingStarFiler.threeStar"
+                 (change)="threeStarFilter()">
+          <label class="custom-control-label" for="start3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3 star
+            <small>( {{ratingStarCount.threeStar}} )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start2" [checked]="ratingStarFiler.twoStar"
+                 (change)="twoStarFilter()">
+          <label class="custom-control-label" for="start2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 star <small>( {{ratingStarCount.twoStar}}
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start1" [checked]="ratingStarFiler.oneStar"
+                 (change)="oneStarFilter()">
+          <label class="custom-control-label" for="start1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 star <small>( {{ratingStarCount.oneStar}}
+            )</small></label>
+        </div>
+      </div>
+      <div class="facility mb-4">
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><i class="fas fa-star-of-life text-default"></i> Facility</h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility1">
+          <label class="custom-control-label" for="facility1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wi-Fi <small> (55)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility2">
+          <label class="custom-control-label" for="facility2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parking <small>(123)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility3">
+          <label class="custom-control-label" for="facility3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Airport Shuttle <small>(13)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility4">
+          <label class="custom-control-label" for="facility4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fitness Center <small>(123)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility5">
+          <label class="custom-control-label" for="facility5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indoor Pool <small>(13)</small></label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div *ngIf="fetchFailed">
+        <alert type="danger" ngPreserveWhitespaces>
+          There is some errors.&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="fetchPackagesList()">Try Again</button>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed" class="supplement-list">
+        <div *ngIf="packagesListView.length === 0">
+          <alert type="danger" ngPreserveWhitespaces>
+            <strong>There is no available package for this search</strong>
+          </alert>
+          <button type="button" class="btn btn-danger mb-2" (click)="fetchPackagesList()">Try Again</button>
+        </div>
+        <div *ngFor="let packages of packagesListView |  paginate: { itemsPerPage: 10, currentPage : p }">
+          <div  class="hotel-item shadow-box1 bg-white mb-3">
+            <div class="row d-flex p-3">
+              <div class="col-md-4">
+                <img class="img-fluid" [errorImage]="defaultData" [defaultImage]="defaultData"
+                     [lazyLoad]="packages?.hotelImage" [useSrcset]="true"/>
+                <div class="pt-2 d-none d-md-block">{{packages?.name}}</div>
+              </div>
+              <div class="col-md-8 pl-md-0 pt-3 pt-md-0">
+                <div class="row">
+                  <div class="col-7 col-md-8">
+                    <h5 class="hotel-title textTitle">{{packages?.packageName}}</h5>
+                    <p style="font-size: 12px;"><i class="fa fa-map-marker"></i> {{packages?.cityName}}
+                    </p>
+                    <div class="d-none d-md-block">
+                      <div style="color:#666666;font-size: 14px;font-weight: bold;">{{'Save 25% For Bookings All Year'}}</div>
+                      <p style="color:#666666;font-size: 10px;margin-bottom:10px;line-height: 15px;">
+                        Perfectly located between the bustling high st. and stunning Kensington
+                        Gardens. Relax, get cosy and let us take care of the rest.</p>
+                    </div>
+                    <div style="color:#007864; font-size: 11px; margin-bottom:10px;">Free
+                      Cancellation</div>
+                    <div style="color:#666666; font-size: 12px;"><b>{{packages?.starRate}}/5</b> Excellant 3,687 reviews
+                    </div>
+                  </div>
+                  <div class="col-5 col-md-4 text-right">
+                    <span class="hotel-price mt-md-2">{{packages.price | currency:currency: 'symbol':'.0-2'}}</span>
+                    <div style="margin-bottom:15px">for 1 night</div>
+                    <button class="btn btn-danger" (click)="gotoDetail(packages)" style="white-space: nowrap !important;">Book Now</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pagination-controls *ngIf="!fetching && !fetchFailed" (pageChange)="p = $event" directionLinks="true"
+                           autoHide="true">
+      </pagination-controls>
+    </div>
+    <div class="col-md-2">
+      <img class="sticky mt-5 w-100 d-none d-md-block" style="height: auto; margin-top: 0px !important;top: 65px;"
+           src="../../../../assets/ads.jpg">
+    </div>
+  </div>
+</div>
+
+<div *ngIf="fetching" class="container">
+  <div class="row mt-2">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter"><ngx-skeleton-loader [theme]="{'height.px': 21, 'background-color': '#ccc',
+         'margin-bottom.px': 0, 'border-bottom.px': 0}"></ngx-skeleton-loader></span>
+      </div>
+    </div>
+    <div class="col-md-2 we-sort-filter">
+      <div class="mb-4 d-none d-md-block">
+        <ngx-skeleton-loader [theme]="{'height.px': 107, 'background-color': '#ccc',
+         'margin-bottom.px': 0, 'border-bottom.px': 0}"></ngx-skeleton-loader>
+      </div>
+      <div class="mb-4 d-none d-md-block">
+        <div><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '10%', 'margin-bottom.px': 0, 'height.px': 15}"></ngx-skeleton-loader></div>
+        <h5 class=" border-bottom pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <div class="custom-control pl-0">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+        </div>
+      </div>
+      <div class="star-rating mb-4 d-none d-md-block">
+        <div><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '10%', 'margin-bottom.px': 0, 'height.px': 15}"></ngx-skeleton-loader></div>
+        <h5 class=" border-bottom pl-0 pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="5" [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+      </div>
+      <div class="facility mb-4 d-none d-md-block">
+        <div><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '10%', 'margin-bottom.px': 0, 'height.px': 15}"></ngx-skeleton-loader></div>
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="5" [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="hotels-list">
+        <div *ngFor="let hotel of [1,2,3,4,5]"
+             class="row hotel-item shadow-box bg-white mb-3 p-3 d-flex">
+          <div class="col-md-4">
+            <div class="img-fluid">
+              <ngx-skeleton-loader [theme]="{'height.px': 142,'background-color': '#ccc'}"></ngx-skeleton-loader>
+            </div>
+            <div class="pt-2 d-none d-md-block"><ngx-skeleton-loader [theme]="{'background-color': 'rgb(204, 204, 204)'}"></ngx-skeleton-loader></div>
+          </div>
+          <div class="col-md-8 pt-md-0 pt-3">
+            <div class="row">
+              <div class="col-7 col-md-8">
+                <h5 class="hotel-title"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader></h5>
+                <p style="font-size: 12px;"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+                </p>
+                <div class="d-none d-md-block">
+                  <div style="color:#666666;font-size: 14px;font-weight: bold;"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader></div>
+                  <p style="color:#666666;font-size: 10px;margin-bottom:10px;line-height: 15px;"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 50}"></ngx-skeleton-loader></p>
+                </div>
+                <div style="color:#666666; font-size: 12px;"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-5 col-md-4 text-right">
+                <span class="mt-md-2"><ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 25, 89)',
+                 'width': '50%', 'margin-bottom.px': 0, 'margin-top.px': 12}"></ngx-skeleton-loader></span>
+                <div style="margin-bottom:15px"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></div>
+                <button class="btn btn-danger"><ngx-skeleton-loader [theme]="{'width.px': 75, 'height.px': 10,'background-color': 'rgb(10, 48, 73)'}"></ngx-skeleton-loader></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <ngx-skeleton-loader [theme]="{'height.px': 600, 'width.px': 160, 'background-color': '#ccc'}"></ngx-skeleton-loader>
+    </div>
+  </div>
+</div>
+

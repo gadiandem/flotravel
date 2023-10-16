@@ -1,0 +1,120 @@
+<div style="background: #ffffff;">
+  <div *ngIf="fetching" class="container pt-5 pb-5" style="height: 400px; text-align: center;">
+    <div class="spinner-border text-primary"></div>
+    <span class="text-center mt-3" ngPreserveWhitespaces>&emsp; {{'tour-booking-result.label-title' | translate }}</span>
+  </div>
+  <div *ngIf="!fetchFailed && !fetching" class="container pt-5 pb-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-12 py-5 text-center">
+        <img class="mb-4" src="assets/ic_success.png" />
+        <h2 class="text-center mb-3">{{paymentRes?.payer?.lastName || 'John'}} {{'tour-booking-result.label-successful' | translate }}</h2>
+        <h5 class="text-center mb-4">{{'tour-booking-result.label-booking-details' | translate }} {{paymentRes?.payer?.email}} </h5>
+
+        <div class="card mt-5 mb-5 text-left1">
+          <div class="card-body text-left1">
+            <h4 class="heading">{{paymentRes?.item_name}}</h4>
+            <div class="hotel-address" ngPreserveWhitespaces>
+              <span><i class="fa fa-map-marker"></i>{{'tour-booking-result.label-address' | translate }} </span>&emsp;<i
+                class="fa fa-phone"></i> +1
+              &emsp;(543) 461-7550
+            </div>
+            <div class="mt-2">
+              <h6>{{'tour-booking-result.label-from' | translate }} </h6>
+              <p ngPreserveWhitespaces>{{searchTourForm?.startTime || 'April 26'}} &emsp; <i
+                  class="fa fa-arrow-right"></i>
+                &emsp; {{searchTourForm?.endTime || 'May 3'}}</p>
+            </div>
+            <ul class="order-payment-list list mt-3 text-left">
+              <li>
+                <div class="row mt-2">
+                  <div class="col-9">
+                    <h6><i class="fa fa-ticket"></i> {{'tour-booking-result.label-tour' | translate }}</h6>
+                    <small>{{'tour-booking-result.label-adults' | translate }} : {{paymentRes?.adultCount || 1}} , {{'tour-booking-result.label-childrens' | translate }} :{{paymentRes?.childCount || 0}}
+                    </small><br>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-right"><span
+                        class="text-lg">{{(paymentRes?.amount | currency:currency:'symbol':'.0-2')}}</span> </p>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="row mt-3">
+                  <div class="col-9">
+                    <h5>{{'tour-booking-result.label-total' | translate }} : </h5>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-right"><span
+                        class="text-lg">{{(paymentRes?.amount | currency:currency:'symbol':'.0-2')}}</span> </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="mb-5">
+          <a class="btn btn-danger mr-2" routerLink="#"><i class="fa fa-download"></i> {{'tour-booking-result.label-download' | translate }}</a>
+          <a class="btn btn-danger" routerLink="#"><i class="fa fa-envelope"></i> {{'tour-booking-result.label-emails' | translate }}</a>
+        </div>
+      </div>
+    </div>
+    <div class="gap"></div>
+  </div>
+
+  <div *ngIf="fetchFailed  && !fetching" class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+      <div class="col-8 text-center">
+        <img class="mb-4" src="assets/ic_fail.png" style="width:70px;" />
+        <h2 class="text-center mb-3">{{paymentRes?.payer?.lastName || 'John'}}{{'tour-booking-result.label-unsuccessful' | translate }}</h2>
+
+        <div class="card mt-5 mb-5 text-left1">
+          <div class="card-body text-left1">
+            <h4 class="heading">{{selectedTour?.name}}</h4>
+            <div class="hotel-address">
+              <span><i class="fa fa-map-marker"></i> {{'tour-booking-result.label-address' | translate }} </span>&emsp;<i
+                class="fa fa-phone"></i> +1
+              &emsp;(543) 461-7550
+            </div>
+            <div class="mt-2">
+              <h6>{{'tour-booking-result.label-from' | translate }}</h6>
+              <p ngPreserveWhitespaces>{{searchTourForm?.startTime || 'April 26 '}} &emsp; <i
+                  class="fa fa-arrow-right"></i>
+                &emsp; {{searchTourForm?.endTime || 'May 3'}} </p>
+            </div>
+            <ul class="order-payment-list list mt-3 text-left">
+              <li>
+                <div class="row mt-2">
+                  <div class="col-9">
+                    <h6><i class="fa fa-ticket"></i> {{'tour-booking-result.label-tour' | translate }}</h6>
+                    <small>{{'tour-booking-result.label-adults' | translate }} : {{selectedSchedule?.adultCount || 1}} , {{'tour-booking-result.label-childrens' | translate }}
+                      :{{selectedSchedule?.childCount || 0}} </small><br>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-right"><span class="text-lg">{{itemPrice | currency:currency:'symbol':'.0-2'}}</span>
+                    </p>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="row mt-3">
+                  <div class="col-9">
+                    <h5>{{'tour-booking-result.label-total' | translate }} : </h5>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-right"><span class="text-lg">{{itemPrice | currency:currency:'symbol':'.0-2'}}</span>
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <a routerLink="/tour/cart">
+          <h4 class="text-center" ngPreserveWhitespaces><i class="fa fa-arrow-left"></i>&emsp;{{'tour-booking-result.label-go-back' | translate }}
+          </h4>
+        </a>
+      </div>
+    </div>
+    <div class="gap"></div>
+  </div>
+</div>

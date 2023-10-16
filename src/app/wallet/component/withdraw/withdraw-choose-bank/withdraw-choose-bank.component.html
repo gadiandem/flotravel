@@ -1,0 +1,84 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title"> {{'wallet-withdraw-bank.bank-title' | translate }}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <form [formGroup]="chooseBankForm" class="form-horizontal clearfix">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-withdraw-bank.bank-title' | translate }}</label>
+              <div class="col-6">
+                <select class="form-control" id="bank" type="text" formControlName="bank"
+                  [ngClass]="{ 'is-invalid': formSubmitError && chooseBankForm.get('bank').errors }">
+                  <option value="">{{'wallet-withdraw-bank.bank-select' | translate }}</option>
+                  <option *ngFor="let bank of bankList" [value]="bank?.id">{{bank?.bankName}}</option>
+                </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="chooseBankForm.get('bank').errors?.required">
+                    {{'wallet-withdraw-bank.bank-invalid' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-withdraw-bank.bank-amount' | translate }}</label>
+              <div class="col-6">
+                <input class="form-control" id="amount" type="number" formControlName="amount"
+                  [ngClass]="{ 'is-invalid': formSubmitError && chooseBankForm.get('amount').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="chooseBankForm.get('amount').errors?.required">
+                    {{'wallet-withdraw-bank.bank-amount-invalid' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-withdraw-bank.withdraw-currency' | translate }}</label>
+              <div class="col-6">
+                <select class="form-control" id="bank" type="text" formControlName="currency"
+                  [ngClass]="{ 'is-invalid': formSubmitError && chooseBankForm.get('currency').errors }">
+                  <option value="">{{'wallet-withdraw-bank.bank-select-currency' | translate }}</option>
+                  <option *ngFor="let currency of currencies" [value]="currency?.currency">{{currency?.currency}}
+                  </option>
+                </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="chooseBankForm.get('currency').errors?.required">
+                    {{'wallet-withdraw-bank.bank-invalid-currency' | translate }}
+                  </span>
+                </span>
+                <ng-template #currencyTemplate let-model="item" let-index="index">
+                  {{model?.currency}}
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr />
+      <div class="clearfix">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary btn-sm mr-2" (click)="confirm()">{{'wallet-withdraw-bank.bank-next' | translate }}</button>
+          <button type="button" class="btn btn-warning btn-sm" (click)="cancel()">{{'wallet-withdraw-bank.bank-cancel' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

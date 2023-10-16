@@ -1,0 +1,29 @@
+.k-dateinput {
+  font-size: 18px;
+  background-color: #eeeeee !important;
+}
+
+.k-dateinput-wrap {
+  background-color: #eeeeee !important;
+}
+
+::ng-deep .k-input-inner {
+  width: 100% !important;
+  border: none !important;
+  height: 100% !important;
+  background-color: transparent;
+  padding: 6px !important;
+}
+
+::ng-deep kendo-datepicker {
+  padding: 0px !important;
+}
+
+::ng-deep kendo-dateinput {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+::ng-deep .k-input-button {
+  display: none;
+}

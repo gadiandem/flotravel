@@ -1,0 +1,28 @@
+<div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        Hotel Facility
+      </div>
+      <div class="card-body">
+        <form [formGroup]="facilityForm" (ngSubmit)="createFacility()">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Name
+                </span>
+              </div>
+              <input formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': formSubmitError && facilityForm.get('name').errors }"/>
+              <span class="invalid-feedback">
+                <span *ngIf="facilityForm.get('name').errors?.required">
+                  Please Enter Facility Name.
+                </span>
+              </span>
+            </div>
+          </div>
+          <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Create Facility" />
+        </form>
+      </div>
+    </div>
+  </div>
+  

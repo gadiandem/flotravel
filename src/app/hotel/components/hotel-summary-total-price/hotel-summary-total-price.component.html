@@ -1,0 +1,14 @@
+<div class="flight-item shadow-box blue-bg mb-3">
+  <div class="row d-flex p-3">
+    <div class="col-md-6">
+      <h6 class="text-danger mb-0">{{'hotel-summary.label-trip-summary' | translate }} </h6>
+      <small>{{'hotel-summary.label-rules' | translate }} </small>
+    </div>
+    <div class="col-md-6">
+      <small class="font-weight-light"
+        style="color: #444; padding-top: 8px; float: right; font-size: 16px;font-weight:300">{{'hotel-summary.label-trip-cost' | translate }}
+        <span style="font-weight:400">{{(+totalPrice || 0) | currency:currency:'symbol':'.0-2'}}</span>
+      </small>
+    </div>
+  </div>
+</div>

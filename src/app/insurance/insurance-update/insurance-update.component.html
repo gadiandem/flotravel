@@ -1,0 +1,68 @@
+<div style="background: #f0f2f6;">
+  <main-header></main-header>
+  <div class="container mt-3 pt-3 pb-5">
+    <div class="card card-default shadow-sm">
+      <div class="card-header">Policy Holder Update</div>
+      <div class="card-body">
+        <form class="form-horizontal" [formGroup]="policyHolderForm">
+          <div class="form-group row"><label for="firstName" class="col-md-2 col-form-label">Last Name</label>
+            <div class="col-md-10"><input id="firstName" class="form-control form-control-rounded"
+                                          formControlName="firstName" type="text"
+                                          [ngClass]="{ 'is-invalid': formSubmitError && policyHolderForm.get('firstName').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="policyHolderForm.get('firstName').errors?.required">
+                  Please enter your email.
+                </span>
+                <span *ngIf="policyHolderForm.get('firstName').errors?.pattern">
+                  Please enter valid value: FLOCASH TEST UPDATED_<strong>number</strong>(0-999999).
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="form-group row"><label for="lastName" class="col-md-2 col-form-label">Last Name</label>
+            <div class="col-md-10"><input id="lastName" class="form-control form-control-rounded"
+                                          formControlName="lastName" type="text"
+                                          [ngClass]="{ 'is-invalid': formSubmitError && policyHolderForm.get('lastName').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="policyHolderForm.get('lastName').errors?.required">
+                  Please enter your email.
+                </span>
+                <span *ngIf="policyHolderForm.get('lastName').errors?.pattern">
+                  Please enter valid value: ETHIOPIAN AIRLINES TEST UPDATED_<strong>number</strong> (0-999999).
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="form-group row"><label for="streetAddress" class="col-md-2 col-form-label">Street Address</label>
+            <div class="col-md-10"><input id="streetAddress" class="form-control form-control-rounded"
+                                          formControlName="streetAddress" type="text"
+                                          [ngClass]="{ 'is-invalid': formSubmitError && policyHolderForm.get('streetAddress').errors }">
+              <span class="invalid-feedback">
+                    <span *ngIf="policyHolderForm.get('streetAddress').errors?.required">
+                      Please enter your email.
+                    </span>
+                    <span *ngIf="policyHolderForm.get('streetAddress').errors?.pattern">
+                      Please enter valid value: 123 Test Street UPDATED_<strong>number</strong> (0-999999).
+                    </span>
+                  </span></div>
+          </div>
+          <div class="form-group row"><label for="city" class="col-md-2 col-form-label">City</label>
+            <div class="col-md-10"><input id="city" class="form-control form-control-rounded" formControlName="city"
+                                          type="text"
+                                          [ngClass]="{ 'is-invalid': formSubmitError && policyHolderForm.get('city').errors }">
+              <span class="invalid-feedback">
+                    <span *ngIf="policyHolderForm.get('city').errors?.required">
+                      Please enter your email.
+                    </span>
+                    <span *ngIf="policyHolderForm.get('city').errors?.pattern">
+                      Please enter valid value: TEST CITY UPDATED_<strong>number</strong> (0-999999).
+                    </span>
+                  </span></div>
+          </div>
+          <button class="btn btn-sm btn-primary" type="button" (click)="updatePolicyHolder()">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<main-footer></main-footer>

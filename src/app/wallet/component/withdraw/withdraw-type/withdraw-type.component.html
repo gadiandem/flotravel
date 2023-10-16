@@ -1,0 +1,52 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title"> {{'wallet-withdraw-funds.withdraw-title' | translate }}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <form [formGroup]="withdrawForm">
+        <div class="form-group">
+          <div class="form-check">
+            <input class="form-check-input" id="bank" type="radio" value="BANK" formControlName="withdrawType"
+              [ngClass]="{ 'is-invalid': formSubmitError && withdrawForm.get('withdrawType').errors }">
+            <label class="form-check-label" for="bank"
+              [ngClass]="{ 'is-invalid': formSubmitError && withdrawForm.get('withdrawType').errors }">{{'wallet-withdraw-funds.withdraw-bank' | translate }}</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" id="card" type="radio" value="CARD" formControlName="withdrawType"
+              [ngClass]="{ 'is-invalid': formSubmitError && withdrawForm.get('withdrawType').errors }">
+            <label class="form-check-label" for="card"
+              [ngClass]="{ 'is-invalid': formSubmitError && withdrawForm.get('withdrawType').errors }">{{'wallet-withdraw-funds.withdraw-card' | translate }}</label>
+          </div>
+          <span class="invalid-feedback">
+            <span *ngIf="withdrawForm.get('withdrawType').errors?.required">
+              {{'wallet-withdraw-funds.withdraw-invalid-type' | translate }}
+            </span>
+          </span>
+        </div>
+      </form>
+      <hr />
+      <div class="clearfix">
+        <div class="pull-right">
+            <button type="button" class="btn btn-success btn-sm mr-2" (click) = "next()"> {{'wallet-withdraw-funds.withdraw-next' | translate }}</button>
+            <button type="button" style="color: white;" class="btn btn-warning btn-sm" (click) = "cancel()"> {{'wallet-withdraw-funds.withdraw-cancel' | translate }}</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-withdraw-list></app-withdraw-list>
+

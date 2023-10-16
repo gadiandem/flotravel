@@ -1,0 +1,64 @@
+.flight-bags-detail {
+  color: #007bff;
+  cursor: pointer;
+  margin-bottom: 0px;
+}
+
+.flight-bags-detail:hover {
+  color: #6610f2;
+}
+
+.airline-tile {
+  margin: 0px;
+}
+
+.chpage .pbox label{font-size: 14px;}
+.chpage .pbox .product-price .priceb{font-size: 25px;}
+.chpage .solicitation ul{margin-top: 20px !important;}
+.chpage .solicitation ul > li{width: 50%;margin-bottom: 15px;padding:0px  10px;list-style: none;}
+.chpage .solicitation ul li ul{margin-top: 5px !important;}
+.chpage .solicitation ul li li{width: 100%;padding: 0px ; list-style: circle;}
+
+@media only screen and (max-width: 767px) {
+  .chpage .solicitation ul > li{width: 100%;}
+}
+
+label {
+  margin-left: 0px;
+}
+
+::ng-deep .k-input-inner {
+  width: 100% !important;
+  border: none !important;
+  height: 100% !important;
+  background-color: transparent;
+  padding: 6px !important;
+}
+::ng-deep kendo-datepicker {
+  padding: 0px !important;
+}
+
+::ng-deep kendo-dateinput {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+::ng-deep .k-input-button {
+  display: none;
+}
+ul {
+  list-style: none;
+  padding-left: 0px;
+}
+
+ul li:before {
+  content: '✓';
+}
+
+:host ::ng-deep .iti {
+  width: 100%;
+}
+
+.iti--allow-dropdown {
+  width: 100%;
+}

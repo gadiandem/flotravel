@@ -1,0 +1,213 @@
+<div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        Package Info
+      </div>
+      <div class="card-body">
+        <form [formGroup]="packageInfoForm" (ngSubmit)="createPackage()">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Name
+                </span>
+              </div>
+              <input formControlName="name" class="form-control" placeholder="" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Description
+                </span>
+              </div>
+              <input formControlName="description" class="form-control" placeholder="" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Region
+                </span>
+              </div>
+              <input [(ngModel)]="searchRegion" typeaheadOptionField="name" [typeahead]="regions$"
+                formControlName="region" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+                (typeaheadOnSelect)="selectRegion($event.item)" class="form-control" placeholder=""
+                [ngClass]="{ 'is-invalid': formSubmitError && packageInfoForm.get('region').errors }" />
+              <span class="invalid-feedback">
+                <span *ngIf="packageInfoForm.get('region').errors?.required">
+                  Please enter Region.
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  City
+                </span>
+              </div>
+              <input [(ngModel)]="searchCity" typeaheadOptionField="displayName" [typeahead]="citys$"
+                formControlName="city" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+                (typeaheadOnSelect)="selectCity($event.item)" class="form-control" placeholder=""
+                [ngClass]="{ 'is-invalid': formSubmitError && packageInfoForm.get('city').errors }" />
+              <span class="invalid-feedback">
+                <span *ngIf="packageInfoForm.get('city').errors?.required">
+                  Please enter Region.
+                </span>
+              </span>
+            </div>
+          </div>
+          <!-- <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Tax
+                </span>
+              </div>
+              <input [(ngModel)]="searchTax" typeaheadOptionField="shortDescription" [typeahead]="taxs$"
+                formControlName="tax" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+                (typeaheadOnSelect)="selecTax($event.item)" class="form-control"
+                [ngClass]="{ 'is-invalid': formSubmitError && packageInfoForm.get('tax').errors }" />
+              <span class="invalid-feedback">
+                <span *ngIf="packageInfoForm.get('tax').errors?.required">
+                  Please enter Tax.
+                </span>
+              </span>
+            </div>
+          </div> -->
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  DayCount
+                </span>
+              </div>
+              <input formControlName="dayCount" class="form-control" placeholder=""
+              [ngClass]="{ 'is-invalid': formSubmitError && packageInfoForm.get('dayCount').errors }"/>
+              <span class="invalid-feedback">
+                <span
+                  *ngIf="packageInfoForm.get('dayCount').errors?.pattern && (packageInfoForm.get('dayCount').dirty || packageInfoForm.get('dayCount').touched)">This
+                  field must contain only digits</span>
+              </span>
+            </div>
+          </div>
+          <label style="font-size: large;" class="text-danger">Iteneraries</label>
+          <hr/>
+          <div class="form-group">
+            <div formArrayName="itineraries">
+              <div class="row" *ngFor="let activity of itinerariesControls; let i = index" [formGroupName]="i">
+                <div class="col-2"><b>Day</b> <span class="rcount text-danger border text-center"
+                    style="background: #eeeeee;">{{i + 1}}</span>
+                </div>
+                <div class="col-9">
+                  <div class="form-group">
+                    <label class="m-0">Activity</label>
+                    <tag-input formControlName='activity'
+                      theme='bootstrap'>
+                    </tag-input>
+                  </div>
+                </div>
+                <div class="col-1 d-flex align-items-center align-self-center mt-sm-2 mb-sm-2" *ngIf="i >= 1">
+                  <div (click)="removeItinerary(i)" style="cursor: pointer;">
+                    <i class="fa fa-times-circle"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="add-room" [hidden]="dayCount <= itineraryCount" (click)="addItinerary()"
+            style="cursor:pointer;">
+            <i class="fa fa-plus-circle"></i> Add Itinerary
+          </div>
+          <hr/>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Price
+                </span>
+              </div>
+              <input formControlName="price" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Currency
+                </span>
+              </div>
+              <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code"
+                  [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="" class="form-control">
+            </div>
+          </div>
+          <div class="form-group mt-2">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Hotel
+                </span>
+              </div>
+              <input [(ngModel)]="searchHotel" typeaheadOptionField="name" [typeahead]="hotels$" formControlName="hotel"
+                [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="selectHotel($event.item)"
+                class="form-control" placeholder=""
+                [ngClass]="{ 'is-invalid': formSubmitError && packageInfoForm.get('hotel').errors }" />
+              <span class="invalid-feedback">
+                <span *ngIf="packageInfoForm.get('hotel').errors?.required">
+                  Please enter Hotel.
+                </span>
+              </span>
+              <!-- <input formControlName="hotel" class="form-control" placeholder="hotel" /> -->
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="m-0">Supplements</label>
+            <tag-input formControlName="supplements" [onlyFromAutocomplete]="true" theme='bootstrap'
+            [placeholder]="'Add Supplement'"
+            displayBy="name"
+            identifyBy="id">
+              <tag-input-dropdown
+                  [showDropdownIfEmpty]="true"
+                  displayBy="name"
+                  identifyBy="id"
+                  [autocompleteObservable]="supplementListAutoComplete">
+              </tag-input-dropdown>
+          </tag-input>
+          </div>
+          <div class="form-group">
+            <label class="m-0">Tours</label>
+            <tag-input formControlName="tours" [onlyFromAutocomplete]="true" theme='bootstrap'
+            [placeholder]="'Add Tour'"
+            displayBy="name"
+            identifyBy="id">
+              <tag-input-dropdown
+                  [showDropdownIfEmpty]="true"
+                  displayBy="name"
+                  identifyBy="id"
+                  [autocompleteObservable]="tourListAutoComplete">
+              </tag-input-dropdown>
+          </tag-input>
+          </div>
+          <div class="form-group">
+            <label class="m-0">Transfers</label>
+            <tag-input formControlName="transfers" [onlyFromAutocomplete]="true" theme='bootstrap'
+            [placeholder]="'Add Transfer'"
+            displayBy="name"
+            identifyBy="id">
+              <tag-input-dropdown
+                  [showDropdownIfEmpty]="true"
+                  displayBy="name"
+                  identifyBy="id"
+                  [autocompleteObservable]="transferListAutoComplete">
+              </tag-input-dropdown>
+          </tag-input>
+          </div>
+          <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Create Package" />
+        </form>
+      </div>
+    </div>
+  </div>

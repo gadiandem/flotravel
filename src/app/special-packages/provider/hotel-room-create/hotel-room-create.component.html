@@ -1,0 +1,139 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header">
+      Hotel Room
+    </div>
+    <div class="card-body">
+      <form [formGroup]="hotelRoomForm" (ngSubmit)="createRoom()">
+        <div class="form-group mt-2">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Hotel
+              </span>
+            </div>
+<!--            <input [(ngModel)]="searchHotel" typeaheadOptionField="name" [typeahead]="hotels$" formControlName="hotel"-->
+<!--              [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="selectHotel($event.item)"-->
+<!--              class="form-control" placeholder="hotel" />-->
+<!--            <span class="invalid-feedback">-->
+<!--              <span *ngIf="hotelRoomForm.get('hotel').errors?.required">-->
+<!--                Please enter Hotel.-->
+<!--              </span>-->
+<!--            </span>-->
+            <input class="form-control" value="{{hotelName}}" readonly="true" />
+            <!-- <input formControlName="hotel" class="form-control" placeholder="hotel" /> -->
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Room Type
+              </span>
+            </div>
+            <input formControlName="roomType" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Room Description
+              </span>
+            </div>
+            <textarea formControlName="roomDescription" class="form-control">
+             </textarea>
+          </div>
+        </div>
+        <!-- <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Customer InformationPack
+              </span>
+            </div>
+            <input formControlName="customerInformationPack" class="form-control" />
+          </div>
+        </div> -->
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Adult Count
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="adultCount">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Child Count
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="childCount">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+        </div>
+        <!-- <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Price Per Night
+              </span>
+            </div>
+            <input formControlName="pricePerNight" class="form-control" />
+          </div>
+        </div> -->
+        <!-- <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Currency
+              </span>
+            </div>
+            <input formControlName="currency" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Discount
+              </span>
+            </div>
+            <input formControlName="discount" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Breakfast
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="breakfast">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+        </div> -->
+        <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Create Room" />
+      </form>
+    </div>
+  </div>
+</div>

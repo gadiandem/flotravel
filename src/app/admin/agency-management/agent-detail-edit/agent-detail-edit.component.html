@@ -1,0 +1,180 @@
+<div class="container-fluid mt-5">
+  <div class="row mb-3">
+    <div class="col-sm-8 offset-2">
+      <div class="card mb-3">
+        <span *ngIf="isLoading">
+          <div class="spinner-grow spinner-grow-sm text-primary mt-1" role="status">
+          </div><span><h5 ngPreserveWhiteSpaces>&emsp;{{'admin-agency-management.label-loading' | translate }}</h5></span>
+        </span>
+        <div class="card-header" style="font-weight: 700">
+          {{'admin-agency-management-edit.label-agent-info' | translate }}
+        </div>
+        <div class="card-body">
+          <form [formGroup]="agentForm">
+            <div class="col-12">
+              <div formGroupName="agentInfo">
+                <div class="form-group row">
+                  <label for="address">{{'admin-agency-management-edit.label-address' | translate }}</label>
+                  <input class="form-control" id="address" formControlName="address"
+                    [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('agentInfo.address').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="agentForm.get('agentInfo.address').errors?.required">
+                      {{'admin-agency-management-edit.invalid-address' | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="name">{{'admin-agency-management-edit.label-agent-name' | translate }}</label>
+                <input class="form-control" id="name" formControlName="name"
+                  [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('name').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="agentForm.get('name').errors?.required">
+                    {{'admin-agency-management-edit.invalid-agent-name' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="search-hotel btn btn-danger" (click)="saveAgent()">
+            {{!agentDetail? 'Create' : 'Update'}} {{'admin-agency-management-edit.title-agent' | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="row mb-3" *ngIf="isSAdmin">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="align-items: center;display: flex;justify-content: space-between;font-weight: 700">
+              {{'admin-agency-management-edit.title-selling-currency' | translate }}
+              <button class="btn btn-success float-right" (click)="createSellingCurrencyForAgency()">Create</button>
+            </div>
+            <style>.card-body::after, .card-footer::after, .card-header::after {content: unset!important;}</style>
+            <div class="card-body">
+              <div class="row">
+                <div class="table table-striped col-12">
+                  <thead>
+                  <tr>
+                    <th scope="col">{{'admin-agency-management-edit.title-selling-no' | translate }}</th>
+<!--                    <th scope="col">{{'admin-agency-management-edit.title-selling-provider' | translate }}</th>-->
+                    <th scope="col">{{'admin-agency-management-edit.title-selling-country' | translate }}</th>
+                    <th scope="col">{{'admin-agency-management-edit.title-currency' | translate }}</th>
+                    <th scope="col">{{'admin-agency-management-edit.title-service-type' | translate }}</th>
+                    <th scope="col">{{'admin-agency-management-edit.title-action' | translate }}</th>
+                  </tr>
+                  </thead>
+                  <tbody *ngIf="loadingSellingCurrencyDetail" class="col-6" style="display: flex;justify-content: center; margin-top: 10px;">
+                    <span>
+                      <div class="spinner-grow spinner-grow-sm text-primary" role="status"></div>
+                      <span ngPreserveWhiteSpaces>&emsp;{{'admin-agency-management-edit.loading' | translate }}</span>
+                    </span>
+                  </tbody>
+                  <tbody *ngIf="!loadingSellingCurrencyDetail">
+                  <tr *ngFor="let sellingCurrency of sellingCurrencyResponse?.sellingCurrencies; let i = index">
+                    <th scope="row">{{i + 1}}</th>
+<!--                    <td>{{sellingCurrency?.provider}}</td>-->
+                    <td>{{convertToCountryName(sellingCurrency?.countryCode)}}</td>
+                    <td>{{sellingCurrency?.currency}}</td>
+                    <td>{{sellingCurrency?.serviceType}}</td>
+                    <td>
+<!--                      <button class="btn btn-warning btn-sm mr-1" (click)="editSellingCurrency(sellingCurrency?.code)"><span-->
+<!--                        class="fa fa-edit"></span></button>-->
+                      <button class="btn btn-danger btn-sm" (click)="deleteSellingCurrency(sellingCurrency)"><span
+                          class="fa fa-trash"></span></button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3" *ngIf="subAgents?.length > 0">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="font-weight: 700">{{'admin-agency-management-edit.title-sub-agent' | translate }}</div>
+            <div class="card-body">
+              <div class="row">
+                <div class="table table-striped col-12">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <!-- <th scope="col">Agent Name</th> -->
+                      <th scope="col">{{'admin-agency-management-edit.label-address' | translate }}</th>
+                      <!-- <th scope="col">{{'admin-agency-management-edit.label-logo' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.label-website' | translate }}</th> -->
+                      <th scope="col">{{'admin-agency-management-edit.title-name' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-parent' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-action' | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let agent of subAgents; let i = index">
+                      <th scope="row">{{i + 1}}</th>
+                      <!-- <td>{{agent?.name}}</td> -->
+                      <td>{{agent?.agentInfo?.address}}</td>
+                      <!-- <td><img [src]="agent.agentInfo.logo" style="height: 30px;" /></td>
+                      <td>{{agent?.agentInfo?.website}}</td> -->
+                      <td>{{agent?.name}}</td>
+                      <td>{{agentDetail.name}}</td>
+                      <td>
+                        <button class="btn btn-warning btn-sm mr-1" (click)="openAgentComponent(agent)"><span
+                            class="fa fa-edit"></span></button>
+                        <!-- <button class="btn btn-danger btn-sm" (click)="removeSubAgent(agent.id)"><span
+                            class="fa fa-trash"></span></button> -->
+                      </td>
+                    </tr>
+                  </tbody>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3" *ngIf="userList?.length > 0">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="font-weight: 700">{{'admin-agency-management-edit.title-user-list' | translate }}</div>
+            <div class="card-body">
+              <div class="row">
+                <div class="table table-striped col-12">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-email' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-name' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-mobile' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-type' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-enabled' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-expired' | translate }}</th>
+                      <th scope="col">{{'admin-agency-management-edit.title-action' | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of userList; let i = index">
+                      <th scope="row">{{i + 1}}</th>
+                      <td>{{user?.email}}</td>
+                      <td>{{user?.firstName}}</td>
+                      <td>{{user?.mobile}}</td>
+                      <td>{{userGroupName(user?.userGroupIds[0])}}</td>
+                      <td>{{user?.enabled}}</td>
+                      <td>{{user?.expired}}</td>
+                      <td>
+                        <button class="btn btn-warning btn-sm mr-1" (click)="openUserComponent(user)"><span
+                            class="fa fa-edit"></span></button>
+                        <!-- <button class="btn btn-danger btn-sm" (click)="removeUser(user.id)"><span
+                            class="fa fa-trash"></span></button> -->
+                      </td>
+                    </tr>
+                  </tbody>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

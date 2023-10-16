@@ -1,0 +1,64 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-transactions-history-table.label-title' | translate }}</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-success" (click)="transactionReport()">  
+        <i class="fa fa-download mr-2"></i>Download</button>  
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <div *ngIf="fetching" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;{{'wallet-transactions-history-table.label-loading' | translate }}</span>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed">
+        <table class="table" id="transactionRecords" style="font-weight: 400;height: auto; margin-top: 50px !important;top: 65px;border:10px;">
+          <thead>
+            <tr>
+              <th scope="col">{{'wallet-transactions-history-table.label-id' | translate }}</th>
+              <th scope="col">{{'wallet-transactions-history-table.label-date' | translate }}</th>
+              <th scope="col">{{'wallet-transactions-history-table.label-type' | translate }}</th>
+              <th scope="col">{{'wallet-transactions-history-table.label-name-email' | translate }}</th>
+              <th scope="col">{{'wallet-transactions-history-table.label-amount' | translate }}</th>
+              <th scope="col">{{'wallet-transactions-history-table.label-status' | translate }}</th>
+              <th scope="col">{{'wallet-transactions-history-table.label-payment' | translate }}</th>
+              <th scope="col">{{'wallet-transactions-history-table.label-action' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf = "transactionListView.length === 0">
+              <p>{{'wallet-transactions-history-table.label-no-transaction' | translate }}</p>
+            </tr>
+            <tr *ngFor="let transaction of transactionListView">
+              <td>{{transaction?.txnId}}</td>
+              <td>{{transaction?.postDate}}</td>
+              <td>{{transaction?.fullTransType}}</td>
+              <td>{{transaction?.userEmail}}</td>
+              <td>{{transaction?.amount | currency: (transaction?.currency || 'USD'): 'symbol':'.0-2'}}</td>
+              <td>{{transaction?.status}}</td>
+              <td>{{transaction?.paymentOption}}</td>
+              <td>
+                <a class="smallFont" (click)='openModalWithComponent(transaction)'>{{'wallet-transactions-history-table.label-detail' | translate }} </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <form [formGroup]="addBankForm" class="form-horizontal clearfix">
+          <ngb-pagination class="d-flex justify-content-center mt-2" [collectionSize]="collectionSize" [page]="page"
+            [pageSize]="pageSize" (pageChange)="refreshTransactions($event)">
+          </ngb-pagination>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

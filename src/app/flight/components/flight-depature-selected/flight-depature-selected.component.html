@@ -1,0 +1,114 @@
+<div class="flights-list">
+  <div class="flight-item shadow-box blue-bg mb-3">
+    <div class="d-flex p-3 pb-0">
+      <h6 class="text-danger d-flex w-100">{{'flight-summary.label-selected-departure' | translate }}
+        <small *ngIf="departureFlight?.flight?.provider === 1" class="font-weight-light ml-auto" style="color: #444; padding-top: 3px;">
+          {{departureFlight?.flight?.depDateTime?.split(' ')[0] | date:'EEE dd, MMM'}} |
+           <a class="text-danger" routerLink="/flight">{{'flight-summary.label-change' | translate }}</a>
+        </small>
+
+      </h6>
+    </div>
+    <div class="row">
+      <div  *ngIf="departureFlight?.flight?.provider !== 2" class="col-md-9 col-7">
+        <div *ngFor="let segment of departureFlight?.flight?.flightSegments;let i= index;" class="row">
+          <div class="col-md-7 col-12">
+            <div class="px-3 pt-3">
+              <h5 class="flight-title">{{segment?.depDateTime  | date: 'h:mm a'}} -
+                {{getArrivalTime(departureFlight?.flight) | date: 'h:mm a'}}</h5>
+              <p class="title"><img [src]="'http://pics.avs.io/300/300/' + segment?.airline.split('-')[0] + '.png'" style="width:30px;">
+                {{segment?.airline?.split('-')[1]}}
+              </p>
+            </div>
+          </div>
+          <div class="col-md-5 d-none d-md-block px-3 pt-3">
+            <div *ngIf="isDirect" class="text-muted" style="font-weight: bold;">{{'( Direct)'}}
+            </div>
+            <div class="text-muted" style="font-weight: bold;">{{totalDuration(segment)}}
+            </div>
+            <p class="text-muted">{{segment?.depAirportCode}} -
+              <!-- {{getArrivalCode(departureFlight?.flight)}}</p> -->
+              {{segment?.arrAirportCode}}</p>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="departureFlight?.flight?.provider === 2" class="col-md-9 col-7">
+        <div class="row">
+          <div class="col-md-7 col-12">
+            <div class="px-3 pt-1">
+              <h5 class="flight-title">{{departureFlight?.flight?.depDateTime | date: 'h:mm'}} -
+                {{getArrivalTime(departureFlight?.flight) | date: 'h:mm'}}</h5>
+              <p class="title"><img [lazyLoad]="departureFlight?.flight?.flightSegments[0]?.airlineLogo"
+                                    [errorImage]="defaultAirlineLogo" [defaultImage]="defaultAirlineLogo" style="width:30px;">
+                {{'API Airways'}}
+              </p>
+            </div>
+          </div>
+          <!--<div class="col-md-5 d-none d-md-block px-3 pt-1">
+            <div class="text-muted" style="font-weight: bold;">{{'Direct'}}
+            </div>
+            <p class="text-muted">{{departureFlight?.flight?.depAirportCode}} -
+              {{getArrivalCode(departureFlight?.flight)}}</p>
+          </div> -->
+        </div>
+      </div>
+      <div class="col-md-3 col-5 py-3 pr-3">
+        <div class="text-right" style="text-align: right; padding-right: 10px;" *ngFor="let segment of departureFlight?.flight?.flightSegments;let i = index">
+          <span *ngIf="i===0 && departureFlight.flight.provider !=3" class="flight-price">{{departureFlight?.flight?.offerItemList[0]?.totalAmount | number: '.0-2'}} {{departureFlight?.flight?.offerItemList[0]?.currency}}</span><br>
+          <span *ngIf="i===0 && departureFlight.flight.provider ==3" class="flight-price">{{departureFlight?.offerItem?.totalPriceOfFlight | number: '.0-2' }} {{departureFlight?.flight?.offerItemList[0]?.currency}}</span><br>
+          <p *ngIf="i===0" style="font-size: 12px;margin-bottom:3px;">{{'flight-summary.label-taxes' | translate }}</p>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="px-3 pb-3">
+        <!--  {{'flight-summary.label-terms' | translate }} -->
+        </div>
+      </div>
+      <div class="col-md-12 collapsed" (click)="isCollapsed = !isCollapsed">
+        <p class="px-3 py-2 m-0" style="color:#007864; cursor:pointer; border-top:1px solid #ccc; ">
+          <span>{{'flight-summary.label-more-info' | translate }}</span>
+          <span class="float-right">{{'flight-summary.label-details' | translate }}</span>
+        </p>
+      </div>
+      <div id="collapse0" class="col-12 collapse" [collapse]="isCollapsed" [isAnimated]="true">
+        <div class="row">
+          <div class="col-md-6">
+            <div *ngFor="let segment of departureFlight?.flight?.flightSegments; let i = index" class="m-3 pl-3"
+                 style="border-left:1px solid #eee072;">
+              <div class="flight-cart-start"></div>
+              <p><strong>{{'flight-summary.label-from' | translate }}</strong> {{segment?.depAirportCode}}&emsp;{{segment?.depAirportName}}<br>
+                <strong>{{'flight-summary.label-to' | translate }}</strong> {{segment?.arrAirportCode}}:&emsp;{{segment?.arrAirportName}}</p>
+              <p>{{segment?.airline.split('-')[1]}}<br>
+                {{segment?.aircraft}}{{'flight-summary.label-aircraft' | translate }} {{segment?.flightNumber}}<br>
+                {{segment?.marketingName}}<br>
+                {{segment?.depDateTime}} -> {{segment?.arrDateTime}}<br>
+                ({{segment?.duration}})</p>
+              <p><strong>Total distance</strong> {{segment.distance}}</p>
+              <div class="flight-cart-end"></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3" *ngIf="departureFlight?.flight?.offerItemList[0]?.weightAllowance">
+              <p><strong>ApplicableParty</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                Maximum Weight:&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                <span>{{departureFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p>
+            </div>
+            <div class="p-3" *ngIf="!departureFlight?.flight?.offerItemList[0]?.weightAllowance && departureFlight?.flight?.offerItemList[0]?.pieceAllowances">
+              <p><strong>ApplicableParty</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+              <p><strong>TotalQuantity</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+              <p><strong>BagType</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                <!-- Maximum Weight:&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                <span>{{departureFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+          </div>
+          <div class="p-3" *ngIf="baggageRules">
+            <p><strong>Baggage Rules</strong><span>&nbsp;</span><br>
+              <ul>
+                <li *ngFor="let bag of baggageInfoView;">&nbsp;{{bag}}</li>
+              </ul>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

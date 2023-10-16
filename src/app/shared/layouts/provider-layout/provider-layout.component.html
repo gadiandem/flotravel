@@ -1,0 +1,11 @@
+<app-provider-header (toggleMenuSidebar)="toggleMenuSidebar()"></app-provider-header>
+
+<app-provider-menu-sidebar class="main-sidebar sidebar-dark-primary elevation-4"></app-provider-menu-sidebar>
+
+<div class="content-wrapper">
+  <router-outlet></router-outlet>
+</div>
+
+<app-provider-footer class="main-footer"></app-provider-footer>
+<aside class="control-sidebar control-sidebar-dark"></aside>
+<div id="sidebar-overlay" (click)="toggleMenuSidebar()"></div>

@@ -1,0 +1,119 @@
+<div *ngIf="!fetching" class="container-fluid my-md-5 mt-5 pt-5 pb-3 shadow-box p-0 margin-layout">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0" placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <form [formGroup]="searchForm" class="hotel-search flight-search" (ngSubmit)="searchHotel()">
+      <div id="select-box-close" (click)="closeFormSearch()" class="text-right my-2"><i class="fa fa-times"></i></div>
+      <div class="row" style="cursor: pointer;">
+        <div class="col-lg-3 col-12">
+          <label class="m-0 font-weight-light">{{'hotel-search-box.label-where' | translate}}</label>
+          <div class="form-group mb-md-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+              </div>
+              <input [(ngModel)]="search" type="search"
+                     typeaheadOptionField="displayName"
+                     [typeahead]="suggestions$"
+                     formControlName="destination"
+                     [value]="destinationDisplayInBoxSearch"
+                     [typeaheadAsync]="true"
+                     [typeaheadOptionsLimit]="limit"
+                     (typeaheadOnSelect)="select($event.item)"
+                     class="form-control" placeholder="{{'hotel-search-box.placeholder-where' | translate}}"
+                     [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('destination').errors?.required">
+                  {{'hotel-search-box.invalid-location' | translate }}
+                </span>
+                <span *ngIf="searchForm.get('destination').errors?.minlength">
+                  {{'hotel-search-box.incorrect-location' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6 pr-3">
+          <label class="m-0 font-weight-light">{{'hotel-search-box.label-start-date' | translate }}</label>
+          <div class="form-group mb-md-0">
+            <div class="input-group checkinDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="search" ngbDatepicker #checkin="ngbDatepicker"
+                     formControlName="check_in"
+                     [startDate]="minDateStart"
+                     [minDate]="minDateStart"
+                     (click)="checkin.toggle()"
+                     (dateSelect)="getCheckinDate($event)"
+                     placement="bottom" class="form-control"
+                     [ngClass]="{ 'is-invalid': formSubmitError && (searchForm.get('check_in').errors || searchForm.errors) }"/>
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('check_in').errors?.required">
+                   {{'hotel-search-box.invalid-start-date' | translate }}
+                </span>
+                <span *ngIf="searchForm.errors?.lessThan">
+                  {{'hotel-search-box.invalid-checkin-less-than-checkout' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6">
+          <label class="m-0 font-weight-light">{{'hotel-search-box.label-end-date' | translate }}</label>
+          <div class="form-group mb-md-0">
+            <div class="input-group checkoutDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="search" ngbDatepicker #checkout="ngbDatepicker"
+                     formControlName="check_out"
+                     [startDate]="minDateStart"
+                     [minDate]="minDateStart"
+                     (click)="checkout.toggle()"
+                     (dateSelect)="getCheckoutDate($event)"
+                     placement="bottom"  class="form-control"
+                     [ngClass]="{ 'is-invalid': formSubmitError && (searchForm.get('check_out').errors || searchForm.errors)}"/>
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('check_out').errors?.required">
+                   {{'hotel-search-box.invalid-end-date' | translate }}
+                </span>
+                 <span *ngIf="searchForm.errors?.lessThan">
+                  {{'hotel-search-box.invalid-checkout-greater-than-checkin' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-12">
+          <label class="mb-0 m-0 font-weight-light">{{'hotel-search-box.label-guests' | translate }}</label>
+          <div class="form-group mb-md-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+              </div>
+              <input #menuDrop type="text" class="guests-input form-control" (click)="toggleDrop()"
+                     [value]="travellerCount +' travellers, ' + roomCount + ' rooms'" style="background:#fff;">
+              <app-room-guests *ngIf="showDropDown"
+                               [roomGuests] = "roomGuests"
+                               (roomGuestsNew)="updateRoomGuests($event)"
+                               (showDropDown)="changeShowDropDown($event)"
+                               class="guests-dropdown shadow-box p-3"></app-room-guests>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-12">
+          <label class="mb-0 font-weight-light invisible ">.</label><br>
+          <input type="submit" name="submit" class="btn btn-danger" value="Search Hotels Simulator" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<app-hotel-search-box-skeleton *ngIf="fetching"></app-hotel-search-box-skeleton>

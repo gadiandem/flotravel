@@ -1,0 +1,48 @@
+<div class="container-fluid mt-5">
+  <div class="row mb-3">
+    <div class="col-sm-4">
+      <div class="card">
+        <img class="card-img-top img-thumbnail" src="{{imagePath.value || 'assets/no-image.png'}}" (error)="onImgError($event)" alt="">
+      </div>
+    </div>
+
+    <div class="col-sm-8">
+      <div class="card">
+        <div class="card-header">
+          {{'admin-user-group-create.label-title' | translate }}
+        </div>
+        <div class="card-body">
+          <form [formGroup]="userGroupForm">
+            <div class="col-12">
+              <div class="form-group row">
+                <label for="value">{{'admin-user-group-create.label-name' | translate }}</label>
+                <input class="form-control" id="value" formControlName="value"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userGroupForm.get('value').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userGroupForm.get('value').errors?.required">
+                    {{'admin-user-group-create.invalid-name' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="icon"> {{'admin-user-group-create.label-logo' | translate }}</label>
+                <input class="form-control" id="icon" formControlName="icon"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userGroupForm.get('icon').errors }" #imagePath>
+                <span class="invalid-feedback">
+                  <span *ngIf="userGroupForm.get('icon').errors?.required">
+                    {{'admin-user-group-create.invalid-logo' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="search-hotel btn btn-danger" (click)="saveUserGroup()">
+            {{'admin-user-group-create.button-user-group' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

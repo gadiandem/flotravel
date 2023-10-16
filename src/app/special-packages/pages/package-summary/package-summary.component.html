@@ -1,0 +1,314 @@
+<div class="container-fluid my-md-5 mt-5 pt-5 pb-3 shadow-box p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0"
+             placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <app-special-package-list-search-box [packageShoppingReq]="searchPackageList" [roomGuests]="roomGuests"
+                                         [travellerCount]="travellerCount" [roomCount]="roomCount"
+                                         (searchRequest)="shoppingPackage($event)"></app-special-package-list-search-box>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div class="row mt-4">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold mt-3">{{searchPackageList?.destination}}</div>
+      <div class="my-2">{{searchPackageList?.date | date: 'mediumDate'}}</div>
+      <div class="btn btn-default" style="cursor: pointer;border: 1px solid;" (click)="openModalWithComponent()">
+        CHANGE
+      </div>
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter">SORT & FILTER</span>
+      </div>
+    </div>
+    <div class="col-8 offset-2">
+      <div *ngIf="fetchFailed" class="my-4">
+        <alert type="danger" ngPreserveWhitespaces>
+          There is some erros.&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="fetchSummary()">Try Again</button>
+      </div>
+      <div *ngIf="fetching" class="text-center my-4">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;Loading...</span>
+      </div>
+      <div class="summary-list" *ngIf="!fetching && !fetchFailed">
+        <div class="shadow-box blue-bg mb-3">
+          <h5 class="text-danger mx-3 pt-3 mb-0">
+            Package Summary
+          </h5>
+          <p class="mx-3 pb-3 mb-0"><small class="text-secondary font-weight-light">Rules and restrictions
+            apply</small>
+            <span class="summary-price">
+                Package Cost:
+                <b>{{(packageSummaryRes?.totalPrice || 0) | currency: currency :'symbol':'.0-2'}}</b>
+              </span>
+          </p>
+        </div>
+        <div class="shadow-box1 blue-bg mb-3">
+          <h5 class="text-danger mx-3 pt-3 mb-0">
+            Package
+            <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+              <a class="text-danger" routerLink="/packages/optional">Change</a>
+            </small>
+          </h5>
+          <div class="row">
+            <div class="col-md-8 col-7">
+              <div class="row">
+                <div class="col-md-7 col-12">
+                  <div class="px-3 pt-3">
+                    <p class="title"><img [src]="selectedPackage?.hotelImage" style="width:50px;">
+                      {{selectedPackage?.packageName}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                  <div class="text-muted" style="font-weight: bold;">{{selectedPackage?.dayCount}} day(s),
+                    {{selectedPackage?.dayCount - 1}} night(s)
+                  </div>
+                  <p class="text-muted">{{selectedPackage?.cityName}}, {{selectedPackage?.regionName}}</p>
+                </div>
+              </div>
+              <div class="col-12">
+                <h5 class="room-title">
+                  Hotel: {{selectedPackage?.name}}<br/>
+                  <span>
+                      Room: {{selectedRoom?.roomType}}
+                    </span></h5>
+              </div>
+              <div class="px-3 pb-3">
+                {{selectedRoom?.roomDescription}}
+              </div>
+            </div>
+            <div class="col-md-4 col-5 p-3 pr-4">
+              <div class="text-right">
+                <span class="flight-price">{{selectedPackage?.price | currency:currency:'symbol':'.0-2'}}</span><br>
+                <p style="font-size: 12px;margin-bottom:3px;">Including taxes and fees unless stated</p>
+              </div>
+              <div class="row">
+                <div class="col-8 col-sm-8 d-flex">
+                  <p class="align-middle">Number of Packages / Pax / Nights</p>
+                </div>
+                <div class="col-4 col-sm-4">
+                  <!-- <button class="col-4 btn btn-primary btn-sm">Update</button> -->
+                  <form [formGroup]="packageForm">
+                    <input class="form-control mt-2 text-center" formControlName="itemCount"
+                           (change)="updateItemCount($event)"
+                           [ngClass]="{ 'is-invalid': !validRange && packageForm.get('itemCount').errors }"/>
+                    <span class="invalid-feedback">
+                        <span *ngIf="packageForm.get('itemCount').errors?.min">
+                          Number of item not smaller than 1
+                        </span>
+                        <span *ngIf="packageForm.get('itemCount').errors?.max">
+                          Number of item not greater than 50
+                        </span>
+                      </span>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="selectedSupplements.length > 0">
+          <form [formGroup]="supplementsForm">
+            <div formArrayName="supplement">
+              <div class="shadow-box1 blue-bg mb-3" [formGroupName]="i"
+                   *ngFor="let selectedSupplement of selectedSupplements; let i= index">
+                <h5 class="text-danger mx-3 pt-3 mb-0">
+                  Supplement
+                  <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+                    <a class="text-danger" routerLink="/packages/optional">Change</a>
+                  </small>
+                </h5>
+                <div class="row">
+                  <div class="col-md-8 col-7">
+                    <div class="row">
+                      <div class="col-md-7 col-12">
+                        <div class="px-3 pt-3">
+                          <p class="title">{{selectedSupplement?.name}}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                        <div class="text-muted" style="font-weight: bold;">{{selectedSupplement?.shortDescription}}
+                        </div>
+                        <!-- <p class="text-muted">{{selectedPackage?.cityName}}, {{selectedPackage?.regionName}}</p> -->
+                      </div>
+                    </div>
+                    <div class="px-3 pb-3">
+                      {{selectedSupplement?.description}}
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-5 p-3 pr-4">
+                    <div class="text-right">
+                        <span
+                          class="flight-price">{{+selectedSupplement?.price| currency:currency:'symbol':'.0-2'}}</span><br>
+                      <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 col-sm-6 d-flex">
+                        <p class="align-middle">Number of Supplement</p>
+                      </div>
+                      <div class="col-4 col-sm-6">
+                        <!-- <button class="col-4 btn btn-primary btn-sm">Update</button> -->
+                        <!-- <form [formGroup]="packageForm"> -->
+                        <input class="form-control mt-2 text-center" formControlName="itemCount"
+                               (change)="updateItemCount($event)"
+                               [ngClass]="{ 'is-invalid': !validRange && supplement.controls[i].get('itemCount').errors }"/>
+                        <span class="invalid-feedback">
+                            <span *ngIf="supplement.controls[i].get('itemCount').errors?.min">
+                              Number of item not smaller than 1
+                            </span>
+                            <span *ngIf="supplement.controls[i].get('itemCount').errors?.max">
+                              Number of item not greater than 50
+                            </span>
+                          </span>
+                        <!-- </form> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div *ngIf="selectedTours.length > 0">
+          <form [formGroup]="toursForm">
+            <div formArrayName="tour">
+              <div class="shadow-box1 blue-bg mb-3" [formGroupName]="i"
+                   *ngFor="let selectedTour of selectedTours; let i= index;">
+                <h5 class="text-danger mx-3 pt-3 mb-0">
+                  Tour
+                  <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+                    <a class="text-danger" routerLink="/packages/optional">Change</a>
+                  </small>
+                </h5>
+                <div class="row">
+                  <div class="col-md-8 col-7">
+                    <div class="row">
+                      <div class="col-md-7 col-12">
+                        <div class="px-3 pt-3">
+                          <p class="title">{{selectedTour?.name}}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                        <div class="text-muted" style="font-weight: bold;">{{selectedTour?.note}}</div>
+                      </div>
+                    </div>
+                    <div class="px-3 pb-3">
+                      {{selectedTour?.description}}
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-5 p-3 pr-4">
+                    <div class="text-right">
+                        <span
+                          class="flight-price">{{+selectedTour?.price| currency:currency:'symbol':'.0-2'}}</span><br>
+                      <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 col-sm-6 d-flex">
+                        <p class="align-middle">Number of Tour</p>
+                      </div>
+                      <div class="col-4 col-sm-6">
+                        <!-- <button class="col-4 btn btn-primary btn-sm">Update</button> -->
+                        <!-- <form [formGroup]="packageForm"> -->
+                        <input class="form-control mt-2 text-center" formControlName="itemCount"
+                               (change)="updateItemCount($event)"
+                               [ngClass]="{ 'is-invalid': !validRange && tour.controls[i].get('itemCount').errors }"/>
+                        <span class="invalid-feedback">
+                            <span *ngIf="tour.controls[i].get('itemCount').errors?.min">
+                              Number of item not smaller than 1
+                            </span>
+                            <span *ngIf="tour.controls[i].get('itemCount').errors?.max">
+                              Number of item not greater than 50
+                            </span>
+                          </span>
+                        <!-- </form> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div *ngIf="selectedTransfers.length > 0">
+          <form [formGroup]="transfersForm">
+            <div formArrayName="transfer">
+              <div class="shadow-box1 blue-bg mb-3" [formGroupName]="i"
+                   *ngFor="let selectedTransfer of selectedTransfers; let i = index;">
+                <h5 class="text-danger mx-3 pt-3 mb-0">
+                  Transfer
+                  <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+                    <a class="text-danger" routerLink="/packages/optional">Change</a>
+                  </small>
+                </h5>
+                <div class="row">
+                  <div class="col-md-8 col-7">
+                    <div class="row">
+                      <div class="col-md-7 col-12">
+                        <div class="px-3 pt-3">
+                          <p class="title">{{selectedTransfer?.transferType}}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                        <div class="text-muted" style="font-weight: bold;">{{selectedTransfer?.note}}</div>
+                      </div>
+                    </div>
+                    <div class="px-3 pb-3">
+                      Arrival: {{(selectedTransfer?.arrival) ? 'Yes' : 'No'}} <br/>
+                      Departure: {{(selectedTransfer?.departure) ? 'Yes' : 'No'}}
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-5 p-3 pr-4">
+                    <div class="text-right">
+                        <span
+                          class="flight-price">{{selectedTransfer?.amount| currency:currency:'symbol':'.0-2'}}</span><br>
+                      <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 col-sm-6 d-flex">
+                        <p class="align-middle">Number of Transfer</p>
+                      </div>
+                      <div class="col-4 col-sm-6">
+                        <!-- <button class="col-4 btn btn-primary btn-sm">Update</button> -->
+                        <!-- <form [formGroup]="packageForm"> -->
+                        <input class="form-control mt-2 text-center" formControlName="itemCount"
+                               (change)="updateItemCount($event)"
+                               [ngClass]="{ 'is-invalid': !validRange && transfer.controls[i].get('itemCount').errors }"/>
+                        <span class="invalid-feedback">
+                            <span *ngIf="transfer.controls[i].get('itemCount').errors?.min">
+                              Number of item not smaller than 1
+                            </span>
+                            <span *ngIf="transfer.controls[i].get('itemCount').errors?.max">
+                              Number of item not greater than 50
+                            </span>
+                          </span>
+                        <!-- </form> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <button class="btn btn-danger float-right px-5 btn-lg mb-4" (click)="continueBooking()" *ngIf="!refresh">
+          Continue
+          Booking
+        </button>
+        <button class="btn btn-primary px-5 btn-lg mb-4" *ngIf="refresh" (click)="updateSummaryPrice()"> Update
+          Price
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-special-package-summary-skeleton *ngIf="fetching"></app-special-package-summary-skeleton>

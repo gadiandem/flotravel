@@ -1,0 +1,612 @@
+<div class="we-body my-5 pt-5 pb-3">
+  <div *ngIf="!fetching && !fetchFailed" class="container">
+    <div class="row">
+      <div class="col-md-8 order-2 order-md-1 mt-4">
+        <div *ngIf="user == null" class="shadow-box p-3 mb-3" (click)="openModalWithComponent()"
+          style="cursor: pointer;">
+          <span>
+            <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+              <i class="fa fa-lock"></i> &nbsp; Sign in to earn 2867 Points
+            </h3>
+          </span>
+        </div>
+        <div class="shadow-box p-3 mb-2" *ngIf="isAgent" style="display: none;">
+          <app-agency-booking (userSelected)="useSelected($event)" (agencyBooking)="agencyBooking($event)">
+          </app-agency-booking>
+        </div>
+        <form [formGroup]="customersForm">
+          <div formArrayName="customerInfo">
+            <div [formGroupName]="i" *ngFor="let customer of customerInfo.controls; let i=index">
+              <div class="shadow-box p-3">
+                <h5 class="text-danger border-bottom pb-2 mb-3" *ngIf="i < adultsCount">Customer {{i+1}} Info</h5>
+                <h5 class="text-danger border-bottom pb-2 mb-3"
+                  *ngIf="(i < (adultsCount+childCount) && i >= adultsCount)">Children {{i+1 - adultsCount}} Info</h5>
+                <h5 class="text-danger border-bottom pb-2 mb-3" *ngIf="i >= (adultsCount+childCount)">Infants {{i+1 -
+                  (childCount + adultsCount)}} Info</h5>
+                <div class="px-4">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" id="male{{i}}" type="radio" value="MALE"
+                            formControlName="gender"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">
+                          <label class="form-check-label" for="male{{i}}"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" id="female{{i+1}}" type="radio" value="FEMALE"
+                            formControlName="gender"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">
+                          <label class="form-check-label" for="female{{i+1}}"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">Female</label>
+                        </div>
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('gender').errors?.required">
+                            Please select your gender.
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 col-8">
+                      <div class="form-group">
+                        <label>First Name</label>
+                        <input class="form-control" type="text" formControlName="firstName"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('firstName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('firstName').errors?.required">
+                            Please enter your First Name.
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-4">
+                      <div class="form-group">
+                        <label>Middle Name</label>
+                        <input class="form-control" type="text" formControlName="middleName" />
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-8">
+                      <div class="form-group">
+                        <label>Surname</label>
+                        <input class="form-control" type="text" formControlName="lastName"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('lastName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('lastName').errors?.required">
+                            Please enter your Last Name.
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-12" *ngIf="i===0">
+                      <div class="form-group">
+                        <label>Birth Date</label>
+                        <!-- <input type="text" class="form-control fromdate" formControlName="birthDate" bsDatepicker
+                          [maxDate]="maxDate"> -->
+                          <kendo-datepicker #datepicker class="form-control" formControlName="birthDate"
+                          calendarType="classic" (click)="onOpenDatepicker($event, datepicker)"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('birthDate').errors }"
+                          title="Select Date" format="dd-MM-yyyy" placeholder="dd-MM-yyyy"
+                          [max]="maxDate"></kendo-datepicker>
+                        <span class="invalid-feedback">
+                          <span *ngIf="customer.get('birthDate').errors?.required">
+                            Please enter your BirthDate.
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-8 mr-auto" *ngIf="i === 0">
+                      <div class="form-group">
+                        <label>Country</label>
+                        <select class="custom-select" formControlName="country"
+                          (change)="onSelectCountry($event.target.value)"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('country').errors }">
+                          <option value="" selected>---Select Country---</option>
+                          <option *ngFor="let country of countries" value="{{country?.code}}">{{country?.name}}</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('country').errors?.required">
+                            {{'hotel-checkout.invalid-country' | translate }}
+                          </span>
+                          <span *ngIf="errorMessage">
+                            {{errorMessage}}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-8" *ngIf="i === 0">
+                      <div class="form-group">
+                        <label>Mobile</label>
+                        <input class="form-control" placeholder="In case we have to reach you." type="text"
+                          formControlName="phoneNo"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('phoneNo').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('phoneNo').errors?.required">
+                            Please enter your phoneNo.
+                          </span>
+                          <span *ngIf="customerInfo.controls[i].get('phoneNo').errors?.pattern">This
+                            field must contain only digits</span>
+                          <span *ngIf="customerInfo.controls[i].get('phoneNo').errors?.minlength">
+                            Phone number incorect.
+                          </span>
+                          <span *ngIf="customerInfo.controls[i].get('phoneNo').errors?.maxlength">
+                            Phone number incorect.
+                          </span>
+                        </span>
+                      </div>
+                      <div class="form-check mb-3" style="margin-top:-10px;">
+                        <input class="form-check-input" type="checkbox" id="isNotify" formControlName="isNotify">
+                        <label class="form-check-label" for="isNotify"> Receive alert / news / notifications
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-8 mr-auto" *ngIf="i === 0">
+                      <div class="form-group">
+                        <label>Passport</label>
+                        <input class="form-control" placeholder="" type="text" formControlName="passport"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('passport').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('passport').errors?.required">
+                            Please Select your passport.
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="shadow-box p-3 mt-4" *ngIf="isAgent" style="display: none;">
+          <app-payment-type [isAgent]="isAgent" (vcnPayment)="paymentTypeUpdate($event)"
+            *ngIf="merchantExist"></app-payment-type>
+          <div *ngIf="!merchantExist" class="shadow-box p-3  mb-3" (click)="updateProfile()" style="cursor: pointer;">
+            <span>
+              <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+                <i class="fa fa-lock"></i> &nbsp; This account not have Merchant please update this
+              </h3>
+            </span>
+          </div>
+        </div>
+        <form [formGroup]="cardPaymentForm" *ngIf="!isVcnPayment">
+          <div class="shadow-box p-3 mt-4">
+            <div class="text-danger" ngPreserveWhitespaces>
+              <i class="fa fa-credit-card"></i>&emsp;
+              <i class="fa fa-check"></i> We use secure transmission
+              &emsp;<i class="fa fa-check"></i> We protect your personal information
+            </div>
+            <div class="row pt-3">
+              <div class="col-md-6 mb-3">
+                <div class="card-container"></div>
+              </div>
+              <div class="col-md-6">
+                <div card container=".card-container" [messages]="messages" [placeholders]="placeholders"
+                  [masks]="masks">
+                  <div class="card-info">
+                    <div class="form-group">
+                      <label for="card_number">Card Number</label>
+                      <input class="form-control" id="card_number" type="text" formControlName="cardNo"
+                        placeholder="xxxx xxxx xxxx xxxx" card-number
+                        [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardNo').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="cardPaymentForm.get('cardNo').errors?.required">
+                          Please enter your card number.
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group">
+                      <label for="full_name">Full Name</label>
+                      <input class="form-control" id="full_name" type="text" formControlName="cardName" card-name
+                        [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardName').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="cardPaymentForm.get('cardName').errors?.required">
+                          Please enter your card holder.
+                        </span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label for="expire_time">Expiry Month/Year</label>
+                          <input class="form-control" id="expire_time" type="text" formControlName="expiry"
+                            placeholder="mm/yy" card-expiry
+                            [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('expiry').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="cardPaymentForm.get('expiry').errors?.required">
+                              Please enter your expire time.
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label for="cvv">CVC</label>
+                          <input class="form-control" id="cvv" type="text" placeholder="xxx" formControlName="cvv"
+                            card-cvc
+                            [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cvv').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="cardPaymentForm.get('cvv').errors?.required">
+                              Please enter your CVV.
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <form [formGroup]="userForm">
+          <div class="shadow-box p-3 my-4">
+            <div class="text-danger mb-3" style="font-size: 20px;">Important information about your booking</div>
+            <p>Please enter the email address where you would like to receive your confirmation.</p>
+            <div class="row">
+              <div class="col-12 col-md-8">
+                <div class="form-group">
+                  <label for="email">your@email.com</label>
+                  <input class="form-control" id="email" placeholder="In case we have to reach you." type="text"
+                    formControlName="email"
+                    [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('email').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf="userForm.get('email').errors?.required">
+                      Please enter your email.
+                    </span>
+                    <span *ngIf="userForm.get('email').errors?.email">
+                      Please enter valid email.
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- <ul class="text-muted">
+                <li>This special discounted rate is non-refundable. If you choose to change or cancel this booking you
+                  will not be refunded any of the payment.</li>
+                <li>24-hour airport shuttle service is available on request. Fees may apply. Contact the property in
+                  advance to make arrangements.</li>
+                <li>You'll be asked to pay the following charges at the property:
+                  <br>Deposit: GBP 50.00 per night</li>
+              </ul> -->
+            <div *ngIf="user == null" class="row">
+              <div class="col-12 col-md-8">
+                <div class="p-4 mb-4" style="background: #eee;">
+                  <p>Enter a password to create an account using the email address above.</p>
+                  <div formGroupName="passwordGroup">
+                    <div class="row">
+                      <div class="col-10">
+                        <div class="form-group">
+                          <label>Create Password</label>
+                          <input class="form-control" type="password" formControlName="password" autocomplete="false"
+                            [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('passwordGroup.password').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="userForm.get('passwordGroup.password').errors?.required">
+                              Please enter your password.
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-10">
+                        <div class="form-group">
+                          <label>Confirm Password</label>
+                          <input class="form-control" type="password" formControlName="confirmPassword"
+                            [ngClass]="{ 'is-invalid': formSubmitError && (userForm.get('passwordGroup.confirmPassword').errors || userForm.get('passwordGroup').errors) }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="userForm.get('passwordGroup.confirmPassword').errors?.required">
+                              Please enter your confirm password.
+                            </span>
+                            <span *ngIf="userForm.get('passwordGroup').errors?.match">
+                              The confirmation does not match the password.
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-check mb-3" style="margin-top:-10px;">
+                        <input class="form-check-input" type="checkbox" id="createAccount"
+                          formControlName="createAccount">
+                        <label class="form-check-label" for="createAccount"> User above email to create new account
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-muted">We have included all charges provided to us by the property. However, charges
+              can
+              vary, for example, based on length of stay or the room you book.</div><br>
+            <div class="row">
+              <div class="col-12">
+                <button *ngIf="isEnoughBalance" class="btn btn-danger" type="submit" (click)="goToBankDeposit()">Pay
+                  with Wallet &emsp;<i class="fa fa-arrow-right"></i></button>
+                <button class="btn btn-danger" type="submit" (click)="buyNow()">{{'package-checkout.label-buy-now' |
+                  translate }} &emsp;<i class="fa fa-arrow-right"></i></button>
+              </div>
+            </div>
+            <div><br><i class="fa fa-lock"></i> We use secure transmission and encrypted storage to protect your
+              personal information.</div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-4 order-1 order-md-2 mt-4 pl-md-0">
+        <div class="card shadow-box mb-3 rounded-0">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-12">
+                <h3 class="title"> Gold Plan</h3>
+                <div style="color:#ffda23" ngPreserveWhitespaces>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="text-danger mb-3" ngPreserveWhitespaces>Travel: <small class="float-right"
+                style="color:#000;">{{searchQuoteForm?.residenceCountry}}&emsp;->&emsp;{{searchQuoteForm?.countryOfTravel}}</small>
+            </h5>
+            <h5 class="card-title">Booking for</h5>
+            <p ngPreserveWhitespaces>{{startDate | date}} &emsp; <i class="fa fa-arrow-right"></i>
+              &emsp;{{endDate | date}}</p>
+            <div *ngIf="searchQuoteForm?.travellers.adt > 0">
+              <h6>Adult(s) <span class="float-right text-danger">
+                  {{(selectedQuoteProduct?.prices?.premiumAfterDiscountExclTax || 0) | currency:currency:'symbol':'.2'}}
+                  x {{searchQuoteForm.travellers.adt || 0}} </span>
+              </h6>
+              <span>{{selectedQuoteProduct?.name}}</span>
+            </div>
+            <div *ngIf="searchQuoteForm?.travellers.chd > 0">
+              <hr>
+              <h6>Children <span class="float-right text-danger">
+                  {{((selectedQuoteProduct?.prices?.priceAfterDiscountInclTax)/2 || 0) |
+                  currency:currency:'symbol':'.2'}}
+                  x {{searchQuoteForm?.travellers.chd || 0}}
+                </span></h6>
+              <span>{{selectedQuoteProduct?.name}}</span>
+            </div>
+            <div *ngIf="searchQuoteForm?.travellers.inf > 0">
+              <hr>
+              <h6>Infants <span class="float-right text-danger">
+                  {{0 | currency:currency:'symbol':'.2'}}
+                  x {{searchQuoteForm?.travellers.inf || 0}}
+                </span></h6>
+              <span>{{selectedQuoteProduct?.name}}</span>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            Taxes: <span class="float-right text-danger">{{(selectedQuoteProduct?.prices?.totalTaxes || 0) |
+              currency:currency:'symbol':'.2'}}</span>
+          </div>
+          <div class="card-footer text-muted">
+            Total trip:
+            <span class="float-right text-danger">
+              {{(selectedQuoteProduct?.prices?.priceAfterDiscountInclTax || 0) |
+              currency:currency:'symbol':'.2'}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<div *ngIf="fetching" class="we-body my-5 pt-5 pb-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h5 class="mt-4 mb-0" style="font-size: 26px;">
+          <ngx-skeleton-loader
+            [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '20%', 'margin-bottom.px': 0}">
+          </ngx-skeleton-loader>
+        </h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 order-2 order-md-1 mt-4">
+        <div class="shadow-box p-3 mb-3">
+          <span>
+            <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'width': '25%', 'margin-bottom.px': 0}">
+              </ngx-skeleton-loader>
+            </h3>
+          </span>
+        </div>
+        <div class="shadow-box p-3">
+          <h5 class="text-danger border-bottom pb-2 mb-3">
+            <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'width': '35%', 'margin-bottom.px': 0}">
+            </ngx-skeleton-loader>
+          </h5>
+          <div class="px-md-4">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'width': '15%', 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 col-8">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-md-3 col-4">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-md-4 col-8">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-8 mr-auto">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-12 col-md-8">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+                <div class="form-group mb-3" style="margin-top:-10px;">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '35%', 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-8 mr-auto">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="shadow-box p-3 mt-4">
+          <div class="text-danger" ngPreserveWhitespaces>
+            <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'width': '70%', 'margin-bottom.px': 0}">
+            </ngx-skeleton-loader>
+          </div>
+          <div class="row pt-3">
+            <div class="col-md-6 mb-3">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 200}"></ngx-skeleton-loader>
+            </div>
+            <div class="col-md-6">
+              <div class="card-info">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-md-6">
+                    <div class="form-group">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                      </ngx-skeleton-loader>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                      </ngx-skeleton-loader>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="shadow-box p-3 my-4">
+            <div class="text-danger mb-3" style="font-size: 20px;">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'width': '50%', 'margin-bottom.px': 0}">
+              </ngx-skeleton-loader>
+            </div>
+            <p>
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'width': '70%', 'margin-bottom.px': 0}">
+              </ngx-skeleton-loader>
+            </p>
+            <div class="row">
+              <div class="col-12 col-md-8">
+                <div class="form-group">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-8">
+                <div class="p-4 mb-4" style="background: #eee;">
+                  <p>
+                    <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}">
+                    </ngx-skeleton-loader>
+                  </p>
+                  <div class="row">
+                    <div class="col-10">
+                      <div class="form-group">
+                        <ngx-skeleton-loader
+                          [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                        </ngx-skeleton-loader>
+                      </div>
+                    </div>
+                    <div class="col-10">
+                      <div class="form-group">
+                        <ngx-skeleton-loader
+                          [theme]="{'background-color': '#ccc',  'height.px': 60, 'margin-bottom.px': 0}">
+                        </ngx-skeleton-loader>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group mb-3" style="margin-top:-10px;">
+                        <ngx-skeleton-loader
+                          [theme]="{'background-color': '#ccc',  'width': '70%', 'margin-bottom.px': 0}">
+                        </ngx-skeleton-loader>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-muted">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'margin-bottom.px': 0}">
+              </ngx-skeleton-loader>
+            </div><br>
+            <div class="row">
+              <div class="col-12">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': 'rgb(10, 48, 73)', 'height.px': 38, 'width.px': 106.578, 'margin-bottom.px': 0}">
+                </ngx-skeleton-loader>
+              </div>
+            </div>
+            <div><br>
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '70%' , 'margin-bottom.px': 0}">
+              </ngx-skeleton-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 order-1 order-md-2 mt-4 pl-md-0">
+        <div class="card shadow-box hotel-details mb-3 rounded-0">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 241.84, 'margin-bottom.px': 0}">
+          </ngx-skeleton-loader>
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-12">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 98.38, 'margin-bottom.px': 0}">
+                </ngx-skeleton-loader>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 112.38, 'margin-bottom.px': 0}">
+            </ngx-skeleton-loader>
+          </div>
+          <div class="card-footer text-muted">
+            <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+          </div>
+          <div class="card-footer text-muted">
+            <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

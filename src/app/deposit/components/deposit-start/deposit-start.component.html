@@ -1,0 +1,156 @@
+<div class="container" *ngIf="!fetching">
+  <div class="card card-outline card-primary">
+    <div class="card-header">
+      <h3 class="card-title">{{'wallet-deposit-funds.deposit-title' | translate }}</h3>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+          <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+          <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <div [collapse]="isCollapsed" [isAnimated]="true">
+      <div class="card-body">
+        <div *ngIf="fetchFailed" class="mb-5 mt-3">
+          <alert type="danger" ngPreserveWhitespaces>
+            {{'wallet-deposit-funds.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+          </alert>
+        </div>
+        <form [formGroup]="depositForm" class="form-horizontal clearfix" (ngSubmit)="depositNext()">
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label text-sm-right">{{'wallet-deposit-funds.deposit-country' | translate
+              }}</label>
+            <div class="col-sm-4">
+              <input formControlName="country" class="form-control" readonly />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label text-sm-right">{{'wallet-deposit-funds.deposit-currency' | translate
+              }}</label>
+            <div class="col-sm-4">
+              <input formControlName="currency" class="form-control" readonly />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-deposit-funds.deposit-amount' | translate
+              }}</label>
+            <div class="col-sm-4">
+              <input type="text" formControlName="amount" class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-deposit-funds.deposit-payment-option' |
+              translate }}</label>
+            <div class="col-sm-4">
+              <select class="form-control" id="type" formControlName="paymentOption"
+                [ngClass]="{ 'is-invalid': formSubmitError && depositForm.get('paymentOption').errors }">
+                <option value="">{{'wallet-deposit-funds.deposit-select-payment' | translate }}</option>
+                <option *ngFor="let option of allDepositOption" [value]="option?.id">{{option?.displayName}}
+                  ({{option?.type}})
+                </option>
+                <!-- <option  value="TEST">TEST</option>
+                <option  value="TEST">TEST</option>
+                <option  value="TEST">TEST</option> -->
+              </select>
+              <span class="invalid-feedback">
+                <span *ngIf="depositForm.get('paymentOption').errors?.required">
+                  {{'wallet-deposit-funds.deposit-invalid-option' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="box-footer clearfix">
+            <div class="pull-left">
+              <button type="button" class="btn btn-primary"
+                (click)="depositBack()">{{'wallet-deposit-funds.deposit-back' | translate }}</button>
+            </div>
+            <div class="pull-right">
+              <button type="submit" class="btn btn-success"
+                [disabled]="fetchFailed">{{'wallet-deposit-funds.deposit-next' | translate }}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--skeleton loading-->
+<div class="container" *ngIf="fetching">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="flight-list">
+          <div class="flight-item shadow-box blue-bg mb-3">
+            <div class="row d-flex p-3">
+              <div class="col-md-6">
+                <h6 class="text-danger mb-0">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '30%'}"></ngx-skeleton-loader>
+                </h6>
+                <small>
+                  <ngx-skeleton-loader
+                    [theme]="{'background-color': '#ccc', 'width': '40%', 'height.px': 15, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </small>
+              </div>
+              <div class="col-md-6 text-right" style="padding-top: 8px;">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'width': '30%', 'height.px': 30}"></ngx-skeleton-loader>
+              </div>
+            </div>
+          </div>
+  
+          <div class="flight-item shadow-box1 blue-bg mb-3">
+            <div class="row d-flex p-3">
+              <div class="col-md-12">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'height.px': 20, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+              </div>
+              <div class="col-md-4">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'width.px': 212.66, 'height.px': 141.67}"></ngx-skeleton-loader>
+              </div>
+              <div class="col-md-8 pl-md-0 pt-3 pt-md-0">
+                <div class="row">
+                  <div class="col-8">
+                    <h5 class="hotel-title">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 30, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                    </h5>
+                    <p style="font-size: 12px;">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 15, 'width': '40%'}"></ngx-skeleton-loader>
+                    </p>
+                    <div class="d-none d-md-block">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 35, 'margin-bottom.px': 10}"></ngx-skeleton-loader>
+  
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 35, 'margin-bottom.px': 10}"></ngx-skeleton-loader>
+                    </div>
+                  </div>
+                  <div class="col-4 text-right">
+                    <span class="mt-md-2">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 30, 'margin-bottom.px': 0, 'width': '50%'}"></ngx-skeleton-loader>
+                    </span>
+                    <div style="margin-bottom:15px">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '90%'}"></ngx-skeleton-loader>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="float-right mb-4">
+            <ngx-skeleton-loader
+              [theme]="{'background-color': 'rgb(10, 48, 73)', 'height.px': 38, 'width.px': 223.66}"></ngx-skeleton-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

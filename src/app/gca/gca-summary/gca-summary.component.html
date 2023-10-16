@@ -1,0 +1,104 @@
+<div class="we-body">
+  <div class="container-fluid">
+    <div class="row mt-4">
+      <div class="col-md-3 we-sort-filter">
+      </div>
+      <div class="flights-list col-md-9 py-5" *ngIf="fetching">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;Loading...</span>
+      </div>
+      <div *ngIf="fetchFailed && !fetching">
+        <alert type="danger" ngPreserveWhitespaces>
+          There is some erros:&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+      </div>
+      <div class="flights-list col-md-9" *ngIf="!fetching && !fetchFailed">
+        <div class="shadow-box blue-bg mb-3">
+          <h5 class="text-danger mx-3 py-3 mb-0">
+            Trip Summary<br>
+            <small class="text-secondary font-weight-light">Rules and restrictions apply</small>
+            <span class="summary-price">
+              Trip Cost:
+              <b>{{(quoteCreateRes?.gcaQuoteResult?.billing?.grand_total || 0) | currency: currency
+                :'symbol':'.0-2'}}</b>
+            </span>
+          </h5>
+        </div>
+        <div class="shadow-box mb-3">
+          <div class="row">
+            <div class="col-md-9 col-7">
+              <div *ngIf="selectedDepartureServices.length > 0">
+                <h5 class="text-danger mx-3 pt-3 mb-0">
+                  Departure Services
+                </h5>
+                <div class="row" *ngFor="let depature of selectedDepartureServices">
+                  <!-- <div class="row"> -->
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <h5 class="hotel-title mb-2">{{depature.service_name}}</h5>
+                      <p style="font-size: 12px;"><i class="icon fa fa-calendar-check-o"></i>&nbsp;
+                        {{quoteCreateRes?.gcaQuoteResult?.journeys[0]?.stops?.departure?.departure_date?.split(' ')[0] |
+                        date:'EEE dd, MMM'}}
+                      </p>
+                      <p style="font-size: 12px;"><i class="fas fa-fighter-jet"></i>&nbsp;{{gcaData?.data[0]?.name}}</p>
+                      <p style="font-size: 12px;"><i class="fas fa-map-marker"></i>&nbsp;{{gcaData?.data[0]?.city}}</p>
+                      <p style="font-size: 12px;"><i class="fas fa-map-marker"></i>&nbsp;{{gcaData?.data[0]?.country}}
+                      </p>
+                    </div>
+                    <div class="px-3 pb-3">
+                      <small>{{'Terminal: ' +
+                        quoteCreateRes?.gcaQuoteResult?.journeys[0].stops?.departure?.terminal_name}}</small>
+                    </div>
+                  </div>
+                  <!-- </div> -->
+                </div>
+              </div>
+              <div *ngIf="selectedArrivalServices.length > 0">
+                <h5 class="text-danger mx-3 pt-3 mb-0">
+                  Arrival Services
+                </h5>
+                <div class="row" *ngFor="let arrival of selectedArrivalServices">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <h5 class="hotel-title mb-2">{{arrival.service_name}}</h5>
+                      <p style="font-size: 12px;"><i class="icon fa fa-calendar-check-o"></i>&nbsp;
+                        {{quoteCreateRes?.gcaQuoteResult?.journeys[0]?.stops?.arrival?.arrival_date?.split(' ')[0] |
+                        date:'EEE dd, MMM'}}
+                      </p>
+                      <p style="font-size: 12px;"><i class="fas fa-fighter-jet"></i>&nbsp;{{gcaData?.data[1]?.name ||
+                        gcaData?.data[0]?.name}}</p>
+                      <p style="font-size: 12px;"><i class="fas fa-map-marker"></i>&nbsp;{{gcaData?.data[1]?.city ||
+                        gcaData?.data[0]?.city}}</p>
+                      <p style="font-size: 12px;"><i class="fas fa-map-marker"></i>&nbsp;{{gcaData?.data[1]?.country
+                        || gcaData?.data[0]?.country}}</p>
+                    </div>
+                    <div class="px-3 pb-3">
+                      <small>{{'Terminal: ' +
+                        quoteCreateRes?.gcaQuoteResult?.journeys[0].stops?.arrival?.terminal_name}}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-5 pr-4 pt-2 mt-2">
+              <div class="text-right">
+                <span class="flight-price">{{(quoteCreateRes?.gcaQuoteResult?.billing?.grand_total || 0) | currency:
+                  currency :'symbol':'.0-2'}}</span><br>
+                <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+              </div>
+            </div>
+            <!-- <div class="col-md-12 collapsed" (click)="isCollapsed[1] = !isCollapsed[1]">
+              <p class="px-3 py-2 m-0" style="color:#007864; cursor:pointer; border-top:1px solid #ccc; ">
+                <span style="color:rgb(255, 255, 255);">Some text here</span>
+              </p>
+            </div> -->
+          </div>
+        </div>
+        <button class="btn btn-danger float-right px-5 btn-lg mb-4" (click)="goToPayment()">Continue Booking</button>
+      </div>
+    </div>
+  </div>
+  <div class="d-none d-lg-block we-ads">
+    <img class="img-fluid" src="assets/ads.jpg">
+  </div>
+</div>

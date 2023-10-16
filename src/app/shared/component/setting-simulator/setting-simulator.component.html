@@ -1,0 +1,26 @@
+<div style="background: #f0f2f6;margin-top: 120px">
+  <main-header></main-header>
+  <div class="container mt-3 pb-3" style="min-height: 500px;">
+    <div class="row">
+      <div class="col-12 mb-4">
+        <h2 class="heading">Supplier Simulator Setting</h2>
+      </div>
+    </div>
+    <div class="custom-control custom-radio row">
+      <input type="checkbox" class="custom-control-input" id="hotel" (change)="updateStateHotelSupplierSimulator($event.target.checked)"
+             [checked]="hotelSupplierSimulator === 'enable'">
+      <label class="custom-control-label" for="hotel">Hotel Simulator</label>
+    </div>
+   <!--<div class="custom-control custom-radio row">
+      <input type="checkbox" class="custom-control-input" id="flight" (change)="updateStateFlightSupplierSimulator($event.target.checked)"
+             [checked]="flightSupplierSimulator === 'enable'">
+      <label class="custom-control-label" for="flight">Flight Simulator</label>
+    </div> -->
+    <div class="row mt-2">
+      <button class="search-hotel btn btn-danger" (click)="saveSetting()">
+        Update Supplier Simulator
+      </button>
+    </div>
+  </div>
+</div>
+<main-footer></main-footer>

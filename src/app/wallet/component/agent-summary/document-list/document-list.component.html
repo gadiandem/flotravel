@@ -1,0 +1,62 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title"> {{'wallet-agent-summary.list-documents-title' | translate }}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" (click)="refresh()">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <div *ngIf="fetchFailed" class="mb-5 mt-3">
+        <alert type="danger" ngPreserveWhitespaces>
+          {{'wallet-agent-summary.error-message' | translate }}:&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="refresh()">{{'wallet-agent-summary.label-try-again' | translate }}</button>
+      </div>
+      <div *ngIf="fetching" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;{{'wallet-agent-summary.label-loading' | translate }}</span>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <td>{{'wallet-agent-summary.list-documents-name' | translate }}</td>
+                <td>{{'wallet-agent-summary.list-documents-number' | translate }}</td>
+                <td>{{'wallet-agent-summary.list-documents-type' | translate }}</td>
+                <td>{{'wallet-agent-summary.list-documents-file' | translate }}</td>
+                <td class="text-center">{{'wallet-agent-summary.list-documents-action' | translate }}</td>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let document of documentList?.documents; let i = index">
+                <td>{{document?.name}}</td>
+                <td>{{document?.documentNumber}}</td>
+                <td>{{document?.type}}</td>
+                <td></td>
+                <td class="text-center">
+                  <a routerLink="/wallet/summary/documentList"><i
+                      class="fa fa-download"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,195 @@
+<main-header></main-header>
+<main role="main" class="margin-top: 70px">
+  <div class="container mt-3 pt-5 pb-5" style="min-height: 800px;">
+    <div class="row">
+      <div class="col-12 mb-4">
+        <h2 class="heading">Hepstar Refund Protection Bookings</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+          [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;Loading...</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">Export to
+              Excel</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">Export to PDF</button>
+          </ng-template>
+
+          <kendo-grid-column-group title="Hepstar Booking List" [columnMenu]="false">
+            <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="customer" title="Customer" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <!-- <div class="customer-photo" [ngStyle]="{'background-image' : photoURL(dataItem)}"></div> -->
+                <div class="customer-name" ngPreserveWhitespaces>
+                  {{ dataItem.payer.firstName | uppercase }} {{ dataItem.payer.lastName | uppercase}} </div>
+                <div>{{dataItem.payer.email}}</div>
+                <!-- <div>{{dataItem.status}}</div> -->
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="packageName" title="Name" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="" ngPreserveWhitespaces>{{ dataItem.item_name }}</div>
+                <div>{{dataItem.name}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="price" title="Price" [width]="120">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.amount | currency:dataItem.currencyName:'symbol':'.0-2'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <!-- <kendo-grid-column field="traceNumber" title="TraceNumber" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.traceNumber}}</div>
+              </ng-template>
+            </kendo-grid-column> -->
+
+            <kendo-grid-column field="createDate" title="Create Date" [width]="180" [class]="{'text-center': true}"
+              [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.createDate | date:'medium'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <!-- <kendo-grid-column field="startDate" title="Start Date" [width]="160" [class]="{'text-center': true}"
+              [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.startDate}}</div>
+              </ng-template>
+            </kendo-grid-column> -->
+
+            <kendo-grid-column field="bookingStatus" title="Booking Status" [width]="100" [class]="{'text-center': true}"
+              filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <span *ngIf="dataItem.bookingStatus === 'PENDING'" class="badge badge-warning">Pending</span>
+                <span *ngIf="dataItem.status === '0000'">Confirm</span>
+                <span *ngIf="dataItem.bookingStatus === 'CANCEL'" class="badge badge-secondary">Cancel</span>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="Action" [width]="150" [class]="{'text-center': true}"
+              [columnMenu]="false" filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <button class="btn btn-warning btn-sm mr-1" (click)="viewDetail(dataItem)">Detail</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)">Delete</button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+
+          <kendo-grid-pdf fileName="GcaBookingList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="GcaBookingList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+    <div *ngIf="agentBooking && agentBooking.length > 0" class="col-12 my-4">
+      <h2 class="heading">Agent Bookings</h2>
+    </div>
+    <div class="row mt-5" *ngIf="agentBooking && agentBooking.length > 0">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="agentBooking" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+          [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="Search in all columns..." kendoTextBox (input)="onFilterAgent($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;Loading...</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">Export to
+              Excel</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">Export to PDF</button>
+          </ng-template>
+
+          <kendo-grid-column-group title="Agent Booking List" [columnMenu]="false">
+            <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="customer" title="Customer" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <!-- <div class="customer-photo" [ngStyle]="{'background-image' : photoURL(dataItem)}"></div> -->
+                <div class="customer-name" ngPreserveWhitespaces>
+                  {{ dataItem.payer.firstName | uppercase }} {{ dataItem.payer.lastName | uppercase}} </div>
+                <div>{{dataItem.payer.email}}</div>
+                <!-- <div>{{dataItem.status}}</div> -->
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="packageName" title="Name" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="" ngPreserveWhitespaces>{{ dataItem.item_name }}</div>
+                <div>{{dataItem.name}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="price" title="Price" [width]="120">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="" ngPreserveWhitespaces>{{ dataItem.item_name }}</div>
+                <div>{{dataItem.amount | currency:dataItem.currencyName:'symbol':'.0-2'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+            
+            <!-- <kendo-grid-column field="traceNumber" title="TraceNumber" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.traceNumber}}</div>
+              </ng-template>
+            </kendo-grid-column> -->
+
+            <kendo-grid-column field="createDate" title="Create Date" [width]="180" [class]="{'text-center': true}"
+              [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.createDate | date:'medium'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <!-- <kendo-grid-column field="startDate" title="Start Date" [width]="160" [class]="{'text-center': true}"
+              [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.startDate}}</div>
+              </ng-template>
+            </kendo-grid-column> -->
+
+            <kendo-grid-column field="bookingStatus" title="Booking Status" [width]="100" [class]="{'text-center': true}"
+              filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <span *ngIf="dataItem.bookingStatus === 'PENDING'" class="badge badge-warning">Pending</span>
+                <span *ngIf="dataItem.status === '0000'" class="badge badge-success">Confirm</span>
+                <span *ngIf="dataItem.bookingStatus === 'CANCEL'" class="badge badge-secondary">Cancel</span>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="Action" [width]="150" [class]="{'text-center': true}"
+              [columnMenu]="false" filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <button class="btn btn-warning btn-sm mr-1" (click)="viewDetail(dataItem)">Detail</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)">Delete</button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+
+          <kendo-grid-pdf fileName="PackageAgentBookingList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="PackageAgentBookingList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</main>
+<main-footer></main-footer>

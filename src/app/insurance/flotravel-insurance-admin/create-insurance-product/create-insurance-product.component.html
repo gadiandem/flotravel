@@ -1,0 +1,49 @@
+<div class="container mb-md-5 mt-5 pt-4 pb-3 d-md-block px-3 p-0 pt-5">
+    <div class="col-sm-8 offset-sm-2">
+      <div class="card">
+        <div class="card-header">
+             Flotravel Insurance
+        </div>
+        <div class="card-body m-3">
+          <form [formGroup]="insuranceForm">
+            <div class="form-group row">
+              <label for="name">Name</label>
+              <input class="form-control" id="name" formControlName="name"
+                [ngClass]="{ 'is-invalid': formSubmitError && insuranceForm.get('name').errors }" disabled>
+              <span class="invalid-feedback">
+                <span *ngIf="insuranceForm.get('name').errors?.required">
+                  invalid name
+                </span>
+              </span>
+            </div>
+            <div class="form-group row">
+              <label for="packagePrice">Package Price</label>
+              <input class="form-control" id="packagePrice" formControlName="packagePrice"
+                [ngClass]="{ 'is-invalid': formSubmitError && insuranceForm.get('packagePrice').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="insuranceForm.get('packagePrice').errors?.required">
+                  invalid price
+                </span>
+              </span>
+          </div>
+            <div class="form-group row">
+                <label for="maxDayCount">Max Day Count</label>
+                <input class="form-control" id="maxDayCount" formControlName="maxDayCount" type="number"
+                  [ngClass]="{ 'is-invalid': formSubmitError && insuranceForm.get('maxDayCount').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="insuranceForm.get('maxDayCount').errors?.required">
+                    invalid maxDayCount
+                  </span>
+                </span>
+            </div>
+                
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="search-hotel btn btn-danger" (click)="createProduct()">
+            Create Product
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

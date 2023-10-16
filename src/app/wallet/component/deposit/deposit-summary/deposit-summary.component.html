@@ -1,0 +1,242 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 order-2 order-md-1 mt-4">
+        <div class="card card-outline card-primary">
+          <div class="card-header">
+            <h3 class="card-title text-danger">Customer Info</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+                <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+                <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div [collapse]="isCollapsed" [isAnimated]="true">
+            <div class="card-body">
+              <form [formGroup]="customersForm">
+                <div class="row">
+                  <div class="col-md-4 col-8">
+                    <div class="form-group">
+                      <label>First Name</label>
+                      <input class="form-control" type="text" formControlName="firstName"
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('firstName').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('firstName').errors?.required">
+                          Please enter your First Name.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-4">
+                    <div class="form-group">
+                      <label>Middle Name</label>
+                      <input class="form-control" type="text" formControlName="middleName" />
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-8">
+                    <div class="form-group">
+                      <label>Surname</label>
+                      <input class="form-control" type="text" formControlName="lastName"
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('lastName').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('lastName').errors?.required">
+                          Please enter your Last Name.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-8">
+                    <div class="form-group">
+                      <label>Mobile</label>
+                      <input class="form-control" placeholder="Please insert the client’s cell phone number" type="text"
+                        formControlName="mobile"
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('mobile').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('mobile').errors?.required">
+                          Please enter your mobile.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-8">
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input class="form-control" placeholder="" type="text" formControlName="email"
+                        [ngClass]="{ 'is-invalid': formSubmitError && customersForm.get('email').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('email').errors?.required">
+                          Please enter your email.
+                        </span>
+                      </span>
+                      <span class="invalid-feedback">
+                        <span *ngIf="customersForm.get('email').errors?.email">
+                          Please enter correct email.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-outline card-primary">
+          <div class="card-header">
+            <div class="card-title text-danger" ngPreserveWhitespaces>
+              <i class="fa fa-credit-card"></i>&emsp;
+              <i class="fa fa-check"></i> We use secure transmission
+              &emsp;<i class="fa fa-check"></i> We protect your personal information
+            </div>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" (click)="isCardCollapsed = !isCardCollapsed">
+                <i *ngIf="!isCardCollapsed" class="fas fa-minus"></i>
+                <i *ngIf="isCardCollapsed" class="fas fa-plus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div [collapse]="isCardCollapsed" [isAnimated]="true">
+            <div class="card-body">
+              <form [formGroup]="cardPaymentForm">
+                <div class="row pt-3">
+                  <div class="col-md-6 mb-3">
+                    <div class="card-container"></div>
+                  </div>
+                  <div class="col-md-6">
+                    <div card container=".card-container" card-width="350" [messages]="messages"
+                      [placeholders]="placeholders" [masks]="masks">
+                      <div class="card-info">
+                        <div class="form-group">
+                          <label for="card_number">Card Number</label>
+                          <input class="form-control" id="card_number" type="text" formControlName="cardNo"
+                            placeholder="xxxx xxxx xxxx xxxx" card-number
+                            [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardNo').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="cardPaymentForm.get('cardNo').errors?.required">
+                              Please enter your card number.
+                            </span>
+                          </span>
+                        </div>
+                        <div class="form-group">
+                          <label for="full_name">Full Name</label>
+                          <input class="form-control" id="full_name" type="text" formControlName="cardName" card-name
+                            [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardName').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="cardPaymentForm.get('cardName').errors?.required">
+                              Please enter your card holder.
+                            </span>
+                          </span>
+                        </div>
+                        <div class="row">
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <label for="expire_time">Expiry Month/Year</label>
+                              <input class="form-control" id="expire_time" type="text" formControlName="expiry"
+                                placeholder="mm/yy" card-expiry
+                                [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('expiry').errors }" />
+                              <span class="invalid-feedback">
+                                <span *ngIf="cardPaymentForm.get('expiry').errors?.required">
+                                  Please enter your expire time.
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <label for="cvv">CVC</label>
+                              <input class="form-control" id="cvv" type="text" placeholder="xxxx" formControlName="cvv"
+                                card-cvc
+                                [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cvv').errors }" />
+                              <span class="invalid-feedback">
+                                <span *ngIf="cardPaymentForm.get('cvv').errors?.required">
+                                  Please enter your CVV.
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="box-footer clearfix">
+                    <div class="pull-right mt-2">
+                      <button type="button" class="btn btn-primary" (click)="deposit()">Deposit</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 order-1 order-md-2 mt-4 pl-md-0">
+        <div class="card card-outline card-success">
+          <div class="card-header">
+            <h3 class="card-title">Deposit Summary</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" (click)="isSummaryCollapsed = !isSummaryCollapsed">
+                <i *ngIf="!isSummaryCollapsed" class="fas fa-minus"></i>
+                <i *ngIf="isSummaryCollapsed" class="fas fa-plus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div [collapse]="isSummaryCollapsed" [isAnimated]="true">
+            <div class="card-body">
+              <div class="clearfix">
+                <span class="float-left">Country </span>
+                <span class="float-right">{{depositStep1?.countryName}} - ({{depositStep1?.countryCode}} )</span>
+              </div>
+              <hr/>
+              <div class="clearfix">
+                <span class="float-left">Currency </span>
+                <span class="float-right">{{depositStep1?.currencyName}} - ({{depositStep1?.currencyCode}} )</span>
+              </div>
+              <hr/>
+              <div class="clearfix">
+                <span class="float-left">Amount </span>
+                <span class="float-right">{{depositStep1?.amount}}</span>
+              </div>
+              <hr/>
+              <div class="clearfix">
+                <span class="float-left">Payment Option </span>
+                <span class="float-right">{{selectedPaymentOption?.displayName}} ({{selectedPaymentOption?.type}} )</span>
+              </div>
+              <hr/>
+              <div class="clearfix">
+                <span class="float-left">Fee </span>
+                <span class="float-right">0</span>
+              </div>
+              <hr/>
+              <div class="clearfix">
+                <span class="float-left">Total Amount </span>
+                <span class="float-right">{{depositStep1?.amount}}</span>
+              </div>
+              <hr/>
+              <div class="clearfix">
+                <span class="float-left">Exchange Rate </span>
+                <span class="float-right">{{exchangeRate?.exchange?.rate || 1}}</span>
+              </div>
+              <hr/>
+              <div class="clearfix">
+                <span class="float-left">Amount To Pay </span>
+                <span class="float-right">{{( depositStep1?.amount * (exchangeRate?.exchange?.rate || 1)) | currency:(depositStep1?.currencyCode||'USD'):'symbol':'.0-2'}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,504 @@
+<div class="container-fluid my-5 pt-5 pb-3 shadow-box d-md-block p-0">
+  <div class="container">
+    <form [formGroup]="searchForm" class="flight-search" (ngSubmit)="shoppingPackage()">
+      <div class="row pt-2" style="cursor: pointer;">
+        <div class="col-lg-4 col-12">
+          <label class="mb-0 font-weight-light">Where</label>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+              </div>
+              <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+                     formControlName="destination" [value]="searchPackageList.destination" [typeaheadAsync]="true"
+                     [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="select($event.item)" class="form-control"
+                     placeholder="City or Station"
+                     [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <label class="mb-0 font-weight-light">Start Date</label>
+          <div class="form-group">
+            <div class="input-group checkinDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" ngbDatepicker #checkin="ngbDatepicker" class="form-control" formControlName="startDate" [startDate]="minDateStart" [minDate]="minDateStart"
+                     (click)="checkin.toggle()" placeholder="DD/MM/YYYY" (dateSelect)="getStartDate($event)" placement="bottom"
+                     [value]="searchPackageList.date |  date:'dd/MM/yyyy'"
+                     [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('startDate').errors }"/>
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('startDate').errors?.required">
+                        Please enter your start date.
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <label class="mb-0 font-weight-light">Days</label>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <select name="" class="form-control custom-select" (change)="selectDayCount($event.target.value)" [value]="searchPackageList.maxDay">
+                <option value="1">In 1 Day</option>
+                <option value="7">1-7 Days</option>
+                <option value="14">8-14 Days</option>
+                <option value="21">15-21 Days</option>
+                <option value="100">22+ Days</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-12">
+          <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Search" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div class="row mt-2">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter" (click)="showFormFilter()">SORT & FILTER</span>
+        <span class="float-right show-map" (click)="showMap()">SHOW MAP</span>
+      </div>
+      <div *ngIf="mapOpen" class="mb-4 text-center border we-map" style="background: #CAE5CD;">
+        <img alt="map" class="img-fluid" src="../../../../assets/google-map.jpg">
+      </div>
+    </div>
+    <div id="sortFilter" class="col-md-2 we-sort-filter">
+      <div class="mb-4 d-none d-md-block">
+        <img alt="map" class="img-fluid" src="../../../../assets/google-map.jpg">
+      </div>
+      <div class="mb-4">
+        <h5 class="border-bottom pb-2"><i class="fa fa-list text-default"></i> Sort & Filter</h5>
+        <div class="custom-control pl-0">
+          <select name="" class="form-control custom-select">
+            <option value="priceIncrease">Price( increase)</option>
+            <option value="priceDecrease">Price( Decrease)</option>
+            <option value="popularity">Popularity</option>
+            <option value="new">New First</option>
+            <option value="rating">Rating</option>
+          </select>
+        </div>
+      </div>
+<!--      <div class="facility mb-4">-->
+<!--        <h5 class="pb-2 border-bottom pb-2"><i class="fas fa-star-of-life text-default"></i> Region</h5>-->
+<!--        <div class="custom-control custom-checkbox" *ngFor="let region of regionList">-->
+<!--          <input type="checkbox" class="custom-control-input" id="{{region?.id}}">-->
+<!--          <label class="custom-control-label" for="{{region?.id}}">{{region?.name}}</label>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="star-rating mb-4">
+        <h5 class=" border-bottom pl-0 pb-2"><i class="fa fa-star text-default"></i> Star Rating</h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start5">
+          <label class="custom-control-label" for="start5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 star <small>( 123
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start4">
+          <label class="custom-control-label" for="start4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 star <small>( 123
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start3">
+          <label class="custom-control-label" for="start3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3 star
+            <small>( 12 )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start2">
+          <label class="custom-control-label" for="start2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 star <small>( 12
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start1">
+          <label class="custom-control-label" for="start1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 star <small>( 123
+            )</small></label>
+        </div>
+      </div>
+      <div class="facility mb-4">
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><i class="fas fa-star-of-life text-default"></i> Facility</h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility1">
+          <label class="custom-control-label" for="facility1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wi-Fi <small> (55)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility2">
+          <label class="custom-control-label" for="facility2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parking <small>(123)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility3">
+          <label class="custom-control-label" for="facility3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Airport Shuttle <small>(13)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility4">
+          <label class="custom-control-label" for="facility4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fitness Center <small>(123)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility5">
+          <label class="custom-control-label" for="facility5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indoor Pool <small>(13)</small></label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="flights-list">
+        <div class="flight-item shadow-box1 blue-bg mb-3">
+          <div class="row d-flex p-3">
+            <div class="col-md-12">
+              <div class="d-flex justify-content-between">
+                <h5 class="text-danger mb-1">Package</h5><a class="text-danger" routerLink="/packages/list">Change</a></div>
+            </div>
+            <div class="col-md-4">
+              <img [src]="selectedPackage?.hotelImage" class="img-fluid">
+            </div>
+            <div class="col-md-8 pl-md-0 pt-3 pt-md-0">
+              <div class="row">
+                <div class="col-8">
+                  <h5 class="hotel-title">{{selectedPackage?.name}}</h5>
+                  <p style="font-size: 12px;"><i class="fa fa-map-marker"></i> {{searchPackageList?.destination}}</p>
+                  <div class="d-none d-md-block">
+                    <div style="color:#666666;font-size: 14px;font-weight: bold;">{{selectedPackage?.dayCount}} day(s), {{selectedPackage?.dayCount - 1}} night(s)</div>
+                    <p style="color:#666666;margin-bottom:10px;line-height: 15px;"> {{selectedPackage?.cityName}}, {{selectedPackage?.regionName}}</p>
+                    <div style="color:#666666;font-size: 14px;font-weight: bold;">{{selectedRoom?.roomType}}</div>
+                    <p style="color:#666666;margin-bottom:10px;line-height: 15px;"> {{selectedRoom?.roomDescription}}</p>
+                  </div>
+                </div>
+                <div class="col-4 text-right"> <span class="hotel-price mt-md-2">{{selectedPackage?.price | currency:selectedRoom?.currency:'symbol':'.0-2'}}</span>
+                  <div style="margin-bottom:15px">including taxes and fees</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedSupplements.length > 0">
+        <div class="shadow-box1 blue-bg mb-3" *ngFor="let selectedSupplement of selectedSupplements; let i = index">
+          <h5 class="text-danger mx-3 pt-3 mb-0">
+            Supplement
+            <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+              <a class="text-danger" (click)="removeSupplement(i)">Remove</a>
+            </small>
+          </h5>
+          <div class="row">
+            <div class="col-md-9 col-7">
+              <div class="row">
+                <div class="col-md-7 col-12">
+                  <div class="px-3 pt-3">
+                    <p class="title">{{selectedSupplement?.name}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                  <div class="text-muted" style="font-weight: bold;">{{selectedSupplement?.shortDescription}}</div>
+                </div>
+              </div>
+              <div class="px-3 pb-3">
+                {{selectedSupplement?.description}}
+              </div>
+            </div>
+            <div class="col-md-3 col-5 p-3 pr-4">
+              <div class="text-right">
+                <span class="flight-price">{{+selectedSupplement?.price| currency:selectedRoom?.currency:'symbol':'.0-2'}}</span><br>
+                <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedTours.length > 0">
+        <div class="shadow-box1 blue-bg mb-3" *ngFor="let selectedTour of selectedTours; let i = index">
+          <h5 class="text-danger mx-3 pt-3 mb-0">
+            Tour
+            <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+              <a class="text-danger" (click)="removeTour(i)">Remove</a>
+            </small>
+          </h5>
+          <div class="row">
+            <div class="col-md-9 col-7">
+              <div class="row">
+                <div class="col-md-7 col-12">
+                  <div class="px-3 pt-3">
+                    <p class="title">{{selectedTour?.name}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                  <div class="text-muted" style="font-weight: bold;">{{selectedTour?.note}}</div>
+                </div>
+              </div>
+              <div class="px-3 pb-3">
+                {{selectedTour?.description}}
+              </div>
+            </div>
+            <div class="col-md-3 col-5 p-3 pr-4">
+              <div class="text-right">
+                <span class="flight-price">{{+selectedTour?.price| currency:selectedTour?.currency:'symbol':'.0-2'}}</span><br>
+                <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedTransfers.length > 0">
+        <div class="shadow-box1 blue-bg mb-3" *ngFor="let selectedTransfer of selectedTransfers; let i = index">
+          <h5 class="text-danger mx-3 pt-3 mb-0">
+            Transfer
+            <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+              <a class="text-danger" (click) = "removeTransfer(i)">Remove</a>
+            </small>
+          </h5>
+          <div class="row">
+            <div class="col-md-9 col-7">
+              <div class="row">
+                <div class="col-md-7 col-12">
+                  <div class="px-3 pt-3">
+                    <p class="title">{{selectedTransfer?.transferType}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                  <div class="text-muted" style="font-weight: bold;">{{selectedTransfer?.note}}</div>
+                </div>
+              </div>
+              <div class="px-3 pb-3">
+                Arrival: {{(selectedTransfer?.arrival) ? 'Yes' : 'No'}} <br/>
+                Departure: {{(selectedTransfer?.departure) ? 'Yes' : 'No'}}
+              </div>
+            </div>
+            <div class="col-md-3 col-5 p-3 pr-4">
+              <div class="text-right">
+                <span class="flight-price">{{selectedTransfer?.amount| currency:selectedTransfer?.currency:'symbol':'.0-2'}}</span><br>
+                <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-danger px-5 float-ledt mb-4" (click)="continueBooking()">Check Out</button>
+      <div>
+        <div *ngIf="fetching" class="text-center my-4">
+          <div class="spinner-border text-primary"></div>
+          <span ngPreserveWhitespaces>&emsp;Loading...</span>
+        </div>
+        <div *ngIf="fetchFailed" class="my-4">
+          <alert type="danger" ngPreserveWhitespaces>
+            There is some errors.&emsp;<strong>{{errorMes}}</strong>
+          </alert>
+          <button type="button" class="btn btn-danger" (click)="fetchOptional()">Try Again</button>
+        </div>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed">
+        <div class="supplement-list" *ngIf="supplementList.length > 0">
+          <h1 class="supplement-title mb-3" style="font-size:26px;">Choose Supplement</h1>
+          <div class="flight-item mb-3" *ngFor="let supplement of supplementList; let i = index;">
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <p class="title">{{supplement?.name}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{supplement?.shortDescription}}</div>
+                  </div>
+                </div>
+                <div class="px-3 pb-3">
+                  {{supplement?.description}}
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right px-2">
+                      <span
+                        class="flight-price">{{+supplement?.price | currency: supplement?.currency :'symbol':'.0-2'}}</span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                  <button class="btn btn-danger" (click)="addSupplement(i)">Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tour-list" *ngIf="tourList.length > 0">
+          <h1 class="flight-title mb-3" style="font-size:26px;">Choose Tour</h1>
+          <div class="flight-item mb-3" *ngFor="let tour of tourList; let i = index;">
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <p class="title">{{tour?.name}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{tour?.note}}</div>
+                  </div>
+                </div>
+                <div class="px-3 pb-3">
+                  {{tour?.description | truncatetext: 100}}
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right px-2">
+                      <span
+                        class="flight-price">{{+tour?.price | currency: tour?.currency :'symbol':'.0-2'}}</span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                  <button class="btn btn-danger" (click)="addTour(i)">Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="transfer-list" *ngIf="transferList.length > 0">
+          <h1 class="flight-title mb-3" style="font-size:26px;">Choose Transfer</h1>
+          <div class="flight-item mb-3" *ngFor="let transfer of transferList; let i = index;">
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <p class="title">{{transfer?.transferType}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <div class="text-muted" style="font-weight: bold;">{{transfer?.note}}</div>
+                  </div>
+                </div>
+                <div class="px-3 pb-3">
+                  Arrival: {{(transfer?.arrival) ? 'Yes' : 'No'}} <br/>
+                  Departure: {{(transfer?.departure) ? 'Yes' : 'No'}}
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right px-2">
+                      <span
+                        class="flight-price">{{transfer?.amount | currency: transfer?.currency :'symbol':'.0-2'}}</span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                  <button class="btn btn-danger" (click)="addTransfer(i)">Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="supplementList.length === 0 && tourList.length === 0 && transferList.length === 0">
+          <alert type="danger" ngPreserveWhitespaces>
+            There is no optional for this package
+          </alert>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <img class="sticky mt-5 w-100 d-none d-md-block" style="height: auto; margin-top: 0px !important;top: 65px;"
+           src="../../../../assets/ads.jpg">
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<div *ngIf="fetching" class="container">
+  <div class="row mt-2">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter"><ngx-skeleton-loader [theme]="{'height.px': 21, 'background-color': '#ccc',
+         'margin-bottom.px': 0, 'border-bottom.px': 0}"></ngx-skeleton-loader></span>
+      </div>
+    </div>
+    <div class="col-md-2 we-sort-filter">
+      <div class="mb-4 d-none d-md-block">
+        <ngx-skeleton-loader [theme]="{'height.px': 107, 'background-color': '#ccc',
+         'margin-bottom.px': 0, 'border-bottom.px': 0}"></ngx-skeleton-loader>
+      </div>
+      <div class="mb-4 d-none d-md-block">
+        <div><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '10%', 'margin-bottom.px': 0, 'height.px': 15}"></ngx-skeleton-loader></div>
+        <h5 class=" border-bottom pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <div class="custom-control pl-0">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+        </div>
+      </div>
+      <div class="star-rating mb-4 d-none d-md-block">
+        <div><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '10%', 'margin-bottom.px': 0, 'height.px': 15}"></ngx-skeleton-loader></div>
+        <h5 class=" border-bottom pl-0 pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="5" [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+      </div>
+      <div class="facility mb-4 d-none d-md-block">
+        <div><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '10%', 'margin-bottom.px': 0, 'height.px': 15}"></ngx-skeleton-loader></div>
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="5" [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="flights-list mb-3">
+        <div class="flight-item shadow-box1 blue-bg mb-3">
+          <div class="row d-flex p-3">
+            <div class="col-md-12">
+              <div>
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0, 'height.px': 23}"></ngx-skeleton-loader>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0, 'height.px': 122, 'width.px': 212}"></ngx-skeleton-loader>
+            </div>
+            <div class="col-md-8 pl-md-0 pt-3 pt-md-0">
+              <div class="row">
+                <div class="col-8">
+                  <h5 class="hotel-title">
+                    <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '50%', 'margin-bottom.px': 0, 'height.px': 22}"></ngx-skeleton-loader>
+                  </h5>
+                  <p style="font-size: 12px;">
+                    <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '67%', 'margin-bottom.px': 0, 'height.px': 18}"></ngx-skeleton-loader>
+                  </p>
+                  <div class="d-none d-md-block">
+                    <div style="color:#666666;font-size: 14px;font-weight: bold;">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '50%', 'margin-bottom.px': 0, 'height.px': 21}"></ngx-skeleton-loader>
+                    </div>
+                    <p style="color:#666666;margin-bottom:10px;line-height: 15px;"> <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0, 'height.px': 30}"></ngx-skeleton-loader></p>
+                    <div style="color:#666666;font-size: 14px;font-weight: bold;">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '50%', 'margin-bottom.px': 0, 'height.px': 21}"></ngx-skeleton-loader>
+                    </div>
+                    <p style="color:#666666;margin-bottom:10px;line-height: 15px;"> <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0, 'height.px': 30}"></ngx-skeleton-loader></p>
+                  </div>
+                </div>
+
+                <div class="col-4 text-right">
+                  <span class="mt-md-2">
+                    <ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 25, 89)', 'width': '50%', 'margin-bottom.px': 0, 'height.px': 26}"></ngx-skeleton-loader>
+                  </span>
+                  <div style="margin-bottom:15px">
+                    <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0, 'height.px': 42}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 25, 89)', 'width': '25%', 'margin-bottom.px': 0, 'height.px': 38}"></ngx-skeleton-loader>
+      </div>
+      <div class="supplement-list">
+        <div *ngFor="let i of [1, 2, 3]">
+          <h1 class="supplement-title mb-3" style="font-size:26px;">
+            <ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 25, 89)', 'width': '30%', 'margin-bottom.px': 0, 'height.px': 28}"></ngx-skeleton-loader>
+          </h1>
+          <div class="mb-3">
+            <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0, 'height.px': 145}"></ngx-skeleton-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <ngx-skeleton-loader [theme]="{'height.px': 600, 'width.px': 160, 'background-color': '#ccc'}"></ngx-skeleton-loader>
+    </div>
+  </div>
+</div>
+

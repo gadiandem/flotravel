@@ -1,0 +1,63 @@
+<div class="container mt-3 pb-3" style="min-height: 500px;">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h2 class="heading">{{'admin-agency-management.label-title' | translate }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [pageSize]="10" [pageable]="true"
+        [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+        <ng-template kendoGridToolbarTemplate>
+          <input placeholder="{{'admin-agency-management.label-search-column' | translate }}" kendoTextBox
+            (input)="onFilter($event.target.value)" />
+          <span *ngIf="isLoading">
+            <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+            </div><span ngPreserveWhiteSpaces>&emsp;{{'admin-agency-management.label-loading' | translate }}</span>
+          </span>
+          <button kendoGridExcelCommand type="button" icon="file-excel">{{'admin-agency-management.label-excel' |
+            translate }}</button>
+          <button kendoGridPDFCommand icon="file-pdf">{{'admin-agency-management.label-pdf' | translate }}</button>
+         <!--<button class="btn btn-success btn-sm" style="float:right;" (click)="createNewAgency()"><i
+              class="icon fa fa-plus"></i>&emsp; {{'admin-agency-management.label-agency-create' | translate }}</button> -->
+        </ng-template>
+        <kendo-grid-column title="#" [width]="20" [columnMenu]="false">
+          <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+            <div style="text-align: center;">{{rowIndex + 1}}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="name" title="{{'admin-agency-management.title-agency' | translate }}" [width]="200">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem?.agentInfo?.logo" class="customer-photo"
+              [ngStyle]="{'background-image' : 'url(' + dataItem?.agentInfo?.logo + ')'}"></div>
+            <div *ngIf="!dataItem?.agentInfo?.logo" class="customer-photo"
+              [ngStyle]="{'background-image' : 'url(' + defaultData + ')'}"></div>
+            <div class="customer-name">{{ dataItem.name }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="parent" title="{{'admin-agency-management.title-parent' | translate }}" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="customer-name">{{ dataItem.parent }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="owner" title="{{'admin-agency-management.title-owner' | translate }}" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="customer-name">{{ dataItem?.owner }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column title="{{'admin-agency-management.title-action' | translate }}" [width]="80"
+          [class]="{'text-center': true}" [resizable]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button class="btn btn-warning btn-sm mr-1" (click)="editAgency(dataItem.id)"><i class="icon fa fa-pencil"
+                style="color: white;" aria-hidden="true"></i></button>
+            <button class="btn btn-danger btn-sm ml-1" (click)="deleteAgency(dataItem.id)"><i class="icon fa fa-times"
+                aria-hidden="true"></i></button>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-excel fileName="Agency.xlsx"></kendo-grid-excel>
+        <kendo-grid-pdf fileName="Agency.pdf" [repeatHeaders]="true" paperSize="A2" [allPages]="true"></kendo-grid-pdf>
+      </kendo-grid>
+      <div kendoDialogContainer></div>
+    </div>
+  </div>
+</div>

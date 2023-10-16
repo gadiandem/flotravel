@@ -1,0 +1,2 @@
+<app-flight-order-item (selectFlight)="selectedFlight($event)" class="flight-item mb-3" *ngFor="let flight of flightList; let i = index;" [flight]="flight" [returnFlight] = "getReturnFlight(flight)">
+</app-flight-order-item>

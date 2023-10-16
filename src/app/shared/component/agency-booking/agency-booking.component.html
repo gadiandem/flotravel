@@ -1,0 +1,24 @@
+<h5 class="text-danger border-bottom pb-2 mb-3">{{'agency-booking.label-agency-booking' | translate }}</h5>
+<div class="form-check mb-3">
+  <input class="form-check-input" type="checkbox" (change)="enableAgencyBooking($event)" id="flexCheckDefault">
+  <label class="form-check-label" for="flexCheckDefault">
+    {{'agency-booking.label-enable-booking' | translate }}
+  </label>
+</div>
+<div *ngIf="isCheck && !isload" class="input-group mb-3">
+  <div class="input-group-prepend">
+    <label class="input-group-text" for="inputGroupSelect01">{{'agency-booking.label-agent-user' | translate }}</label>
+  </div>
+  <select *ngIf="!isload && userList.length !== 0" class="custom-select" id="inputGroupSelect01" #agentSelect
+    (change)='onAgentSelected(agentSelect.value)'>
+    <option selected>{{'agency-booking.label-choose-user' | translate }}</option>
+    <option *ngFor="let user of userList" [value]="user.id">{{user?.firstName + ' ' + user?.lastName}}</option>
+  </select>
+  <div *ngIf="!isload && userList.length === 0" class="alert alert-warning" role="alert">
+    {{'agency-booking.invalid-user' | translate }}
+  </div>
+</div>
+<div *ngIf="isCheck && isload" class="text-center mt-3 loading-space">
+  <div class="spinner-border text-primary"></div>
+  <span ngPreserveWhitespaces>&emsp;{{'agency-booking.paragraph-three' | translate }}</span>
+</div>

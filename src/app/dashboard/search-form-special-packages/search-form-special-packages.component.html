@@ -1,0 +1,71 @@
+<div class="tab-pane fade py-3 m-3 m-md-0 pt-lg-4 active show">
+  <form [formGroup]="searchForm" (ngSubmit)="searchPackages()">
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="icon fa fa-map-marker"></i><span
+                  class="d-none d-md-block">&nbsp;{{'dashboard-special-packages.label-where' | translate }}</span>
+              </span>
+            </div>
+            <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+              formControlName="destination" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+              (typeaheadOnSelect)="select($event.item)" class="form-control" type="search"
+              placeholder="{{'dashboard-special-packages.placeholder-where' | translate }}"
+              [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="searchForm.get('destination').errors?.required">
+                {{'dashboard-special-packages.invalid-location' | translate }}
+              </span>
+              <span *ngIf="searchForm.get('destination').errors?.minlength">
+                {{'dashboard-special-packages.incorrect-location' | translate }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i
+                  class="icon fa fa-calendar-check-o"></i>&nbsp;{{'dashboard-special-packages.label-when' | translate
+                }}</span>
+            </div>
+            <kendo-datepicker #datepicker class="form-control" formControlName="startDate" calendarType="classic" (click)="onOpenDatepicker($event, datepicker)" formControlName="startDate" title="Select Date"
+            format="dd-MM-yyyy" placeholder="Check-out Date" [min]="minDate"></kendo-datepicker>
+            <span class="invalid-feedback">
+              <span *ngIf="searchForm.get('startDate').errors?.required">
+                {{'dashboard-special-packages.invalid-time' | translate }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="new-rooms mb-3">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="mb-0 m-0 font-weight-light">Guests</label>
+          <div class="form-group mb-md-0" style="margin-bottom: 0 !important;">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+              </div>
+              <input #menuDrop type="text" class="guests-input form-control" (click)="toggleDrop()"
+                [value]="travellerCount +' travellers, ' + roomCount + ' rooms'" style="background:#fff;">
+              <app-room-guests *ngIf="showDropDown" [roomGuests]="roomGuests" (roomGuestsNew)="updateRoomGuests($event)"
+                (showDropDown)="changeShowDropDown($event)" class="guests-dropdown shadow-box p-3"></app-room-guests>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="submit" name="submit" class="search-hotel btn btn-danger mt-3"
+      value="{{'dashboard-special-packages.button-find-special-packages' | translate }}" />
+  </form>
+</div>

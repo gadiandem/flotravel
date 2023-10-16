@@ -1,0 +1,110 @@
+  <div class="container mt-3 pb-5">
+    <div class="row">
+      <div class="col-12 mb-4">
+        <h2 class="heading">  {{'admin-things-to-do.label-xtra-available' | translate }}</h2>
+      </div>
+    </div>
+    <form [formGroup]="extraPackageAvailabilityForm" (ngSubmit)="addExtraPackageAvailability()">
+    <div class="row">
+        <!-- <div class="col-12"> -->
+          <div class="col-12">
+            <div class="form-group">
+              <label for="name">{{'admin-things-to-do.label-extra-package' | translate }}</label>
+              <input class="form-control" id="name" formControlName="name" readonly>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label for="startDate">{{'admin-things-to-do.label-start-date' | translate }}</label>
+              <!-- <input class="form-control" id="startDate" formControlName="startDate"> -->
+              <input type="text" class="form-control fromdate" formControlName="startDate" bsDatepicker
+              (bsValueChange)="onValueChange($event)" [minDate]="minDate" [bsConfig]="bsConfig">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label for="endDate">{{'admin-things-to-do.label-end-date' | translate }}</label>
+              <!-- <input class="form-control" id="endDate" formControlName="endDate"> -->
+              <input type="text" class="form-control fromdate" formControlName="endDate" bsDatepicker
+                 [bsConfig]="bsConfig">
+            </div>
+          </div>
+          <div class="col-2 d-flex align-items-center">
+            <button type="submit" name="submit" class="btn btn-primary">
+              {{'admin-things-to-do.label-add-availability' | translate }}
+            </button>
+          </div>
+          <div class="col-2 d-flex align-items-center">
+            <button type="button" name="submit" class="btn btn-danger" (click)="deleteExtraPackageAvailability()">
+              {{'admin-things-to-do.label-delete-availability' | translate }}
+            </button>
+          </div>
+        <!-- </div> -->
+      </div>
+    </form>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+          [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="{{'admin-things-to-do.label-searching' | translate }}" kendoTextBox (input)="onFilter($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;{{'admin-things-to-do.label-loading' | translate }}</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">{{'admin-things-to-do.label-excel' | translate }}</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">{{'admin-things-to-do.label-pdf' | translate }}</button>
+          </ng-template>
+
+          <kendo-grid-column-group title="{{'admin-things-to-do.label-list' | translate }}" [columnMenu]="false">
+            <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="id" title="{{'admin-things-to-do.label-id' | translate }}" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="customer-name" ngPreserveWhitespaces>
+                  {{ dataItem.id }}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="extraPacakge" title="{{'admin-things-to-do.label-extra-package' | translate }}" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <!-- <div class="extras" ngPreserveWhitespaces>{{ dataItem.item_name }}</div> -->
+                <div>{{extraPackageInfo?.name || dataItem.extraPackageId}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="dateAvailable" title="{{'admin-things-to-do.label-date-avail' | translate }}" [width]="180" [class]="{'text-center': true}"
+              [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.date | date:'medium'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="available" title="{{'admin-things-to-do.label-available' | translate }}" [width]="70" [class]="{'text-center': true}"
+              filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <span *ngIf="dataItem.available" class="badge badge-success">{{'admin-things-to-do.label-yes' | translate }}</span>
+                <span *ngIf="!dataItem.available" class="badge badge-secondary">{{'admin-things-to-do.label-no' | translate }}</span>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="{{'admin-things-to-do.label-action' | translate }}" [width]="80" [class]="{'text-center': true}" [columnMenu]="false"
+              filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <button class="btn btn-warning btn-sm" (click)="viewDetail(dataItem)">{{'admin-things-to-do.label-detail' | translate }}</button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+
+          <kendo-grid-pdf fileName="ExtrasBookingList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="ExtrasBookingList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,95 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-virtual-cards-search.label-title' | translate }}</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <form [formGroup]="vertualCardListForm" class="form-horizontal clearfix">
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-virtual-cards-search.label-date-from' | translate }}</label>
+              <div class="input-group col-8">
+                <input class="form-control" placeholder="dd/mm/yyyy" name="dp" formControlName="dateFrom" ngbDatepicker
+                  #df="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary calendar" (click)="df.toggle()" type="button">
+                    <i class="icon fa fa-calendar-check-o"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-virtual-cards-search.label-date-to' | translate }}</label>
+              <div class="input-group col-8">
+                <input class="form-control" placeholder="dd/mm/yyyy" formControlName="dateTo" ngbDatepicker
+                  #dt="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary calendar" (click)="dt.toggle()" type="button">
+                    <i class="icon fa fa-calendar-check-o"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-virtual-cards-search.label-card-number' | translate }}</label>
+              <div class="col-8">
+                <input class="form-control" id="cardNumber" type="text" formControlName="cardNumber"
+                  [ngClass]="{ 'is-invalid': formSubmitError && vertualCardListForm.get('cardNumber').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="vertualCardListForm.get('cardNumber').errors?.required">
+                    {{'wallet-virtual-cards-search.invalid-card-number' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-virtual-cards-search.label-block' | translate }}?</label>
+              <div class="col-8">
+                <select class="form-control" id="block" type="text" formControlName="block"
+                  [ngClass]="{ 'is-invalid': formSubmitError && vertualCardListForm.get('block').errors }">
+                  <option value="">{{'wallet-virtual-cards-search.label-all' | translate }}</option>
+                  <option value="true">{{'wallet-virtual-cards-search.label-block' | translate }}</option>
+                  <option value="false">{{'wallet-virtual-cards-search.label-not-block' | translate }}</option>
+                </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="vertualCardListForm.get('block').errors?.required">
+                    {{'wallet-virtual-cards-search.invalid-block' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr />
+      <div class="clearfix">
+        <!-- <div class="pull-left">
+          <button type="button" class="btn btn-primary btn-sm mr-2" (click)="searchTransactions()">
+            <i class="fa fa-history" aria-hidden="true"></i> Transaction History
+          </button>
+        </div> -->
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary btn-sm mr-2" (click)="searchTransactions()">{{'wallet-virtual-cards-search.label-search' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

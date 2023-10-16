@@ -1,0 +1,64 @@
+<div class="container my-md-5 mt-5 pt-5 pb-3 col-lg-8 offset-lg-2">
+  <div class="hotel-item shadow-box1 bg-white py-2 mb-3">
+    <div class="row d-flex p-3 py-4">
+      <div class="col-md-4">
+        <img [lazyLoad]="orderPackage?.selectedPackage?.hotelImage" [useSrcset]="true"
+             class="img-fluid rounded">
+      </div>
+      <div class="col-md-8 pt-3 pt-md-0 ">
+        <div class="row">
+          <div class="col-md-9">
+            <h5 class="hotel-title">{{orderPackage?.selectedPackage?.packageName}}</h5>
+            <div class="my-2">
+              <span>{{orderPackage?.startDate | date : 'mediumDate'}}</span> -
+              <span>{{addDays(orderPackage?.startDate, orderPackage?.selectedPackage?.dayCount) | date : 'mediumDate'}}</span>
+              <span class="ml-md-4">Malmö</span>
+            </div>
+            <div>{{orderPackage.bookingStatus}}</div>
+            <hr>
+            <div class="fs-5 fw-bold text-dark mt-4">{{'package-cancellation.label-cancel-rules' | translate }}</div>
+            <p class="small">{{'package-cancellation.label-cancellation-policy' | translate }}</p>
+            <p class="small">{{'package-cancellation.label-cancellation-policy-1' | translate }}</p>
+            <div class="fs-6 fw-bold text-dark" *ngFor="let room of orderPackageDetail?.rooms; let i = index">
+              {{'package-cancellation.label-room' | translate }} {{i + 1}}: {{room.roomType}}
+              <p class="small">{{room.roomDescription}}</p>
+            </div>
+            <div class="bcancel-btn d-block text-center fw-bold px-3 py-2 mt-3 mb-4" [attr.aria-expanded]="!isCollapsed" (click)="showStatementCancel()">
+              <img class="mr-1" src="../../../../assets/booking-cancellation-btn-icon.PNG" width="20" height="auto" alt=""> {{'package-cancellation.label-cancel' | translate }}
+            </div>
+            <div id="collapsed" [collapse]="isCollapsed" [isAnimated]="true" class="collapse text-dark">
+              <form [formGroup]="cancellationForm" (ngSubmit)="cancel()">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input formControlName="reason" class="form-control bcancel-btn d-block text-center fw-bold px-3 py-2 mt-3"
+                           placeholder="{{'hotel-cancel.label-reason' | translate }}"
+                           [ngClass]="{ 'is-invalid': formSubmitError && cancellationForm.get('reason').errors }"/>
+                    <span class="invalid-feedback">
+                      <span *ngIf="cancellationForm.get('reason').errors?.required">
+                        {{'hotel-cancel.invalid-reason' | translate }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-danger mb-4" (click)="cancel()">Cancel</button>
+              </form>
+            </div>
+            <div class="fs-5 fw-bold text-dark"> {{'package-cancellation.label-support' | translate }}</div>
+            <p> {{'package-cancellation.label-contact' | translate }}</p>
+            <div class="fw-bold">{{'package-cancellation.label-code' | translate }}</div>
+            <div>{{packageOrderId}}</div>
+            <div class="d-flex justify-content-between pr-lg-5 mt-5">
+              <div>{{'package-cancellation.label-modify' | translate }}</div>
+              <div class="mx-3"> {{'package-cancellation.label-cancel' | translate }}</div>
+              <div>{{'package-cancellation.label-print' | translate }}</div>
+            </div>
+          </div>
+          <div class="col-md-3 text-right d-flex flex-column justify-content-end">
+            <div style="color:#007864; cursor: pointer;" data-toggle="collapse" data-target="#collapse0" (click)="backPage()">
+              {{'package-cancellation.label-go-back' | translate }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,262 @@
+<div class="container-fluid mt-5">
+    <div class="row mb-3">
+        <div class="col-sm-9">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{'flo-air-create.label-title' | translate }}</h2>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="flightForm" (ngSubmit)="saveFlight()">
+                        <div class="col-10">
+                            <div class="row mt-3">
+                                <h4> {{'flo-air-create.label-flight-info' | translate }}</h4>
+                            </div>
+                            <div class="row">
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <div class="form-group row">
+                                            <label  for="flightType"> {{'flo-air-create.label-type' | translate }}</label>
+                                            <select class="form-control custom-select ml-3" formControlName="flightType" [(ngModel)]="selectedStop">
+                                                <option [value]="flight.option" 
+                                                    *ngFor="let flight of flightTypeList">
+                                                    {{flight.option}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="from"> {{'flo-air-create.label-flying-from' | translate }} </label>
+                                        <input [(ngModel)]="searchFlyFrom[0]"
+                                            typeaheadOptionField="displayName" [typeahead]="sugFlyFrom$"
+                                            formControlName="from" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7"
+                                            (typeaheadOnSelect)="selectFlyFrom($event.item)" class="form-control"
+                                            placeholder="{{'dashboard-flights.placeholder-flying-from' | translate }}"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('from').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('from').errors?.required">
+                                                {{'flo-air-create.invalid-flying-from' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3"  *ngIf="selectedStop === 'OneStop'">
+                                        <label for="stop">  {{'flo-air-create.label-stop' | translate }} </label>
+                                        <input [(ngModel)]="searchStop[0]"
+                                            typeaheadOptionField="displayName" [typeahead]="sugSearchStop$"
+                                            formControlName="stop" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7"
+                                            (typeaheadOnSelect)="selectStop($event.item)" class="form-control"
+                                            placeholder="{{'dashboard-flights.placeholder-flying-from' | translate }}"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('stop').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('stop').errors?.required">
+                                                {{'flo-air-create.invalid-stop' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="to">  {{'flo-air-create.label-destination' | translate }} </label>
+                                        <input [(ngModel)]="searchFlyTo[0]" typeaheadOptionField="displayName"
+                                             [typeahead]="sugFlyTo$"
+                                            formControlName="to" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7"
+                                            (typeaheadOnSelect)="selectDestination($event.item)" class="form-control"
+                                            placeholder="  {{'dashboard-flights.placeholder-destination' | translate }}"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('to').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('to').errors?.required">
+                                                {{'flo-air-create.invalid-destination' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <h4>  {{'flo-air-create.label-flight-time' | translate }} </h4>
+                            </div>
+                            <div class="row">
+                                <div class="form-group row">
+                                    <div class="col-md-5">
+                                        <label for="depart">  {{'flo-air-create.label-dep-time' | translate }} </label>
+                                        <input type="time" class="form-control" id="depart" formControlName="depart"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('depart').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('depart').errors?.required">
+                                                {{'flo-air-create.invalid-dep-time' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="selectedStop === 'OneStop'">
+                                        <div class="form-group row">
+                                            <label for="stopArrive">  {{'flo-air-create.label-stop-time' | translate }} </label>
+                                            <input type="time" class="form-control" id="arrive" formControlName="stopArrive"
+                                                [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('stopArrive').errors }">
+                                            <span class="invalid-feedback">
+                                                <span *ngIf="flightForm.get('stopArrive').errors?.required">
+                                                    {{'flo-air-create.invalid-stop-time' | translate }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="selectedStop === 'OneStop'">
+                                        <label for="stopDepart">  {{'flo-air-create.label-dep-stop-time' | translate }} </label>
+                                        <input type="time" class="form-control" id="depart" formControlName="stopDepart"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('stopDepart').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('stopDepart').errors?.required">
+                                                {{'flo-air-create.invalid-stop-dep-time' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group row">
+                                            <label for="arrive">  {{'flo-air-create.label-arr-time' | translate }} </label>
+                                            <input type="time" class="form-control" id="arrive" formControlName="arrive"
+                                                [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('arrive').errors }">
+                                            <span class="invalid-feedback">
+                                                <span *ngIf="flightForm.get('arrive').errors?.required">
+                                                    {{'flo-air-create.invalid-arr-time' | translate }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <h4>  {{'flo-air-create.label-extra-info' | translate }} </h4>
+                            </div>
+                            <div class="row">
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <label for="airline"> {{'flo-air-create.label-airline' | translate }} </label>
+                                        <input formControlName="airline" [typeahead]="searchAirline"
+                                        [typeaheadItemTemplate]="customItemTemplate" typeaheadOptionField="name"
+                                        [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" type="text" class="form-control"  placeholder=""
+                                        (typeaheadOnSelect)="getselectedAirline($event.item)"
+                                        [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('airline').errors }" />
+                                      <span class="invalid-feedback">
+                                        <span *ngIf="flightForm.get('airline').errors?.required">
+                                            {{'flo-air-create.invalid-airline' | translate }}
+                                        </span>
+                                        <ng-template #customItemTemplate let-model="item" let-index="index">
+                                          {{model.name}}- {{model.iata}}
+                                        </ng-template>
+                                      </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="aircraft"> {{'flo-air-create.label-aircraft' | translate }} </label>
+                                        <input class="form-control" id="aircraft" formControlName="aircraft"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('aircraft').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('aircraft').errors?.required">
+                                                {{'flo-air-create.invalid-aircraft' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group row">
+                                            <label for="flightNumber">{{'flo-air-create.label-flight-number' | translate }}</label>
+                                            <input class="form-control" id="flightNumber" formControlName="flightNumber"
+                                                [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('flightNumber').errors }">
+                                            <span class="invalid-feedback">
+                                                <span *ngIf="flightForm.get('flightNumber').errors?.required">
+                                                    {{'flo-air-create.invalid-flight-number' | translate }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="flightClass"> {{'flo-air-create.label-class' | translate }} </label>
+                                        <select formControlName="flightClass" class="form-control custom-select">
+                                            <option value="FIRST">{{'flo-air-create.label-first-class' | translate }}</option>
+                                            <option value="BUSINESS">{{'flo-air-create.label-business' | translate }}</option>
+                                            <option value="ECONOMY">{{'flo-air-create.label-economy' | translate }}</option>
+                                            <option value="PREMIUM ECONOMY">{{'flo-air-create.label-prem-economy' | translate }}</option>
+                                          </select>
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('flightClass').errors?.required">
+                                                {{'flo-air-create.invalid-class' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <h4>  {{'flo-air-create.label-luggage' | translate }}</h4>
+                            </div>
+                            <div class="row">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <label for="maximumWeight"> {{'flo-air-create.label-weight' | translate }} </label>
+                                        <input type="number" class="form-control" id="maximumWeight" formControlName="maximumWeight"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('maximumWeight').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('maximumWeight').errors?.required">
+                                                {{'flo-air-create.invalid-weight' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group row">
+                                            <label for="totalQuantity">{{'flo-air-create.label-bags' | translate }} </label>
+                                            <input type="number" class="form-control" id="totalQuantity"
+                                                formControlName="totalQuantity"
+                                                [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('totalQuantity').errors }">
+                                            <span class="invalid-feedback">
+                                                <span
+                                                    *ngIf="flightForm.get('totalQuantity').errors?.required">
+                                                    {{'flo-air-create.invalid-bags' | translate }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <h4> {{'flo-air-create.label-price' | translate }}</h4>
+                            </div>
+                            <div class="row">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <label for="basicFare">  {{'flo-air-create.label-fare' | translate }} </label>
+                                        <input type="number" class="form-control" id="basicFare" formControlName="basicFare"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('basicFare').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('basicFare').errors?.required">
+                                                {{'flo-air-create.invalid-fare' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group row">
+                                            <label for="tax"> {{'flo-air-create.label-tax' | translate }} </label>
+                                            <input type="number" class="form-control" id="tax" formControlName="tax"
+                                                [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('tax').errors }">
+                                            <span class="invalid-feedback">
+                                                <span *ngIf="flightForm.get('tax').errors?.required">
+                                                    {{'flo-air-create.invalid-tax' | translate }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="totalFare">{{'flo-air-create.label-total' | translate }} </label>
+                                        <input type="number" class="form-control" id="totalFare" formControlName="totalFare"
+                                            [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('totalFare').errors }">
+                                        <span class="invalid-feedback">
+                                            <span *ngIf="flightForm.get('totalFare').errors?.required">
+                                                {{'flo-air-create.invalid-total' | translate }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <button class="search-hotel btn btn-danger" (click)="saveFlight()">
+                        {{'flo-air-create.button-create-flight' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

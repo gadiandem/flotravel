@@ -1,0 +1,169 @@
+<div class="tab-pane fade py-3 m-3 m-md-0 pt-lg-4 active show">
+  <form [formGroup]="searchForm" (ngSubmit)="searchCombineSerivce()">
+    <div class="form-group">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="icon fa fa-map-marker"></i><span class="d-none d-md-block">&nbsp;Going To</span>
+          </span>
+        </div>
+        <input [(ngModel)]="search" [typeaheadItemTemplate]="customItemTemplate1" typeaheadOptionField="displayName"
+          [typeahead]="suggestions$" formControlName="destination" [typeaheadAsync]="true"
+          [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="select($event.item)" type="search" class="form-control"
+          placeholder="City or Station"
+          [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+        <span class="invalid-feedback">
+          <span *ngIf="searchForm.get('destination').errors?.required">
+            Please enter your City or Station.
+          </span>
+          <span *ngIf="searchForm.get('destination').errors?.minlength">
+            City or Station must be longer than 3 characters.
+          </span>
+        </span>
+        <ng-template #customItemTemplate1 let-model="item" let-index="index">
+          <span *ngIf="model.type === 'CITY'"><i class="icon fa fa-map-marker"></i></span><span
+            *ngIf="model.type === 'AIRPORT'"><i class="icon fa fa-plane"></i></span> {{model.displayName |
+          truncatetext:100:0}}
+        </ng-template>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="icon fa fa-map-marker"></i><span class="d-none d-md-block">&nbsp;Leave From</span>
+          </span>
+        </div>
+        <input [(ngModel)]="leaveFrom" [typeaheadItemTemplate]="customItemTemplate2" typeaheadOptionField="displayName"
+          [typeahead]="suggestions2$" formControlName="leaveFrom" [typeaheadAsync]="true"
+          [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="selectLeaveFrom($event.item)" type="search"
+          class="form-control" placeholder="City or Station"
+          [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('leaveFrom').errors }" />
+        <span class="invalid-feedback">
+          <span *ngIf="searchForm.get('leaveFrom').errors?.required">
+            Please enter your City or Station.
+          </span>
+          <span *ngIf="searchForm.get('leaveFrom').errors?.minlength">
+            City or Station must be longer than 3 characters.
+          </span>
+        </span>
+        <ng-template #customItemTemplate2 let-model="item" let-index="index">
+          <span *ngIf="model.type === 'CITY'"><i class="icon fa fa-map-marker"></i></span><span
+            *ngIf="model.type === 'AIRPORT'"><i class="icon fa fa-plane"></i></span> {{model.displayName |
+          truncatetext:100:0}}
+        </ng-template>
+      </div>
+    </div>
+    <kendo-daterange class="row" calendarType="classic">
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label class="m-0">{{'dashboard-hotel.label-check-in' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="row">
+              <div class="input-group-prepend col-sm-1">
+                <span class="input-group-text">
+                  <i class="icon fa fa-calendar-check-o"></i>
+                </span>
+              </div>
+              <div class="input-group-prepend col-sm-9 ml-0">
+                <kendo-dateinput format="dd-MM-yyyy" kendoDateRangeStartInput [min]="minDateStart"
+                  [(value)]="checkin_date" placeholder="Check-in Date"></kendo-dateinput>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label class="m-0">{{'dashboard-hotel.label-check-out' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="row">
+            <div class="input-group-prepend col-sm-1">
+              <span class="input-group-text">
+                <i class="icon fa fa-calendar-check-o"></i>
+              </span>
+            </div>
+            <div class="input-group-prepend col-sm-9 ml-0">
+            <kendo-dateinput format="dd-MM-yyyy" kendoDateRangeEndInput [(value)]="checkout_date"
+              placeholder="Check-out Date">
+            </kendo-dateinput>
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <kendo-daterange-popup #popup [animate]="{ type: 'fade', duration: 100, direction: 'down' }">
+        <ng-template kendoDateRangePopupTemplate>
+          <kendo-multiviewcalendar calendarType="classic" kendoDateRangeSelection>
+          </kendo-multiviewcalendar>
+          <div class="row">
+            <div class="col-12 py-1">
+              <button class="float-right btn btn-info mr-3" (click)="onChangeCheckOutDate($event, popup)">Done</button>
+            </div>
+          </div>
+        </ng-template>
+      </kendo-daterange-popup>
+    </kendo-daterange>
+
+    <!-- <input type="text" name="daterangeInput" daterangepicker [options]="options" (selected)="selectedDate($event, daterange)" /> -->
+    <div class="new-rooms">
+      <div formArrayName="rooms">
+        <div class="row" *ngFor="let room of roomsControls; let i = index" [formGroupName]="i">
+          <div class="col-2"><b>Room</b> <span class="rcount text-danger border text-center"
+              style="background: #eeeeee;">
+              {{i + 1}}</span></div>
+          <div class="col-4">
+            <div class="form-group">
+              <label class="m-0">Adults</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-user">
+                    </i></span>
+                </div>
+                <select class="form-control custom-select" formControlName="adult">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 col-sm-3">
+            <div class="form-group">
+              <label class="m-0">Children<small class="text-danger"><b>(2-12yrs)</b></small></label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="icon fa fa-child">
+                    </i>
+                  </span>
+                </div>
+                <select class="form-control custom-select" formControlName="children">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-1 d-flex align-items-center align-self-center mt-sm-2 mb-sm-2" *ngIf="i >= 1">
+            <div (click)="removeItem(i)" style="cursor: pointer;">
+              <i class="fa fa-times-circle"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="add-room" (click)="onAddRoom()" style="cursor:pointer;">
+      <i class="fa fa-plus-circle"></i> Add more rooms
+    </div>
+    <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Find Hotels" />
+  </form>
+</div>

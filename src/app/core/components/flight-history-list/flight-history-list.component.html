@@ -1,0 +1,512 @@
+<main-header></main-header>
+<div *ngIf="!isLoading" class="container my-md-5 mt-5 pt-5 pb-3 col-lg-8 offset-lg-2">
+  <h3> {{'flight-history-list.label-title' | translate }}</h3>
+  <div class="row mt-3 shadow-box">
+    <div class="col-md-12">
+      <form [formGroup]="searchForm" (ngSubmit)="searchHistory()">
+        <div class="row my-3">
+          <div class="col-lg-3 col-6">
+            <label class="m-0 font-weight-light">{{'flight-history-list.label-from' | translate }}</label>
+            <div class="form-group mb-0">
+              <div class="input-group checkinDate">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-calendar-check"></i></span>
+                </div>
+                <input type="text" ngbDatepicker #checkin="ngbDatepicker" class="form-control"
+                  formControlName="fromDate" (click)="checkin.toggle()" (dateSelect)="getFromDate($event)"
+                  placement="bottom" placeholder="MM/DD/YYYY">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <label class="m-0 font-weight-light">{{'flight-history-list.label-to' | translate }}</label>
+            <div class="form-group mb-0">
+              <div class="input-group checkoutDate">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-calendar-check"></i></span>
+                </div>
+                <input type="text" ngbDatepicker #checkout="ngbDatepicker" class="form-control" formControlName="toDate"
+                  [startDate]="fromDate" [minDate]="fromDate" (click)="checkout.toggle()" placeholder="DD/MM/YYYY"
+                  (dateSelect)="getToDate($event)" placement="bottom" />
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-12 pt-1">
+            <input type="submit" class="btn btn-danger mt-3" value="Refresh">
+          </div>
+        </div>
+      </form>
+      <p>{{'flight-history-list.label-info' | translate }}</p>
+      <!-- Hotel booking -->
+      <div *ngIf="flightUserBooking.length === 0">
+        <div *ngIf="!flightAgentBooking || flightAgentBooking?.length === 0">
+          <alert type="danger" ngPreserveWhitespaces>
+            {{'flight-history-list.label-no-booking' | translate }}
+          </alert>
+        </div>
+      </div>
+
+      <!-- Flight booking -->
+      <div class="flight-item shadow-box1 bg-white mb-3" *ngFor="let flight of flightUserBooking;let i = index">
+        <div class="row d-flex p-3">
+          <div class="col-md-4">
+            <img *ngIf="!flight?.paymentAeroRes"
+              [src]="'http://pics.avs.io/300/300/' + flight?.departureFlight?.flightSegments[0]?.airline.split('-')[0] + '.png'"
+              class="img-fluid rounded" style="height: 195px !important;">
+            <img *ngIf="flight?.paymentAeroRes" [src]="'https://storage.aerocrs.com/375/system/LogoAPI.png'"
+              class="img-fluid rounded" style="height: 195px !important;">
+          </div>
+          <div class="col-md-8 pt-3 pt-md-0 ">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="hotel-title">{{flight.item_name}}</h5>
+                <div class="mt-2"> {{'flight-history-list.label-booking-ref' | translate }} {{flight?.id}}</div>
+                <div class="my-2">
+                  <span>{{flight.departureFlight?.depDateTime | date}}</span> -
+                  <span>{{flight.departureFlight?.arrDateTime | date}}</span>
+                  <span class="ml-md-4">{{flight.airlineID}}</span>
+                </div>
+                <div>{{flight.bookingStatus}}</div>
+                <div id="collapse{{i}}" [collapse]="isCollapsedUser[i]" [isAnimated]="true"
+                  class="collapse text-dark mt-3">
+                  <div>
+                    <p class="m-0"><span class="font-weight-bold"> {{'flight-history-list.label-date' | translate }}
+                      </span> {{flight?.createDate | date : 'mediumDate'}}</p>
+                    <p class="m-0"><span class="font-weight-bold"> {{'flight-history-list.label-add-on' | translate
+                        }}</span>
+                      <span *ngIf="flight?.addonGca == true"> {{'flight-history-list.label-gac' | translate }} &nbsp;
+                        &nbsp;</span>
+                      <span *ngIf="flight?.addonRefundProtect == true"> {{'flight-history-list.label-refund' | translate
+                        }} &nbsp; &nbsp;</span>
+                      <span *ngIf="flight?.addonSmartDelay == true"> {{'flight-history-list.label-delay' | translate }}
+                        &nbsp; &nbsp;</span>
+                      <span *ngIf="flight?.subscribePolicyData != null || undefined">
+                        {{'flight-history-list.label-insurance' | translate }} &nbsp; &nbsp;</span>
+                      <span *ngIf="flight?.traceMeData != null || undefined"> {{'flight-history-list.label-traceme' |
+                        translate }} </span>
+                    </p>
+                  </div>
+                  <h5 class="text-danger mb-3">
+                    {{'flight-history-list.label-departure' | translate }}
+                    <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                        class="fas fa-clock"></i>&nbsp;{{flight.departureFlight?.depDateTime | date : 'hh:mm'}}</span>
+                  </h5>
+                  <div class="row mb-3" *ngFor="let segment of flight?.departureFlight?.flightSegments">
+                    <div class="col-3">
+                      {{segment?.depDateTime | date : 'hh:mm'}}<br>
+                      <b>{{segment?.depDateTime | date : 'd MMM'}}</b><br><br>
+                      {{segment?.arrDateTime | date: 'hh:mm'}}<br>
+                      <b> {{segment?.arrDateTime | date: 'd MMM'}}</b>
+                    </div>
+                    <div class="col-9" style="border-left: 1px solid #eee072;">
+                      <div class="flight-cart-start">
+                        {{segment?.depAirportName}}<br>
+                        <small> {{segment?.airline.split('-')[1]}} Airlines<br>
+                          <b>{{flight.departureFlight?.offerItemList[0]?.serviceNames}}</b></small>
+                      </div>
+                      <div class="flight-cart-end">
+                        {{segment?.arrAirportName}}<br>
+                        <small> {{segment?.airline.split('-')[1]}} Airlines<br>
+                          <b>{{flight.departureFlight?.offerItemList[0]?.serviceNames}}</b></small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="py-2 px-3 my-3 mb-2">
+                    <p>{{flight?.travellers?.adt || 1}}&nbsp;{{'flight-payment.label-adults' | translate }}, {{flight?.travellers?.chd || 0}}&nbsp;{{'flight-payment.label-childs' | translate }}, {{flight?.travellers?.inf || 0}} {{'flight-payment.label-infants' | translate }}</p>
+                  </div>
+                  <div class="dropdown-divider"></div>
+                  <div *ngIf="flight.returnFlight">
+                    <h5 class="text-danger mt-3 mb-3">
+                      {{'flight-history-list.label-return' | translate }}
+                      <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                          class="fas fa-clock"></i>&nbsp;{{flight.returnFlight?.depDateTime | date : 'hh:mm'}}</span>
+                    </h5>
+                    <div class="row mb-3" *ngFor="let segment of flight?.returnFlight?.flightSegments">
+                      <div class="col-3">
+                        {{segment?.depDateTime | date : 'hh:mm'}}<br>
+                        <b>{{segment?.depDateTime | date : 'd MMM'}}</b><br><br>
+                        {{segment?.arrDateTime | date: 'hh:mm'}}<br>
+                        <b> {{segment?.arrDateTime | date: 'd MMM'}}</b>
+                      </div>
+                      <div class="col-9" style="border-left: 1px solid #eee072;">
+                        <div class="flight-cart-start">
+                          {{segment?.depAirportName}}<br>
+                          <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' | translate
+                            }}<br>
+                            <b>{{flight?.returnFlight?.offerItemList[0].serviceNames}}</b></small>
+                        </div>
+                        <div class="flight-cart-end">
+                          {{segment?.arrAirportName}}<br>
+                          <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' | translate
+                            }}<br>
+                            <b>{{flight?.returnFlight?.offerItemList[0].serviceNames}}</b></small>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="py-2 px-3 my-3 mb-2">
+                      <p>{{flight?.travellers?.adt || 1}}&nbsp;{{'flight-payment.label-adults' | translate }}, {{flight?.travellers?.chd || 0}}&nbsp;{{'flight-payment.label-childs' | translate }}, {{flight?.travellers?.inf || 0}}&nbsp;{{'flight-payment.label-infants' | translate }}</p>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                  </div>
+                  <div *ngIf="flight.nextFlights">
+                    <div *ngFor="let data of flight.nextFlights; let i = index">
+                      <h5 class="text-danger mt-3 mb-3">
+                        {{'flight-history-list.label-next-flight' | translate }}
+                        <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                            class="fas fa-clock"></i>&nbsp;{{data?.depDateTime | date : 'hh:mm'}}</span>
+                      </h5>
+                      <div class="row mb-3" *ngFor="let segment of data.flightSegments">
+                        <div class="col-3">
+                          {{segment?.depDateTime | date : 'hh:mm'}}<br>
+                          <b>{{segment?.depDateTime | date : 'd MMM'}}</b><br><br>
+                          {{segment?.arrDateTime | date: 'hh:mm'}}<br>
+                          <b> {{segment?.arrDateTime | date: 'd MMM'}}</b>
+                        </div>
+                        <div class="col-9" style="border-left: 1px solid #eee072;">
+                          <div class="flight-cart-start">
+                            {{segment?.depAirportName}}<br>
+                            <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' |
+                              translate }}<br>
+                              <b>{{data?.offerItemList[0].serviceNames}}</b></small>
+                          </div>
+                          <div class="flight-cart-end">
+                            {{segment?.arrAirportName}}<br>
+                            <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' |
+                              translate }}<br>
+                              <b>{{data?.offerItemList[0].serviceNames}}</b></small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="py-2 px-3 my-3 mb-2">
+                        <p>{{flight?.travellers?.adt || 1}}&nbsp;{{'flight-payment.label-adults' | translate }}, {{flight?.travellers?.chd || 0}}&nbsp;{{'flight-payment.label-childs' | translate }}, {{flight?.travellers?.inf || 0}}&nbsp;{{'flight-payment.label-infants' | translate }}</p>
+                      </div>
+                      <div class="dropdown-divider"></div>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="font-weight-bold">{{'flight-history-list.label-taxes' | translate }}</div>
+                    {{flight.taxes | currency:flight.currencyName:'symbol':'.0-2'}}
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="font-weight-bold">{{'flight-history-list.label-total' | translate }}</div>
+                    <div>{{flight.amount | currency:flight.currencyName:'symbol':'.0-2'}}</div>
+                  </div>
+                </div>
+                <div id="collapseCancelUser{{i}}" class="collapse text-dark mt-3" [collapse]="isCollapsedCancelUser[i]"
+                  [isAnimated]="true">
+                  <hr>
+                  <p class="small">{{'flight-history-list.label-hi' | translate }} {{flight.payer?.firstName + ' ' +
+                    flight.payer?.lastName}},</p>
+                  <p class="small">{{'flight-history-list.label-cancel-question' | translate }}</p>
+                  <p class="small">{{'flight-history-list.label-cancellation' | translate }}</p>
+                  <p class="small">{{'flight-history-list.label-thanks' | translate }}</p>
+                  <button *ngIf="!fetching" class="btn btn-danger mt-3 mx-auto d-block" (click)="goToCancelBookingPage(flight)"
+                    [disabled]="!((flight?.bookingStatus === 'CONFIRMED') && (flight?.refundedAmount === 0))">{{'flight-history-list.label-cancel-booking'
+                    | translate }}</button>
+                </div>
+                <div id="collapseModifylUser{{i}}" class="collapse text-dark mt-3" [collapse]="isCollapseModifylUser[i]"
+                  [isAnimated]="true">
+                  <hr>
+                  <p class="small">{{'flight-history-list.label-hi' | translate }} {{flight.payer?.firstName + ' ' +
+                    flight.payer?.lastName}},</p>
+                  <p class="small">{{'flight-history-list.label-modify-question' | translate }}</p>
+                  <p class="small">{{'flight-history-list.label-modification' | translate }}</p>
+                  <p class="small">{{'flight-history-list.label-thanks' | translate }}</p>
+                  <p *ngIf="flight?.ownerOfNDC !== 'QR' " class="small font-weight-bold">
+                    {{'flight-history-list.label-modify-invalid' | translate }} </p>
+                  <button *ngIf="!fetching"class="btn btn-danger mt-3 mx-auto d-block" (click)="goToModifyBookingPage(flight)"
+                    [disabled]="flight?.ownerOfNDC !== 'QR' "> {{'flight-history-list.label-modify' | translate
+                    }}</button>
+                </div>
+                <div class="d-flex justify-content-between pr-lg-5 mt-5">
+                  <div (click)="deleteRecord(flight)" style="cursor: pointer">{{'flight-history-list.label-delete-record' | translate }}</div>
+                  <div class="mx-3" style="cursor: pointer" (click)="viewCancelPopup(flight, i, 'user')"
+                    [attr.aria-expanded]="!isCollapsedCancelUser[i]">{{'flight-history-list.label-cancel' | translate }}
+                  </div>
+                  <div class="mx-3" style="cursor: pointer" (click)="viewModifyPopup(flight, i, 'user')"
+                    [attr.aria-expanded]="!isCollapseModifylUser[i]">{{'flight-history-list.label-modify' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 text-right d-flex flex-column justify-content-between">
+                <span class="hotel-price font-weight-bold mt-md-2">{{flight.amount |
+                  currency:flight.currencyName:'symbol':'.0-2'}}</span>
+                <div style="color:#007864; cursor: pointer" [attr.aria-expanded]="!isCollapsedUser[i]"
+                  (click)="viewDetail(flight, i, 'user')">
+                  {{'flight-history-list.label-details' | translate }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent booking for this user -->
+      <div class="flight-item shadow-box1 bg-white mb-3" *ngFor="let flight of flightAgentBooking;let i = index">
+        <div class="row d-flex p-3">
+          <div class="col-md-4">
+            <img
+              [src]="'http://pics.avs.io/300/300/' + flight?.departureFlight?.flightSegments[0]?.airline.split('-')[0] + '.png'"
+              class="img-fluid rounded" style="height: 195px !important;">
+          </div>
+          <div class="col-md-8 pt-3 pt-md-0 ">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="hotel-title">{{flight.item_name}}</h5>
+                <div class="mt-2">{{'flight-history-list.label-booking-ref' | translate }} {{flight?.id}}</div>
+                <div class="my-2">
+                  <span>{{flight.departureFlight?.depDateTime | date}}</span> -
+                  <span>{{flight.departureFlight?.arrDateTime | date}}</span>
+                  <span class="ml-md-4">{{flight.airlineID}}</span>
+                </div>
+                <div>{{flight.bookingStatus}}</div>
+                <div id="collapseAgent{{i}}" [collapse]="isCollapsedAgent[i]" [isAnimated]="true"
+                  class="collapse text-dark mt-3">
+                  <div>
+                    <p class="m-0"><span class="font-weight-bold">{{'flight-history-list.label-date' | translate }}
+                      </span> {{flight?.createDate | date : 'mediumDate'}}</p>
+                    <p class="m-0"><span class="font-weight-bold">{{'flight-history-list.label-add-on' | translate
+                        }}</span>
+                      <span *ngIf="flight?.addonGca == true"> {{'flight-history-list.label-gac' | translate }} &nbsp;
+                        &nbsp;</span>
+                      <span *ngIf="flight?.addonRefundProtect == true"> {{'flight-history-list.label-refund' | translate
+                        }} &nbsp; &nbsp;</span>
+                      <span *ngIf="flight?.addonSmartDelay == true"> {{'flight-history-list.label-delay' | translate }}
+                        &nbsp; &nbsp;</span>
+                      <span *ngIf="flight?.subscribePolicyData != null || undefined">
+                        {{'flight-history-list.label-insurance' | translate }} &nbsp; &nbsp;</span>
+                      <span *ngIf="flight?.traceMeData != null || undefined"> {{'flight-history-list.label-traceme' |
+                        translate }}</span>
+                    </p>
+                  </div>
+                  <h5 class="text-danger mb-3">
+                    {{'flight-history-list.label-departure' | translate }}
+                    <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                        class="fas fa-clock"></i>&nbsp;{{flight.departureFlight?.depDateTime | date : 'hh:mm'}}</span>
+                  </h5>
+                  <div class="row mb-3" *ngFor="let segment of flight?.departureFlight?.flightSegments">
+                    <div class="col-3">
+                      {{segment?.depDateTime | date : 'hh:mm'}}<br>
+                      <b>{{segment?.depDateTime | date : 'd MMM'}}</b><br><br>
+                      {{segment?.arrDateTime | date: 'hh:mm'}}<br>
+                      <b> {{segment?.arrDateTime | date: 'd MMM'}}</b>
+                    </div>
+                    <div class="col-9" style="border-left: 1px solid #eee072;">
+                      <div class="flight-cart-start">
+                        {{segment?.depAirportName}}<br>
+                        <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' | translate
+                          }}<br>
+                          <b>{{flight.departureFlight?.offerItemList[0]?.serviceNames}}</b></small>
+                      </div>
+                      <div class="flight-cart-end">
+                        {{segment?.arrAirportName}}<br>
+                        <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' | translate
+                          }}<br>
+                          <b>{{flight.departureFlight?.offerItemList[0]?.serviceNames}}</b></small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="py-2 px-3 my-3 mb-2">
+                    <p>{{flight?.travellers?.adt || 1}}&nbsp;{{'flight-payment.label-adults' | translate }}, {{flight?.travellers?.chd || 0}}&nbsp;{{'flight-payment.label-childs' | translate }}, {{flight?.travellers?.inf || 0}}&nbsp;{{'flight-payment.label-infants' | translate }}</p>
+                  </div>
+                  <div class="dropdown-divider"></div>
+                  <div *ngIf="flight.returnFlight">
+                    <h5 class="text-danger mt-3 mb-3">
+                      {{'flight-history-list.label-return' | translate }}
+                      <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                          class="fas fa-clock"></i>&nbsp;{{flight.returnFlight?.depDateTime | date : 'hh:mm'}}</span>
+                    </h5>
+                    <div class="row mb-3" *ngFor="let segment of flight?.returnFlight?.flightSegments">
+                      <div class="col-3">
+                        {{segment?.depDateTime | date : 'hh:mm'}}<br>
+                        <b>{{segment?.depDateTime | date : 'd MMM'}}</b><br><br>
+                        {{segment?.arrDateTime | date: 'hh:mm'}}<br>
+                        <b> {{segment?.arrDateTime | date: 'd MMM'}}</b>
+                      </div>
+                      <div class="col-9" style="border-left: 1px solid #eee072;">
+                        <div class="flight-cart-start">
+                          {{segment?.depAirportName}}<br>
+                          <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' | translate
+                            }}<br>
+                            <b>{{flight?.returnFlight?.offerItemList[0].serviceNames}}</b></small>
+                        </div>
+                        <div class="flight-cart-end">
+                          {{segment?.arrAirportName}}<br>
+                          <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' | translate
+                            }}<br>
+                            <b>{{flight?.returnFlight?.offerItemList[0].serviceNames}}</b></small>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="py-2 px-3 my-3 mb-2">
+                      <p>{{flight?.travellers?.adt || 1}}&nbsp;{{'flight-payment.label-adults' | translate }}, {{flight?.travellers?.chd || 0}}&nbsp;{{'flight-payment.label-childs' | translate }}, {{flight?.travellers?.inf || 0}}&nbsp;{{'flight-payment.label-infants' | translate }}</p>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                  </div>
+                  <div *ngIf="flight.nextFlights">
+                    <div *ngFor="let data of flight.nextFlights; let i = index">
+                      <h5 class="text-danger mt-3 mb-3">
+                        {{'flight-history-list.label-next-flight' | translate }}
+                        <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                            class="fas fa-clock"></i>&nbsp;{{data?.depDateTime | date : 'hh:mm'}}</span>
+                      </h5>
+                      <div class="row mb-3" *ngFor="let segment of data.flightSegments">
+                        <div class="col-3">
+                          {{segment?.depDateTime | date : 'hh:mm'}}<br>
+                          <b>{{segment?.depDateTime | date : 'd MMM'}}</b><br><br>
+                          {{segment?.arrDateTime | date: 'hh:mm'}}<br>
+                          <b> {{segment?.arrDateTime | date: 'd MMM'}}</b>
+                        </div>
+                        <div class="col-9" style="border-left: 1px solid #eee072;">
+                          <div class="flight-cart-start">
+                            {{segment?.depAirportName}}<br>
+                            <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' |
+                              translate }}<br>
+                              <b>{{data?.offerItemList[0].serviceNames}}</b></small>
+                          </div>
+                          <div class="flight-cart-end">
+                            {{segment?.arrAirportName}}<br>
+                            <small> {{segment?.airline.split('-')[1]}} {{'flight-history-list.label-airlines' |
+                              translate }}<br>
+                              <b>{{data?.offerItemList[0].serviceNames}}</b></small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="py-2 px-3 my-3 mb-2">
+                        <p>{{flight?.travellers?.adt || 1}}&nbsp;{{'flight-payment.label-adults' | translate }}, {{flight?.travellers?.chd || 0}}&nbsp;{{'flight-payment.label-childs' | translate }}, {{flight?.travellers?.inf || 0}}&nbsp;{{'flight-payment.label-infants' | translate }}</p>
+                      </div>
+                      <div class="dropdown-divider"></div>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="font-weight-bold">{{'flight-history-list.label-taxes' | translate }}</div>
+                    {{flight.taxes | currency:flight.currencyName:'symbol':'.0-2'}}
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="font-weight-bold">{{'flight-history-list.label-total' | translate }}</div>
+                    <div>{{flight.amount | currency:flight.currencyName:'symbol':'.0-2'}}</div>
+                  </div>
+                </div>
+                <div id="collapseCancelAgent{{i}}" class="collapse text-dark mt-3"
+                  [collapse]="isCollapsedCancelAgent[i]" [isAnimated]="true">
+                  <hr>
+                  <p class="small">{{'flight-history-list.label-hi' | translate }} {{flight.payer?.firstName + ' ' +
+                    flight.payer?.lastName}},</p>
+                  <p class="small">{{'flight-history-list.label-cancel-question' | translate }}</p>
+                  <p class="small">{{'flight-history-list.label-cancellation' | translate }}</p>
+                  <p class="small">{{'flight-history-list.label-thanks' | translate }} {{'HahnAir'}}!</p>
+                  <button class="btn btn-danger mt-3 mx-auto d-block" (click)="goToCancelBookingPage(flight)"
+                    [disabled]="!((flight?.bookingStatus === 'CONFIRMED') && (flight?.refundedAmount === 0))">{{'flight-history-list.label-cancel-booking'
+                    | translate }}</button>
+                </div>
+                <div id="collapseModifyAgent{{i}}" class="collapse text-dark mt-3"
+                  [collapse]="isCollapsedModifyAgent[i]" [isAnimated]="true">
+                  <hr>
+                  <p class="small">{{'flight-history-list.label-hi' | translate }} {{flight.payer?.firstName + ' ' +
+                    flight.payer?.lastName}},</p>
+                  <p class="small">{{'flight-history-list.label-modify-question' | translate }}</p>
+                  <p class="small">{{'flight-history-list.label-modification' | translate }}</p>
+                  <p class="small">{{'flight-history-list.label-thanks' | translate }}</p>
+                  <p *ngIf="flight?.ownerOfNDC !== 'QR' " class="small font-weight-bold">
+                    {{'flight-history-list.label-modify-invalid' | translate }} </p>
+                  <button class="btn btn-danger mt-3 mx-auto d-block" (click)="goToModifyBookingPage(flight)"
+                    [disabled]="flight?.ownerOfNDC !== 'QR' "> {{'flight-history-list.label-modify' | translate
+                    }}</button>
+                </div>
+                <div class="d-flex justify-content-between pr-lg-5 mt-5">
+                  <div (click)="deleteRecord(flight)" style="cursor: pointer">{{'flight-history-list.label-delete' | translate }}</div>
+                  <div class="mx-3" style="cursor: pointer" (click)="viewCancelPopup(flight, i, 'agent')"
+                    [attr.aria-expanded]="!isCollapsedCancelAgent[i]">{{'flight-history-list.label-cancel' | translate }}</div>
+                  <div class="mx-3" style="cursor: pointer" (click)="viewModifyPopup(flight, i, 'user')"
+                    [attr.aria-expanded]="!isCollapsedModifyAgent[i]">{{'flight-history-list.label-modify' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 text-right d-flex flex-column justify-content-between">
+                <span class="hotel-price font-weight-bold mt-md-2">{{flight.amount |
+                  currency:flight.currencyName:'symbol':'.0-2'}}</span>
+                <div style="color:#007864;cursor: pointer" [attr.aria-expanded]="!isCollapsedAgent[i]"
+                  (click)="viewDetail(flight, i, 'agent')">
+                  {{'flight-history-list.label-details' | translate }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <pagination-controls (pageChange)="p = $event" directionLinks="true" autoHide="true">
+      </pagination-controls>
+    </div>
+  </div>
+</div>
+<!-- skeleton loading-->
+<div *ngIf="isLoading" class="container my-md-5 mt-5 pt-5 pb-3 col-lg-8 offset-lg-2">
+  <h3>{{'flight-history-list.label-title' | translate }}</h3>
+  <div class="row mt-3 shadow-box">
+    <div class="col-md-12">
+      <div class="row my-3">
+        <div class="col-lg-3 col-6 mt-3">
+          <ngx-skeleton-loader
+            [theme]="{'height.px': 38, 'width.px': 255, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-lg-3 col-6 mt-3">
+          <ngx-skeleton-loader
+            [theme]="{'height.px': 38, 'width.px': 255, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-lg-3 col-12 mt-3">
+          <ngx-skeleton-loader
+            [theme]="{'height.px': 38, 'width.px': 80.73, 'background-color': 'rgb(10, 48, 73)', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+        </div>
+      </div>
+      <p><ngx-skeleton-loader
+          [theme]="{'height.px': 21, 'width': '50%', 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+      </p>
+      <div class="hotel-item shadow-box bg-white mb-3" *ngFor="let booking of [1, 2, 3, 4]; let i = index">
+        <div class="row d-flex p-3">
+          <div class="col-md-4">
+            <ngx-skeleton-loader
+              [theme]="{'height.px': 195, 'width.px': 339, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+          </div>
+          <div class="col-md-8 pt-3 pt-md-0">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="hotel-title">
+                  <ngx-skeleton-loader
+                    [theme]="{'height.px': 21.59, 'width': '50%', 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </h5>
+                <div class="my-2">
+                  <ngx-skeleton-loader
+                    [theme]="{'height.px': 21, 'width': '52%', 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+                <div>
+                  <ngx-skeleton-loader
+                    [theme]="{'height.px': 21, 'width': '18%', 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+                <div class="d-flex justify-content-between pr-lg-5 mt-5">
+                  <ngx-skeleton-loader
+                    [theme]="{'height.px': 21, 'width.px': 43, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  <ngx-skeleton-loader
+                    [theme]="{'height.px': 21, 'width.px': 43, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  <ngx-skeleton-loader
+                    [theme]="{'height.px': 21, 'width.px': 77, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-4 text-right d-flex flex-column justify-content-between">
+                <span class="hotel-price font-weight-bold mt-md-2">
+                  <ngx-skeleton-loader
+                    [theme]="{'height.px': 26, 'width.px': 100, 'background-color': 'rgb(0, 25, 89)', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </span>
+                <div style="color:#007864;">
+                  <ngx-skeleton-loader
+                    [theme]="{'height.px': 21, 'width.px': 77, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<main-footer></main-footer>

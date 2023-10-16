@@ -1,0 +1,111 @@
+<div class="mb-4 d-none d-md-block">
+  <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mapType' [zoom]='12' mapTypeControl="false">
+    <agm-marker *ngFor="let data of markerList; let i = index" [latitude]="data.lat" [longitude]="data.lng"
+                [markerDraggable]="data.draggable">
+      <agm-info-window>
+        <strong>{{data?.label}}</strong>
+      </agm-info-window>
+    </agm-marker>
+  </agm-map>
+  <button style="width: 100%" (click)="fullScreenMap()">Maps</button>
+</div>
+<div *ngIf="isShowFilter">
+  <div class="mb-4">
+    <h5 class="pb-2 border-bottom pl-0 pb-2"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search By Hotel Name</h5>
+    <div class="form-group">
+      <div class="input-group">
+        <input [(ngModel)]="search"
+               typeaheadOptionField="name"
+               [typeahead]="suggestions$"
+               [value]="hotelName"
+               [typeaheadAsync]="true"
+               [typeaheadOptionsLimit]="limit"
+               (typeaheadOnSelect)="select($event.item)"
+               class="form-control" placeholder="VD: Vinpearl">
+        <div class="input-group-prepend" *ngIf="search.length > 0">
+          <span class="input-group-text" style="background-color: #F0F0F0 !important;border: 0 !important;">
+            <i class="fa fa-remove" style="color: #3498db" (click)="updateHotelListViewByFieldSearch()"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mb-4">
+    <h5 class=" border-bottom pl-0 pb-2"><i class="fa fa-list text-default"></i> {{'hotel-sidebar.label-sort' |
+      translate }}</h5>
+    <div class="custom-control pl-0">
+      <select name="" class="form-control custom-select" (change)="onSortChange($event.target.value)">
+        <option value="priceIncrease">{{'hotel-sidebar.label-price-increase' | translate }}</option>
+        <option value="priceDecrease">{{'hotel-sidebar.label-price-decrease' | translate }}</option>
+        <option value="popularity">{{'hotel-sidebar.label-popularity' | translate }}</option>
+     <!--  <option value="new">{{'hotel-sidebar.label-new-first' | translate }}</option> -->
+        <option value="rating">{{'hotel-sidebar.label-rating' | translate }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="star-rating mb-4">
+    <h5 class=" border-bottom pl-0 pb-2"><i class="fa fa-star text-default"></i> {{'hotel-sidebar.label-star-rating' |
+      translate }}</h5>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="start5" [checked]="ratingStarFiler.fiveStar"
+             (change)="fiveStarFilter()">
+      <label class="custom-control-label" for="start5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-star-five'
+        | translate }} <small>( {{ratingStarCount.fiveStar}}
+        )</small></label>
+    </div>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="start4" [checked]="ratingStarFiler.fourStar"
+             (change)="fourStarFilter()">
+      <label class="custom-control-label" for="start4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-star-four'
+        | translate }} <small>( {{ratingStarCount.fourStar}}
+        )</small></label>
+    </div>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="start3" [checked]="ratingStarFiler.threeStar"
+             (change)="threeStarFilter()">
+      <label class="custom-control-label" for="start3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-star-three'
+        | translate }}
+        <small>( {{ratingStarCount.threeStar}} )</small></label>
+    </div>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="start2" [checked]="ratingStarFiler.twoStar"
+             (change)="twoStarFilter()">
+      <label class="custom-control-label" for="start2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-star-two' |
+        translate }} <small>( {{ratingStarCount.twoStar}}
+        )</small></label>
+    </div>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="start1" [checked]="ratingStarFiler.oneStar"
+             (change)="oneStarFilter()">
+      <label class="custom-control-label" for="start1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-star-one' |
+        translate }} <small>( {{ratingStarCount.oneStar}}
+        )</small></label>
+    </div>
+  </div>
+  <div class="facility mb-4">
+    <h5 class="pb-2 border-bottom pl-0 pb-2"><i class="fas fa-star-of-life text-default"></i> {{'hotel-sidebar.label-facility' | translate }}</h5>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="facility1">
+      <label class="custom-control-label" for="facility1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-wi-fi' |
+        translate }} <small> (55)</small></label>
+    </div>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="facility2">
+      <label class="custom-control-label" for="facility2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-parking'
+        | translate }} <small>(123)</small></label>
+    </div>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="facility3">
+      <label class="custom-control-label" for="facility3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-airport-shuttle' | translate }} <small>(13)</small></label>
+    </div>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="facility4">
+      <label class="custom-control-label" for="facility4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-fitness-center' | translate }} <small>(123)</small></label>
+    </div>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="facility5">
+      <label class="custom-control-label" for="facility5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-sidebar.label-indoor-pool' | translate }} <small>(13)</small></label>
+    </div>
+  </div>
+</div>
+

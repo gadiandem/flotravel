@@ -1,0 +1,11 @@
+<app-hotel-simulator-admin-header (toggleMenuSidebar)="toggleMenuSidebar()"></app-hotel-simulator-admin-header>
+
+<app-hotel-simulator-admin-sidebar class="main-sidebar sidebar-dark-primary elevation-4"></app-hotel-simulator-admin-sidebar>
+
+<div class="content-wrapper">
+  <router-outlet></router-outlet>
+</div>
+
+<app-hotel-simulator-admin-footer class="main-footer"></app-hotel-simulator-admin-footer>
+<aside class="control-sidebar control-sidebar-dark"></aside>
+<div id="sidebar-overlay" (click)="toggleMenuSidebar()"></div>

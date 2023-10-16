@@ -1,0 +1,75 @@
+<div class="container mt-3 pb-3" style="min-height: 500px;">
+    <div class="row">
+      <div class="col-12 mb-4">
+        <h2 class="heading">Merchant Management</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [pageSize]="10" [pageable]="true"
+          [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="Search user..." kendoTextBox />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;Loading...</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel">Export to Excel</button>
+            <button kendoGridPDFCommand icon="file-pdf">Export to PDF</button>
+            <button *ngIf="canInitialize" class="btn btn-success btn-sm" style="float:right;" (click)="initialMerchant()"><i
+                class="icon fa fa-plus"></i>&emsp; initialize</button>
+            <button class="btn btn-success btn-sm" style="float:right;" (click)="createMerchant()"><i
+                class="icon fa fa-plus"></i>&emsp; Create</button>
+          </ng-template>
+          <kendo-grid-column title="#" [width]="20" [columnMenu]="false">
+            <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+              <div style="text-align: center;">{{rowIndex + 1}}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="merchantAccount" title="Merchant Account" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div *ngIf="dataItem.profileImg != undefined" class="customer-photo"
+                [ngStyle]="{'background-image' : 'url(' + dataItem.profileImg + ')'}"></div>
+              <div class="customer-name">{{ dataItem.merchantAccount}}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="currency" title="Currency" [width]="120">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="customer-name">{{ dataItem.currency }}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="generateCard" title="GenerateCard" [width]="120">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="customer-name">{{ dataItem.generateCard }}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="vcnAgentAccount" title="Agent Account" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="customer-name">{{ dataItem.vcnAgentAccount }}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="demo" title="Test" [width]="80">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span *ngIf="dataItem.demo === true" class="badge badge-success">YES</span>
+              <span *ngIf="dataItem.demo === false" class="badge badge-danger">NO</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column title="Action" [width]="100" [class]="{'text-center': true}"
+            [resizable]="false">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <button class="btn btn-warning btn-sm mr-1" (click)="editMerchant(dataItem.id)"><i class="icon fa fa-pencil"
+                  style="color: white;" aria-hidden="true"></i></button>
+              <button class="btn btn-danger btn-sm ml-1" (click)="deleteMerchant(dataItem)"><i class="icon fa fa-times"
+                  aria-hidden="true"></i></button>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="profileImg" title="Profile Img" hidden="true">
+          </kendo-grid-column>
+          <kendo-grid-excel fileName="User.xlsx"></kendo-grid-excel>
+          <kendo-grid-pdf fileName="User.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+        </kendo-grid>
+        <div kendoDialogContainer></div>
+      </div>
+    </div>
+  </div>
+  

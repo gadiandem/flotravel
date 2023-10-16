@@ -1,0 +1,135 @@
+<div class="container mt-3 pb-5">
+    <!-- <div class="row">
+      <div class="col-12 mb-4">
+        <h2 class="heading">Package Availability List</h2>
+      </div>
+    </div> -->
+    <div class="card mb-3">
+      <div class="card-header">
+        Package Availability Search
+      </div>
+      <div class="card-body">
+        <form [formGroup]="searchForm" (ngSubmit)="getPackageAvailability()">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group mt-2">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      Package Info
+                    </span>
+                  </div>
+                  <input [(ngModel)]="searchpackageInfos" typeaheadOptionField="name" [typeahead]="packageInfos$" formControlName="pacakgeInfo"
+                    [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="selectPackageInfo($event.item)"
+                    class="form-control" placeholder="Package Info"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="m-0">Start Date</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" class="form-control fromdate" formControlName="startDate" bsDatepicker
+                    [bsConfig]="bsConfig" (bsValueChange)="onValueChange($event)" [minDate]="minDate">
+                    <span class="invalid-feedback">
+                      <span *ngIf="searchForm.get('startDate').errors?.required">
+                        Please enter your departuring.
+                      </span>
+                    </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 returning">
+              <div class="form-group">
+                <label class="m-0">End Date</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" class="form-control todate" formControlName="endDate" bsDatepicker [bsConfig]="bsConfig">
+                  <span class="invalid-feedback">
+                    <span *ngIf="searchForm.get('endDate').errors?.required">
+                      Please enter your returning.
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-danger" (click)="deletePackageByType()">Delete</button>
+          <button type="button" class="btn btn-outline-info ml-2" (click)="createPackageAvailability()">Create</button>
+          <input type="submit" name="submit" style="float:right;" class="btn btn-danger"  value="Search Availability" />
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [pageSize]="10" [pageable]="true"
+          [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;Loading...</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">Export to
+              Excel</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">Export to PDF</button>
+          </ng-template>
+
+          <kendo-grid-column-group title="Package Availability List" [columnMenu]="false">
+            <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="type" title="Type" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div>
+                  {{ dataItem.name | uppercase }}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="desciption" title="Description" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.basicDescription}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="date" title="Date" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.date | date: 'mediumDate'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <!-- <kendo-grid-column field="price" title="Price" [width]="200">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div>{{dataItem.pricePerNight | currency: dataItem.currency: 'symbol'}}</div>
+                </ng-template>
+              </kendo-grid-column> -->
+            <kendo-grid-column title="Action" [width]="80" [class]="{'text-center': true}" [columnMenu]="false"
+              filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <!-- <button class="btn btn-warning btn-sm" (click)="viewDetail()(dataItem)">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  </button> -->
+                  <button class="btn btn-danger btn-sm ml-1" (click)="removePackageAvailability(dataItem.id)">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+
+          <kendo-grid-pdf fileName="PackageInfoList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="PackageInfoList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>

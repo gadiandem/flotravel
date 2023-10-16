@@ -1,0 +1,84 @@
+<div class="container  my-5 pt-5">
+  <div class="col-sm-8 offset-sm-2">
+    <div class="card">
+      <div class="card-header" style="font-weight: 700">
+        {{'selling-currency.title-create' | translate }}
+      </div>
+      <div class="card-body mx-3">
+        <form [formGroup]="sellingCurrencyForm">
+          <div class="form-group row">
+            <label for="type"> {{'selling-currency.lable-type' | translate }}</label>
+            <select class="form-control" id="type" formControlName="type"
+                    [ngClass]="{ 'is-invalid': formSubmitError && sellingCurrencyForm.get('type').errors }">
+              <option value=""> {{'selling-currency.type-placeholder' | translate }}</option>
+              <option value="HOTEL"> {{'selling-currency.type-hotel' | translate }}</option>
+              <option value="FLIGHT"> {{'selling-currency.type-flight' | translate }}</option>
+              <option value="INSURANCE"> {{'selling-currency.type-insurance' | translate }}</option>
+              <option value="TRACE_ME"> {{'selling-currency.type-traceme' | translate }}</option>
+              <option value="PACKAGE"> {{'selling-currency.type-package' | translate }}</option>
+              <option value="HOTEL_COLLECTION"> {{'selling-currency.type-hotel-collection' | translate }}</option>
+              <option value="HELPSTAR"> {{'selling-currency.type-helpstar' | translate }}</option>
+            </select>
+            <span class="invalid-feedback">
+              <span *ngIf="sellingCurrencyForm.get('type').errors?.required">
+                {{'selling-currency.error-require-type' | translate }}
+              </span>
+            </span>
+          </div>
+<!--          <div class="form-group row">-->
+<!--            <label for="provider"> {{'selling-currency.lable-provider' | translate }}</label>-->
+<!--            <select class="form-control" id="provider" formControlName="provider"-->
+<!--                    [ngClass]="{ 'is-invalid': formSubmitError && sellingCurrencyForm.get('provider').errors }">-->
+<!--              <option value=""> {{ 'selling-currency.provider-placeholder' | translate }}</option>-->
+<!--              <option *ngFor="let provider of providers" [value]="provider?.code"> {{ provider?.name }}</option>-->
+<!--            </select>-->
+<!--            <span class="invalid-feedback">-->
+<!--              <span *ngIf="sellingCurrencyForm.get('provider').errors?.required">-->
+<!--                {{'selling-currency.invalid-provider' | translate }}-->
+<!--              </span>-->
+<!--            </span>-->
+<!--          </div>-->
+          <div class="form-group row">
+            <label>{{'selling-currency.label-country' | translate }}</label>
+            <select class="custom-select" formControlName="country"
+                    (change)="onSelectCountry($event.target.value)"
+                    [ngClass]="{ 'is-invalid': formSubmitError && sellingCurrencyForm.get('country').errors }">
+              <option value="" selected>---Select Country---</option>
+              <option *ngFor="let country of countries" value="{{country?.code}}">{{country?.name}}</option>
+            </select>
+            <span class="invalid-feedback">
+                 <span *ngIf="sellingCurrencyForm.get('country').errors?.required">
+                            {{'selling-currency.invalid-country' | translate }}
+                 </span>
+                 <span *ngIf="errorMessage">
+                            {{errorMessage}}
+                 </span>
+            </span>
+          </div>
+          <div class="form-group row">
+            <label>{{'selling-currency.label-currency' | translate }}</label>
+            <select class="custom-select" formControlName="currency"
+                    (change)="onSelectCurrency($event.target.value)"
+                    [ngClass]="{ 'is-invalid': formSubmitError && sellingCurrencyForm.get('currency').errors }">
+              <option value="" selected>---Select Currency---</option>
+              <option *ngFor="let currency of currencies" value="{{currency?.code}}">{{currency?.code}}</option>
+            </select>
+            <span class="invalid-feedback">
+                 <span *ngIf="sellingCurrencyForm.get('currency').errors?.required">
+                            {{'selling-currency.invalid-currency' | translate }}
+                 </span>
+                 <span *ngIf="errorMessage">
+                            {{errorMessage}}
+                 </span>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <button class="search-hotel btn btn-danger" (click)="createAgencySellingCurrency()">
+          {{'selling-currency.button-create-selling-currency' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

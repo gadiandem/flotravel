@@ -1,0 +1,40 @@
+import { Payer } from '../../flocash/payer';
+import { PayOption } from '../../flocash/pay-option';
+import { Status } from './status';
+import { City } from './city';
+import { Customer } from './customer';
+import { RoomDetails } from './room-details';
+import { HotelInfo } from '../hotel-list/hotel-info';
+
+export class PaymentRes {
+  id: string;
+  amount: string;
+  orderDate: string;
+  currency: string;
+  currencyName: string;
+  custom: string;
+  item_name: string;
+  item_price: string;
+  quantity: string;
+  orderId: string;
+  tracking: string;
+  traceNumber: string;
+  paymentChannel: string;
+  payer: Payer;
+  payOption: PayOption;
+  responseStatus: Status;
+  sessionId: string;
+  city: City;
+  checkInDate: string;
+  checkOutDate: string;
+  noOfNight: string;
+  noOfRooms: string;
+  holder: Customer;
+  hotelInfo: HotelInfo;
+  roomDetails: RoomDetails;
+  cancelPoliciesInfos: string;
+  bookingId: string;
+  bookingStatus: string;
+  bookingRemarks: string;
+  token: string;
+}

@@ -1,0 +1,140 @@
+<div class="container-fluid my-m2-5 mt-5 pt-2 pb-3 col-lg-10">
+    <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+      <div class="spinner-border text-primary"></div>
+      <span ngPreserveWhitespaces>&emsp;{{'hotel-history-detail.label-loading' | translate }} </span>
+    </div>
+    <div *ngIf="!isLoading" class="col-md-12">
+      <div class="row mt-5 mt-sm-3">
+        <div class="col-12">
+          <h5 style="font-size: 24px;" class=' mt-4 text-danger border-bottom font-weight-bold'>{{'hotel-history-detail.label-title' | translate }}</h5>
+        </div>
+    <div class="row mt-5 ">
+      <div class="col-md-8 shadow-box">
+        <alert *ngIf="bookingDetail.status ==='CANCELLED'" type="danger" ngPreserveWhitespaces>
+          {{'hotel-history-detail.label-booking-cancelled' | translate }}
+        </alert>
+        <alert *ngIf="error !== undefined" type="danger" ngPreserveWhitespaces>
+          {{'hotel-history-detail.error-message' | translate }}{{error.code}} - {{error.message}}
+        </alert>
+        <div class="row mt-sm-3 mb-4">
+        <div class="col-12">
+          <div class="col-12">
+            <h5 class='text-danger border-bottom mb-4'>{{'hotel-history-detail.label-booking-details' | translate }}</h5>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.label-booking-id' | translate }}</label>&emsp;
+              {{bookingId}}
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.label-status' | translate }}</label>&emsp;{{bookingDetail.status}}
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.label-statusDesc' | translate }} </label>&emsp;{{bookingDetail.statusDesc}}
+            </div>
+          </div>
+       </div>
+        <div class="col-12">
+          <div class="col-12">
+            <h5 class='text-danger border-bottom mb-4'>{{'hotel-history-detail.label-contact-details' | translate }}</h5>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.title-email' | translate }}</label>&emsp;{{bookingDetail.payer.email}}
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.title-name' | translate }} </label>&emsp;{{bookingDetail.payer.firstName}} {{bookingDetail.payer.lastName}}
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.title-phone' | translate }} </label>&emsp;{{bookingDetail.payer.mobile}}
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="row mt-5 mt-sm-3 mb-4">
+        <div class="col-12">
+          <div class="col-12">
+            <h5 class='text-danger border-bottom mb-4'>{{'hotel-history-detail.title-Transaction-details' | translate }}</h5>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.title-order-no' | translate }}</label>&emsp;{{bookingDetail.bookingId}}
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.title-trace-number' | translate }}</label>&emsp;{{bookingDetail.traceNumber}}
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.title-amount' | translate }} </label>&emsp;{{bookingDetail.amount}}
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-group" ngPreserveWhitespaces>
+              <label>{{'hotel-history-detail.title-refund' | translate }} </label>&emsp;{{bookingDetail.refundedAmount}}
+            </div>
+          </div>
+        </div> 
+      </div>
+        <div class="row mt-5 mt-sm-3 mb-4">
+          <div class="col-12">
+            <h5 class='text-danger border-bottom mb-4'>{{'hotel-history-detail.title-hotel-remarks' | translate }}</h5>
+          </div>
+          <div class="col-12 ml-5" ngPreserveWhitespaces>
+            <span [innerHTML]="bookingDetail.hotelRemarks"></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 ">
+        <div class="card mb-3 shadow-box" style="border-radius: 0px;">
+          <img [src]="bookingDetail.hotelInfo.image.baseUrl + '/800x640/' + bookingDetail.hotelInfo.image.name" title="" style="width:100%"/>
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-12">
+                <h6 class="mt-2">{{bookingDetail.hotelInfo.name}}</h6>
+                <p class="mt-2"><span> {{bookingDetail.hotelInfo.address}} </span>, <span> {{bookingDetail?.city.cityName}}</span>, <span>{{bookingDetail?.city.countryName}}</span> </p>
+                <!-- <ul class="icon-group">
+                  <i *ngFor="let item of [1, 2, 3, 4] index as i" class="fa fa-star"></i>
+                </ul> -->
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5>{{'hotel-history-detail.label-booking' | translate }}</h5>
+            <p ngPreserveWhitespaces>{{bookingDetail.checkInDate | date}} &emsp;<i class="fa fa-arrow-right"></i>&emsp;
+              {{bookingDetail.checkOutDate | date}}</p>
+            <hr/>
+            <div *ngFor="let room of bookingDetail.roomDetails.roomDetails; let i= index">
+              <h6>{{'hotel-history-detail.label-room' | translate }} {{i + 1}}<small class="float-right text-danger">
+                  {{selectedBookingDetail?.roomDetails.roomDetails[i].roomRate.pricePerNight[0] | currency:currency:'symbol':'.0-2'}}
+                  x {{bookingDetail?.noOfNight}}{{'hotel-history-detail.label-days-due' | translate }}</small></h6>
+              <span escapse="false" [innerHTML]="room.roomDescription"></span>
+              <hr *ngIf="i < (bookingDetail.roomDetails.roomDetails.length -1)"/>
+              <div>
+                <span>{{'hotel-history-detail.label-adults' | translate }} </span> <span> {{room.adultCount}}</span><span>   {{'hotel-history-detail.label-children' | translate }} </span> <span>{{room.childCount}}</span> 
+             </div> 
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            {{'hotel-history-detail.label-taxes' | translate }}<span class="float-right text-danger">{{0 | currency:currency:'symbol':'.0-2'}}</span>
+          </div>
+          <div class="card-footer text-muted">
+            {{'hotel-history-detail.label-amount' | translate }} <span class="float-right text-danger">{{selectedBookingDetail?.amount | currency:currency:'symbol':'.0-2'}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!--  <div class="row ml-5 mb-4" *ngIf="!isLoading && !(bookingDetail.status ==='CANCELLED')">
+      <button type="button" class="btn btn-danger" style="cursor: pointer;" (click)="openModalWithComponent()"  [disabled]="bookingDetail.refundedAmount > 0"> {{'hotel-history-detail.button-cancel' | translate }}</button>
+    </div> -->
+</div>

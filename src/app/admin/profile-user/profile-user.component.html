@@ -1,0 +1,78 @@
+<div class="container mt-5">
+  <div class="row mb-3">
+
+    <div class="col-sm-8 offset-2">
+      <div class="card">
+        <div class="card-header">
+          {{'admin-user-profile.label-title' | translate }}
+        </div>
+        <div class="card-body">
+          <form [formGroup]="userForm">
+            <div class="col-12">
+              <div class="form-group row mt-1">
+                <label for="agent">{{'admin-user-profile.label-agent' | translate }}</label>
+                <select class="form-control" id="agent" formControlName="agent" [value]="userDataForEdit?.agentId"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('agent').errors }">
+                  <option value="">{{'admin-user-profile.label-option' | translate }}</option>
+                  <option *ngFor="let agent of userDataForEdit?.agentList" [value]="agent?.id">{{agent?.name}}</option>
+                </select>
+              </div>
+              <div class="form-group row">
+                <label for="type">{{'admin-user-profile.label-user-type' | translate }}</label>
+                <select class="form-control" id="type" formControlName="type" [value]="userDataForEdit?.userGroups[0]?.id"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('type').errors }">
+                  <option value="">{{'admin-user-profile.label-option' | translate }}</option>
+                  <option *ngFor="let group of userDataForEdit?.userGroups" [value]="group?.id">{{group?.value}}</option>
+                </select>
+              </div>
+              <div class="form-group row">
+                <label for="firstName"> {{'admin-user-profile.label-fname' | translate }}</label>
+                <input class="form-control" id="firstName" formControlName="firstName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('firstName').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('firstName').errors?.required">
+                    {{'admin-user-profile.invalid-fname' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="lastName"> {{'admin-user-profile.label-lname' | translate }}</label>
+                <input class="form-control" id="name" formControlName="lastName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('lastName').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('lastName').errors?.required">
+                    {{'admin-user-profile.invalid-lname' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="email"> {{'admin-user-profile.label-email' | translate }}</label>
+                <input class="form-control" id="email" formControlName="email" readonly>
+              </div>
+              <div class="form-group row">
+                <label for="mobile"> {{'admin-user-profile.label-mobile' | translate }}</label>
+                <input class="form-control" id="mobile" formControlName="mobile"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('mobile').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('mobile').errors?.required">
+                    {{'admin-user-profile.invalid-mobile' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="currency">{{'admin-user-profile.label-currency' | translate }}</label>
+                <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code" id="currency"
+                  [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="{{'admin-user-profile.placeholder-currency' | translate }}" class="form-control">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="search-hotel btn btn-danger" (click)="saveUser()">
+            {{'admin-user-profile.button-update' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+/*agm-map {*/
+/*  height:112px; !* height is required *!*/
+/*}*/
+
+agm-map {
+  height:200px; /* height is required */
+}
+
+.hotel-image {
+  max-height: 200px;
+}
+
+.custom-control-label {
+  margin: 0px 0px 0px 0px;
+  font: 12px Roboto;
+  font-weight: normal !important;
+  padding-top: 5px;
+}

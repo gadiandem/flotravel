@@ -1,0 +1,76 @@
+<div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        Package Tax
+      </div>
+      <div class="card-body">
+        <form [formGroup]="taxForm" (ngSubmit)="createTax()">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Name
+                </span>
+              </div>
+              <input formControlName="name" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Description
+                </span>
+              </div>
+              <textarea formControlName="description" class="form-control">
+                  </textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                    ShortDescription
+                </span>
+              </div>
+              <textarea formControlName="shortDescription" class="form-control">
+                  </textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Price
+                </span>
+              </div>
+              <input formControlName="price" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Currency
+                </span>
+              </div>
+              <input formControlName="currency" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Note
+                </span>
+              </div>
+              <textarea formControlName="note" class="form-control">
+               </textarea>
+            </div>
+          </div>
+          <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Create Tax" />
+        </form>
+      </div>
+    </div>
+  </div>
+  

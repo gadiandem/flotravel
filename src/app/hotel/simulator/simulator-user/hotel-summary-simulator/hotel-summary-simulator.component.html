@@ -1,0 +1,96 @@
+<app-hotel-search-box-simulator [searchHotelListRequest]="searchHotelListRequest" [fetching]="isLoading"
+                      (searchHotelBox)="searchHotel($event)"></app-hotel-search-box-simulator>
+<div *ngIf="!isLoading" class="container">
+  <div class="row">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter" (click)="showFilter()">{{'hotel-summary.label-sort-filter' | translate }}</span>
+      </div>
+    </div>
+    <div class="col-md-2 we-sort-filter">
+      <div class="mb-4 d-none d-md-block">
+        <h5 class=" border-bottom pl-0 pb-2"><i class="fa fa-list text-default"></i> {{'hotel-summary.label-sort' | translate }}</h5>
+        <div class="custom-control pl-0">
+          <select name="" class="form-control custom-select">
+            <option value="priceIncrease">{{'hotel-summary.label-price-increase' | translate }}</option>
+            <option value="priceDecrease">{{'hotel-summary.label-price-decrease' | translate }}</option>
+            <option value="popularity">{{'hotel-summary.label-popularity' | translate }}</option>
+            <option value="new">{{'hotel-summary.label-new-first' | translate }}</option>
+            <option value="rating">{{'hotel-summary.label-rating' | translate }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="star-rating mb-4 d-none d-md-block">
+        <h5 class=" border-bottom pl-0 pb-2"><i class="fa fa-star text-default"></i> {{'hotel-summary.label-star-rating' | translate }}</h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start5">
+          <label class="custom-control-label" for="start5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-star-five' | translate }} <small>( 123
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start4">
+          <label class="custom-control-label" for="start4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-star-four' | translate }}  <small>( 123
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start3">
+          <label class="custom-control-label" for="start3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-star-three' | translate }}
+            <small>( 13 )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start2">
+          <label class="custom-control-label" for="start2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-star-two' | translate }}  <small>( 13
+            )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start1">
+          <label class="custom-control-label" for="start1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-star-one' | translate }}  <small>( 123
+            )</small></label>
+        </div>
+      </div>
+      <div class="facility mb-4 d-none d-md-block">
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><i class="fas fa-star-of-life text-default"></i> {{'hotel-summary.label-facility' | translate }} </h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility1">
+          <label class="custom-control-label" for="facility1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-wi-fi' | translate }}  <small> (55)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility2">
+          <label class="custom-control-label" for="facility2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-parking' | translate }} <small>(123)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility3">
+          <label class="custom-control-label" for="facility3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-airport-shuttle' | translate }} <small>(13)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility4">
+          <label class="custom-control-label" for="facility4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-fitness-center' | translate }} <small>(123)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility5">
+          <label class="custom-control-label" for="facility5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-summary.label-indoor-pool' | translate }} <small>(13)</small></label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div *ngIf="!fetchFailed" class="flight-list">
+        <app-hotel-summary-total-price [totalPrice] = "totalPrice" [currency]="selectedHotel.currency"></app-hotel-summary-total-price>
+
+        <app-hotel-select-summary-simulator [selectedHotel]="selectedHotel"
+                                  [selectedRoom]="selectedRoom"
+                                  [numberOfNight]="numberOfNight"
+                                  [searchHotelListRequest]="searchHotelListRequest"
+                                  [changeLink]="changeLink"
+                                  [totalPrice]="totalPrice"
+                                  [currency]="selectedHotel.currency">
+        </app-hotel-select-summary-simulator>
+        <button class="btn btn-danger px-5 float-end mb-4" (click)="goToCard()">{{'hotel-summary.button-continue-booking' | translate }}</button>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <img class="sticky mt-5 w-100 d-none d-md-block" style="height: auto; margin-top: 0px !important;top: 65px;" src="assets/ads.jpg">
+    </div>
+  </div>
+</div>
+<app-hotel-summary-simulator-skeleton *ngIf="isLoading"></app-hotel-summary-simulator-skeleton>
+

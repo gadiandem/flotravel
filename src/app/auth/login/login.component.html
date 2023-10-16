@@ -1,0 +1,61 @@
+<div class="text-center bgimage">
+  <div class="container pt-5">
+    <div class="row py-5">
+      <div class="col-md-8 col-12">
+        <div class="text-left mt-4 align-middle text-light">
+          <h1> {{'login.main-heading' | translate }} </h1>
+          <span> {{'login.sub-heading' | translate }}</span>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-2 mt-sm-4">
+        <div class="form-group loginpage">
+          <form [formGroup]="loginForm" class="form-signin p-5" autocomplete="off" style="background: #F5F5F5;">
+            <h5 class="font-weight-bold"><span> {{'login.login' | translate }}</span></h5>
+            <hr>
+            <label class="sr-only">{{'login.email' | translate }}</label>
+            <div class="form-group">
+              <input type="email" formControlName="email" name="email" class="form-control input-sm mb-2"
+                placeholder="{{'login.form-placeholder-email' | translate }}" autofocus style="padding: 8px 10px;"
+                (keyup.enter)="login()"
+                [ngClass]="{ 'is-invalid': formSubmitError && loginForm.get('email').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="loginForm.get('email').errors?.required">
+                  {{'login.invalid-email' | translate }}
+                </span>
+                <span *ngIf="loginForm.get('email').errors?.email">
+                  {{'login.incorrect-email' | translate }}
+                </span>
+              </span>
+            </div>
+            <label class="sr-only">  {{'login.password' | translate }}</label>
+            <div class="form-group">
+              <input type="password" formControlName="password" class="form-control" placeholder="{{'login.form-placeholder-password' | translate }}"
+                style="padding: 8px 10px;" (keyup.enter)="login()"
+                [ngClass]="{ 'is-invalid': formSubmitError && loginForm.get('password').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="loginForm.get('password').errors?.required">
+                  {{'login.invalid-password' | translate }}
+                </span>
+              </span>
+            </div>
+            <div *ngIf="failure">
+              <alert type="danger" [dismissible]="dismissible" ngPreserveWhitespaces>
+                <!-- <strong> -->
+                  {{errorMessage}}
+                <!-- </strong> -->
+              </alert>
+            </div>
+            <div *ngIf="isLoading && !failure" class="text-center mt-3 loading-space">
+              <div class="spinner-border text-primary"></div>
+            </div>
+            <button class="btn btn-danger mb-3 mt-2" type="button" (click)="login()" [disabled]="isLoading">{{'login.login-button' | translate }}</button>
+            <button class="btn btn-danger mb-3 mt-2 ml-2" type="button" (click)="signUp()" [disabled]="isLoading">{{'login.signup-button' | translate }}</button>
+            <p class="mb-1"><a routerLink="../forgetPassword">{{'login.forgot-password' | translate }}</a></p>
+            <div>
+            </div> 
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

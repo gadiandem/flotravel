@@ -1,0 +1,85 @@
+<div class="hold-transition login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <a routerLink="/"><b>{{'wallet-login.label-title' | translate }}</b> {{'wallet-login.label-portal' | translate }}</a>
+    </div>
+    <div *ngIf="fetchFailed">
+      <alert type="danger" ngPreserveWhitespaces>
+        <strong>{{errorMes}}</strong>
+      </alert>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body login-card-body">
+        <p class="login-box-msg">{{'wallet-login.label-start' | translate }}</p>
+        <form [formGroup]="loginForm" class="clearfix">
+          <div class="input-group mb-3">
+            <input type="email" class="form-control" placeholder="{{'wallet-login.label-account' | translate }}" formControlName="email"
+              [ngClass]="{ 'is-invalid': formSubmitError && loginForm.get('email').errors }">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+            <span class="invalid-feedback">
+              <span *ngIf="loginForm.get('email').errors?.required">
+                {{'wallet-login.invalid-account' | translate }}
+              </span>
+            </span>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" class="form-control" placeholder="{{'wallet-login.label-password' | translate }}" formControlName="password"
+              [ngClass]="{ 'is-invalid': formSubmitError && loginForm.get('password').errors }" />
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+            <span class="invalid-feedback">
+              <span *ngIf="loginForm.get('password').errors?.required">
+                {{'wallet-login.invalid-password' | translate }}
+              </span>
+            </span>
+          </div>
+          <div class="row">
+            <div class="col-8">
+              <div class="icheck-primary">
+                <input type="checkbox" id="remember" formControlName="remmemberMe">
+                <label for="remember">
+                  {{'wallet-login.label-me' | translate }}
+                </label>
+              </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-4">
+              <button type="button" class="btn btn-primary btn-block" (click)="login()"> {{'wallet-login.label-sign-in' | translate }}</button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
+
+        <div class="social-auth-links text-center mb-3">
+          <p>{{'wallet-login.label-or' | translate }}</p>
+          <button class="btn btn-block btn-primary" (click)="fbLogin()">
+            <i class="fab fa-facebook mr-2"></i> {{'wallet-login.label-facebook' | translate }}
+          </button>
+          <button class="btn btn-block btn-danger" (click)="googleLogin()">
+            <i class="fab fa-google-plus mr-2"></i> {{'wallet-login.label-google' | translate }}
+          </button>
+        </div>
+        <!-- /.social-auth-links -->
+
+        <p class="mb-1">
+          <a routerLink="../register">{{'wallet-login.label-forgot-password' | translate }}</a>
+        </p>
+        <p class="mb-0">
+          <a routerLink="../register" class="text-center">{{'wallet-login.label-members' | translate }}</a>
+        </p>
+      </div>
+      <!-- /.login-card-body -->
+    </div>
+    <a (click)="back()" style="cursor: pointer;">
+      <h4 class="text-center" ngPreserveWhitespaces><i class="fa fa-arrow-left"></i>&emsp;{{'wallet-login.button-go-back' | translate }}
+      </h4>
+    </a>
+  </div>
+</div>

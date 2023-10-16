@@ -1,0 +1,90 @@
+<div class="container mt-5">
+    <div class="card card-default my-3">
+      <div class="card-header">
+        {{'admin-things-to-do.label-extraDetail-availability' | translate }}
+      </div>
+      <div class="card-body">
+        <form [formGroup]="extraDetailAvailabilityForm" (ngSubmit)="update()">
+            <div class="col-12">
+              <div class="form-group row" style="display: none;">
+                <input class="form-control" formControlName="id">
+              </div>
+              <div class="form-group row">
+                <label for="name">{{'admin-things-to-do.label-extraName' | translate }}</label>
+                <input class="form-control" id="name" formControlName="name">
+              </div>
+              <!-- <div class="form-group row">
+                <label for="destination">Destination</label>
+                <input class="form-control" id="destination" formControlName="destination">
+              </div> -->
+              <div class="form-group row">
+                <label for="title">{{'admin-things-to-do.label-title-field' | translate }}</label>
+                <input class="form-control" id="title" formControlName="title">
+              </div>
+
+              <div class="form-group row">
+                <label for="description">{{'admin-things-to-do.label-short' | translate }}</label>
+                <!-- <input class="form-control" id="description" formControlName="description"> -->
+                <textarea class="form-control" id="shortDescription" formControlName="shortDescription">
+                </textarea>
+              </div>
+              <div class="form-group row">
+                <label for="duration">{{'admin-things-to-do.label-duration' | translate }}</label>
+                <input class="form-control" id="duration" formControlName="duration">
+              </div>
+              <div class="form-group row">
+                <label for="star">{{'admin-things-to-do.label-star' | translate }}</label>
+                <input class="form-control" id="star" formControlName="star">
+              </div>
+              <div class="form-group row">
+                <label for="reviews">{{'admin-things-to-do.label-review' | translate }}</label>
+                <input class="form-control" id="reviews" formControlName="reviews">
+              </div>
+              <div class="form-group row">
+                <label for="acceptMethods">{{'admin-things-to-do.label-method' | translate }}</label>
+                <input class="form-control" id="acceptMethods" formControlName="acceptMethods">
+              </div>
+              <div class="form-group row">
+                <label for="cancellation">{{'admin-things-to-do.label-cancel' | translate }}</label>
+                <select class="form-control custom-select" formControlName="cancellation">
+                  <option value="">-- {{'admin-things-to-do.label-select' | translate }} --</option>
+                  <option value="FREE">{{'admin-things-to-do.label-free' | translate }}</option>
+                  <option value="FEE">{{'admin-things-to-do.label-fee' | translate }}</option>
+                  <option value="NOT_ALLOW">{{'admin-things-to-do.label-not-allow' | translate }}</option>
+                </select>
+              </div>
+              <div class="form-group row">
+                <label for="language">{{'admin-things-to-do.label-language' | translate }}</label>
+                <input class="form-control" id="language" formControlName="languages">
+              </div>
+
+              <div class="form-group row">
+                <label for="imgUrl">{{'admin-things-to-do.label-image' | translate }}</label>
+                <input class="form-control" id="imgUrl" formControlName="imgUrl" #imagePath>
+                <img [src]="imagePath.value" class="col-12 mt-2" style="text-align: center; max-width: 350px;"/>
+              </div>
+              <div class="form-group row">
+                <label for="latitude">{{'admin-things-to-do.label-latitude' | translate }}</label>
+                <input class="form-control" id="latitude" formControlName="latitude">
+              </div>
+              <div class="form-group row">
+                <label for="longitude">{{'admin-things-to-do.label-longtitude' | translate }}</label>
+                <input class="form-control" id="longitude" formControlName="longitude">
+              </div>
+              <div class="form-group row">
+                <label for="price">{{'admin-things-to-do.label-prices' | translate }}</label>
+                <input class="form-control" id="price" formControlName="price">
+              </div>
+              <div class="form-group row">
+                <label for="price_for_child">{{'admin-things-to-do.label-price-child' | translate }}</label>
+                <input class="form-control" id="price_for_child" formControlName="priceForChild">
+              </div>
+              <button type="submit" name="submit" class="search-hotel btn btn-danger">
+                {{'admin-things-to-do.update-extraDetail-availability' | translate }}
+              </button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

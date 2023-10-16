@@ -1,0 +1,272 @@
+<main role="main">
+  <div class="we-body">
+    <div class="container mb-md-5 mt-5 pt-4 pb-3 shadow-box d-md-block px-3 p-0">
+      <div class="row">
+        <div *ngIf="fetching" class="text-center mt-3 loading-space" style="height: 500px; width: 100%;">
+          <div class="spinner-border text-primary"></div>
+          <span ngPreserveWhitespaces>&emsp;Loading...</span>
+        </div>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed" class="row mb-5 py-2">
+        <div class="col-md-8 order-2 order-md-1 mt-4">
+          <form [formGroup]="searchForm" (ngSubmit)="searchQoute()">
+            <div class="shadow-box p-3">
+              <div class="form-group">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" ngPreserveWhitespaces>
+                      <i class="icon fa fa-map-marker"></i>&nbsp;Residence Country
+                    </span>
+                  </div>
+                  <input id="typeahead-http" type="text" class="form-control" autocomplete="off"
+                    formControlName="residenceCountry" placeholder="Residence Country" [ngClass]="{
+                      'is-invalid': formSubmitError && searchForm.get('residenceCountry').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf=" searchForm.get('residenceCountry').errors?.required ">
+                      Please enter Residence Country.
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" ngPreserveWhitespaces>
+                      <i class="icon fa fa-map-marker"></i>&nbsp;Country of
+                      Travel
+                    </span>
+                  </div>
+                  <input id="typeahead-http" type="text" class="form-control" autocomplete="off"
+                    formControlName="countryOfTravel" placeholder="Country of Travel" [ngClass]="{
+                      'is-invalid': formSubmitError && searchForm.get('countryOfTravel').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf="searchForm.get('countryOfTravel').errors?.required">
+                      Please enter Country of Travel.
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Product Criteria Code</label>
+                <div class="input-group mb-3">
+                  <input id="typeahead-http" type="text" class="form-control" autocomplete="off"
+                    formControlName="productCriteriaCode" placeholder="Residence Country" [ngClass]="{
+                      'is-invalid': formSubmitError && searchForm.get('productCriteriaCode').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf=" searchForm.get('productCriteriaCode').errors?.required ">
+                      Please enter productCriteriaCode.
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Product Criteria Version</label>
+                <div class="input-group mb-3">
+                  <input id="typeahead-http" type="text" class="form-control" autocomplete="off"
+                    formControlName="productCriteriaVersion" placeholder="productCriteriaVersion" [ngClass]="{
+                      'is-invalid': formSubmitError && searchForm.get('productCriteriaVersion').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf=" searchForm.get('productCriteriaVersion').errors?.required ">
+                      Please enter productCriteriaVersion.
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Product Criteria Category</label>
+                <div class="input-group mb-3">
+                  <input id="typeahead-http" type="text" class="form-control" autocomplete="off"
+                    formControlName="productCriteriaCategory" placeholder="productCriteriaCategory" [ngClass]="{
+                      'is-invalid': formSubmitError && searchForm.get('productCriteriaCategory').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf=" searchForm.get('productCriteriaCategory').errors?.required ">
+                      Please enter productCriteriaCategory.
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label> Product Criteria SubCategory </label>
+                <div class="input-group mb-3">
+                  <input id="typeahead-http" type="text" class="form-control" autocomplete="off"
+                    formControlName="productCriteriaSubCategory" placeholder="productCriteriaSubCategory" [ngClass]="{
+                      'is-invalid': formSubmitError && searchForm.get('productCriteriaSubCategory').errors}" />
+                  <span class="invalid-feedback">
+                    <span *ngIf=" searchForm.get('productCriteriaSubCategory').errors?.required ">
+                      Please enter productCriteriaSubCategory.
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>BookingDate</label>
+                <div class="col-sm-6 input-group mb-3">
+                  <input id="typeahead-http" type="text" class="form-control" autocomplete="off"
+                    formControlName="bookingDate" placeholder="bookingDate" [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('bookingDate').errors }" readonly/>
+                </div>
+              </div>
+              <kendo-daterange class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="m-0">Traveling Date </label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="icon fa fa-calendar-check-o"></i>
+                        </span>
+                      </div>
+                      <kendo-dateinput format="dd-MM-yyyy" style="width: 75%; font-size: 20" kendoDateRangeStartInput
+                        [(value)]="checkin_date" placeholder="Check-in Date"></kendo-dateinput>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="m-0">Return Date</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="icon fa fa-calendar-check-o"></i>
+                        </span>
+                      </div>
+                      <kendo-dateinput format="dd-MM-yyyy" style="width: 75%; font-size: 20" kendoDateRangeEndInput
+                        [(value)]="checkout_date" placeholder="Check-out Date">
+                      </kendo-dateinput>
+                    </div>
+                  </div>
+                </div>
+              </kendo-daterange>
+              <div class="row">
+                <div class="col-4">
+                  <div class="form-group">
+                    <label class="m-0">Adults</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                      </div>
+                      <select formControlName="adults" class="form-control custom-select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-group">
+                    <label class="m-0">Children
+                      <small class="text-danger"><b>(2-12 yrs)</b></small></label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-child"></i></span>
+                      </div>
+                      <select formControlName="children" class="form-control custom-select">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-group">
+                    <label class="m-0">Infants</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-child"></i></span>
+                      </div>
+                      <select formControlName="infants" class="form-control custom-select">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Find Qoute" />
+            </div>
+          </form>
+        </div>
+        <div class="col-md-4 order-1 order-md-2 mt-4 pl-md-0">
+          <div class="card shadow-box mb-3 rounded-0">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="title">
+                    {{ selectedInsuranceType?.name || "Gold Plan" }}
+                  </h3>
+                  <div style="color: #ffda23" ngPreserveWhitespaces></div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="hotel-title mb-4">
+                {{ selectedInsuranceType?.type || "with Covid 19 plan" }}
+              </h5>
+              <!-- <p style="font-size: 12px">
+                <i class="fa fa-map-marker"></i>
+                {{ selectedInsuranceType?.type || "with Covid 19 plan" }}
+              </p> -->
+              <div class="d-none d-md-block">
+                <div style="color: #666666; font-size: 14px; font-weight: bold">
+                  {{
+                    selectedInsuranceType?.title ||
+                      "Luggage Loss covered under this plan"
+                  }}
+                </div>
+                <p style="
+                    color: #666666;
+                    font-size: 10px;
+                    margin-bottom: 10px;
+                    line-height: 15px;
+                  ">
+                  {{
+                    selectedInsuranceType?.shortDesc ||
+                      "Perfectly plan for all adults and children for United Kigdom. Relax, get cosy and let us take care of the rest."
+                  }}
+                </p>
+              </div>
+              <div style="color: #007864; font-size: 11px; margin-bottom: 10px">
+                {{
+                  selectedInsuranceType?.freeCancellation === true
+                    ? "Free Cancellation"
+                    : "Not Free Cancellation"
+                }}
+              </div>
+              <div style="color: #666666; font-size: 12px">
+                <b>4/5</b> Excellant 3,687 reviews
+              </div>
+            </div>
+            <div class="card-footer text-muted">
+              Discount:
+              <span class="float-right hotel-price-from">
+                {{
+                  selectedInsuranceType?.discount / 100 || 0.25 | percent
+                }}</span>
+            </div>
+            <div class="card-footer text-muted">
+              Package Price:
+              <span class="float-right text-danger">
+                {{
+                  selectedInsuranceType?.price || 420.2
+                    | currency: currency:"symbol":".0-2"
+                }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

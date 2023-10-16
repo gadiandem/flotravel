@@ -1,0 +1,251 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-register.title' | translate }}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <!-- <div *ngIf="fetchFailed" class="mb-5 mt-3">
+        <alert type="danger" ngPreserveWhitespaces>
+          There is some erros:&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="refresh()">Try Again</button>
+      </div>
+      <div *ngIf="fetching" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;Loading...</span>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed"> -->
+      <div>
+        <div class="box-body">
+          <div *ngIf="errorMessage.length > 0">
+            <alert type="danger" ngPreserveWhitespaces>
+              <strong>{{errorMessage}}</strong>
+            </alert>
+          </div>
+          <form [formGroup]="registerForm" class="clearfix">
+            <div class="row">
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="firstName">{{'wallet-register.label-first-name' | translate }}</label>
+                <input class="form-control" type="text" formControlName="firstName" id="firstName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('firstName').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('firstName').errors?.required">
+                    {{'wallet-register.invalid-first-name' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="lastName"> {{'wallet-register.label-last-name' | translate }}</label>
+                <input class="form-control" type="text" formControlName="lastName" id="lastName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('lastName').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('lastName').errors?.required">
+                    {{'wallet-register.invalid-last-name' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="dateOfBirth">{{'wallet-register.label-DoB' | translate }}</label>
+                <!-- <input class="form-control" type="text" formControlName="dateOfBirth" id="dateOfBirth"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('dateOfBirth').errors }"> -->
+                <div class="input-group">
+                  <input class="form-control" placeholder=" {{'wallet-register.DoB-placeholder' | translate }}" name="dp" formControlName="dateOfBirth"
+                    ngbDatepicker #df="ngbDatepicker"
+                    [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('dateOfBirth').errors }">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="df.toggle()" type="button">
+                      <i class="icon fa fa-calendar-check-o"></i>
+                    </button>
+                  </div>
+                </div>
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('dateOfBirth').errors?.required">
+                    {{'wallet-register.invalid-DoB' | translate }}
+                  </span>
+                </span>
+              </div>
+
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="email">{{'wallet-register.label-email' | translate }}</label>
+                <input class="form-control" type="text" formControlName="email" id="email"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('email').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('email').errors?.required">
+                    {{'wallet-register.invalid-email' | translate }}
+                  </span>
+                  <span *ngIf="registerForm.get('email').errors?.email">
+                    {{'wallet-register.incorrect-email' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div formGroupName="passwordGroup" class="row">
+              <!-- <div class="col-12"> -->
+              <div class="form-group col-sm-6 col-xs-12">
+                <label> {{'wallet-register.label-password' | translate }}</label>
+                <input class="form-control" type="password" formControlName="password" autocomplete="false"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('passwordGroup.password').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('passwordGroup.password').errors?.required">
+                    {{'wallet-register.invalid-password' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label>{{'wallet-register.label-repeat-password' | translate }}</label>
+                <input class="form-control" type="password" formControlName="confirmPassword" autocomplete="off"
+                  [ngClass]="{ 'is-invalid': formSubmitError && (registerForm.get('passwordGroup.confirmPassword').errors || registerForm.get('passwordGroup').errors) }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('passwordGroup.confirmPassword').errors?.required">
+                    {{'wallet-register.invalid-repeat-password' | translate }}
+                  </span>
+                  <span *ngIf="registerForm.get('passwordGroup').errors?.match">
+                    {{'wallet-register.incorrect-repeat-password' | translate }}
+                  </span>
+                </span>
+              </div>
+              <!-- </div> -->
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="mobile">{{'wallet-register.label-phone-number' | translate }}</label>
+                <input class="form-control" type="text" formControlName="mobile" id="mobile"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('mobile').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('mobile').errors?.required">
+                    {{'wallet-register.invalid-phone-number' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="address">{{'wallet-register.label-address' | translate }}</label>
+                <input class="form-control" type="text" formControlName="address" id="address"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('address').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('address').errors?.required">
+                    {{'wallet-register.invalid-address' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="country">{{'wallet-register.label-country' | translate }}</label>
+                <!-- <input class="form-control" type="text" formControlName="country" id="country"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('country').errors }"> -->
+                <input [(ngModel)]="searchCountry" [typeaheadItemTemplate]="customItemTemplate"
+                  typeaheadOptionField="name" [typeahead]="country$" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7"
+                  (typeaheadOnSelect)="selectResidenceCountry($event.item)" type="text" class="form-control"
+                  formControlName="country" placeholder=""
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('country').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('country').errors?.required">
+                    {{'wallet-register.invalid-country' | translate }}
+                  </span>
+                </span>
+                <ng-template #customItemTemplate let-model="item" let-index="index">
+                  {{model.name}} - {{model?.code}}
+                </ng-template>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="city">{{'wallet-register.label-city' | translate }}</label>
+                <input class="form-control" type="text" formControlName="city" id="city"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('city').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('city').errors?.required">
+                    {{'wallet-register.invalid-city' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="state"> {{'wallet-register.label-state' | translate }}</label>
+                <select name="state" id="state" class="form-control" formControlName="state"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('state').errors }">
+                  <option value=""> {{'wallet-register.select-state-option' | translate }}</option>
+                  <option *ngFor="let state of stateList; let i = index" [value]="state.code">{{state.name}}</option>
+                </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('state').errors?.required">
+                    {{'wallet-register.invalid-state' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="postalCode"> {{'wallet-register.label-postal-code' | translate }}</label>
+                <input class="form-control" type="text" formControlName="postalCode" id="postalCode"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('postalCode').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('postalCode').errors?.required">
+                    {{'wallet-register.invalid-postal-code' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="state">{{'wallet-register.label-currency' | translate }}</label>
+                <input formControlName="currency" [typeahead]="currencies" [typeaheadItemTemplate]="currencyTemplate"
+                  typeaheadOptionField="code" [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder=""
+                  class="form-control"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('currency').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('currency').errors?.required">
+                    {{'wallet-register.invalid-currency' | translate }}
+                  </span>
+                </span>
+                <ng-template #currencyTemplate let-model="item" let-index="index">
+                  {{model?.code}} - {{model?.name}}
+                </ng-template>
+              </div>
+              <div class="form-group col-sm-6 col-xs-12">
+                <label for="language">{{'wallet-register.label-language' | translate }}</label>
+                <select name="language" id="language" class="form-control" formControlName="language"
+                  [ngClass]="{ 'is-invalid': formSubmitError && registerForm.get('language').errors }">
+                  <option value="">{{'wallet-register.select-language-option' | translate }}</option>
+                  <option value="en">{{'wallet-register.select-english' | translate }}</option>
+                  <option value="fr">{{'wallet-register.select-french' | translate }}</option>
+                </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="registerForm.get('language').errors?.required">
+                    {{'wallet-register.invalid-language' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </form>
+
+          <p></p>
+          <h5>{{'wallet-register.pre-contract-info' | translate }}</h5><br>{{'wallet-register.consent-info' | translate }}<br>
+          <ul>
+            <li>{{'wallet-register.user-agreement' | translate }} <a
+                style="cursor: pointer; color: #007bff;" (click)="privacyDetail()">{{'wallet-register.privacy-policy-link' | translate }}</a></li>
+            <li> {{'wallet-register.user-info-agreement' | translate }}<a style="cursor: pointer; color: #007bff;" (click)="privacyDetail()">{{'wallet-register.privacy-policy-link' | translate }}</a></li>
+          </ul>
+          <p></p>
+          <div class="icheck-primary">
+            <input type="checkbox" id="remember">
+            <label for="remember">
+              {{'wallet-register.checkbox-accept' | translate }}
+            </label>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary" (click)="register()">
+              {{'wallet-register.button-create-account' | translate }}
+            </button>
+            <div class="pull-right">
+              <a routerLink="../login">{{'wallet-register.button-login-page' | translate }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

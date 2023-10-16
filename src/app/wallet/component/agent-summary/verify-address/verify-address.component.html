@@ -1,0 +1,51 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title"> {{'wallet-agent-summary.verify-address-upload-document' | translate }}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <div class="form-horizontal clearfix">
+        <p class="text-green">
+          {{'wallet-agent-summary.verify-address-regulations' | translate }}
+        </p>
+        <br>
+        <p class="text-green">* {{'wallet-agent-summary.verify-address-photo' | translate }}
+        </p>
+        <br>
+        <div class="form-group row">
+          <label class="col-4 col-form-label text-sm-right">{{'wallet-agent-summary.verify-address-status' | translate }}</label>
+          <div class="col-8">
+            <div style="color: red">
+              {{'wallet-agent-summary.verify-address-not-active' | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-4 col-form-label text-sm-right">{{'wallet-agent-summary.verify-address-uploaded' | translate }}</label>
+          <div class="col-8">
+            <p class="form-control-static">0</p>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="clearfix">
+        <div class="pull-left">
+            <button type="button" class="btn btn-primary mr-2" (click)="upload()"> {{'wallet-agent-summary.verify-address-upload-document' | translate }}</button>
+            <button type="button" class="btn btn-warning" (click)="cancel()"> {{'wallet-agent-summary.verify-address-cancel' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

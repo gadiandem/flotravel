@@ -1,0 +1,84 @@
+<div *ngIf="!isLoading" class="container my-md-5 mt-5 pt-5 pb-3 col-lg-8 offset-lg-2">
+  <div class="hotel-item shadow-box1 bg-white py-2 mb-3">
+    <div class="row d-flex p-3 py-4">
+
+      <div class="col-md-4">
+        <img
+          [src]="'http://pics.avs.io/300/300/' + bookingDetail?.departureFlight?.flightSegments[0]?.airline.split('-')[0] + '.png'"
+          class="img-fluid rounded" style="height: 195px !important;">
+      </div>
+      <div class="col-md-8 pt-3 pt-md-0 ">
+        <div class="row">
+          <div class="col-md-9">
+            <div *ngIf="bookingDetail?.returnFlight">
+              <h5 class="hotel-title" style="font-weight: 700">
+                {{bookingDetail?.departureFlight?.depAirportCode}}-{{bookingDetail?.departureFlight?.arrAirportCode}}
+              </h5>
+              <div class="my-2">
+                <span>{{'Depart '}}{{bookingDetail?.departureFlight?.depDateTime | date: 'd, MMM'}}</span> -
+                <span>{{'Return '}}{{bookingDetail?.returnFlight?.depDateTime | date: 'd, MMM'}}</span>
+              </div>
+            </div>
+            <div *ngIf="!(bookingDetail?.returnFlight)">
+              <h5 class="hotel-title" style="font-weight: 700">
+                {{bookingDetail?.departureFlight?.depAirportCode}}-{{bookingDetail?.departureFlight?.arrAirportCode}}
+              </h5>
+              <div class="my-2">
+                <span>{{'Depart '}}{{bookingDetail?.departureFlight?.depDateTime | date: 'd, MMM'}}</span>
+              </div>
+              <div *ngIf="bookingDetail?.nextFlights">
+                <div *ngFor="let flight of bookingDetail?.nextFlights">
+                  <h5 class="hotel-title" style="font-weight: 700">
+                    {{flight?.depAirportCode}}-{{flight?.arrAirportCode}}
+                  </h5>
+                  <div class="my-2">
+                    <span>{{'Depart '}}{{flight?.depDateTime | date: 'd, MMM'}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>{{bookingDetail?.bookingStatus}}</div>
+            <hr>
+            <div class="fs-5 fw-bold text-dark mt-4">{{'flight-modification.label-rules' | translate }}</div>
+            <p class="small">{{'flight-modification.label-modification-rule-1' | translate }}</p>
+            <p class="small">{{'flight-modification.label-modification-rule-2' | translate }}</p>
+            <div class="fs-6 fw-bold text-dark">
+              {{typeFlight}} {{'flight-modification.label-booking-ref' | translate }}
+              {{bookingDetail?.orderViewRSInfo?.bookingRefId}}, {{'flight-modification.label-date' | translate }}
+              {{bookingDetail.createDate | date: 'd MMM'}}
+            </div>
+            <div class="fs-6 fw-bold text-dark">
+              <p class="text-primary display-5 text-center fw-bold mt-3">{{'flight-modification.label-title' | translate }}
+              </p>
+              <button type="button" class="form-control rounded-pill d-block text-center fw-bold px-3 py-2 mt-1"
+                (click)="fullOrder()"> {{'flight-modification.label-full-order' | translate }} </button>
+              <button type="button" class="form-control rounded-pill d-block text-center fw-bold px-3 py-2 mt-1"
+                (click)="partialChange()"> {{'flight-modification.label-partial-order' | translate }} </button>
+              <button type="button" class="form-control rounded-pill d-block text-center fw-bold px-3 py-2 mt-1"
+                (click)="addService()"> {{'flight-modification.label-service' | translate }} </button>
+              <!--  <button type="button"  class="form-control rounded-pill d-block text-center fw-bold px-3 py-2 mt-1"
+                  (click)="deferredPaymentChange()"> {{'flight-modification.label-deferred-exchange' | translate }} </button> -->
+              <!-- <button type="button"  class="form-control rounded-pill d-block text-center fw-bold px-3 py-2 mt-1"
+                  (click)="orderSplit()"> {{'flight-modification.label-order-split' | translate }} </button> -->
+            </div>
+            <div class="fs-5 fw-bold text-dark">{{'flight-modification.label-support' | translate }}</div>
+            <p>{{'flight-modification.label-contact' | translate }}</p>
+            <div class="fw-bold">{{'flight-modification.label-itinerary' | translate }}</div>
+            <div>{{bookingDetail.orderId}}</div>
+            <div class="d-flex justify-content-between pr-lg-5 mt-5">
+              <div>{{'flight-modification.label-delete' | translate }}</div>
+              <div class="mx-3">{{'flight-modification.label-cancel' | translate }} </div>
+              <div>{{'flight-modification.label-modify' | translate }} </div>
+            </div>
+          </div>
+          <div class="col-md-3 text-right d-flex flex-column justify-content-end">
+            <div style="color:#007864;" data-toggle="collapse" data-target="#collapse0">
+              {{'flight-modification.label-view-details' | translate }} </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<app-flight-summary-skeleton *ngIf="isLoading"></app-flight-summary-skeleton>

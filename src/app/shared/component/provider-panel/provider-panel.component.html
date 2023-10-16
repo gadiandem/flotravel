@@ -1,0 +1,142 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card" style="width: 100%;">
+      <div class="card-header">
+        {{editProvider? 'Edit' : 'Create'}} {{'admin-flotravel-provider-panel.label-title' | translate }}
+      </div>
+      <div class="card-body">
+        <form [formGroup]="providerForm">
+          <div class="row">
+            <div class="form-group col-md-4 col-6">
+              <label for="code">{{'admin-flotravel-provider-panel.label-code' | translate }}</label>
+              <input class="form-control" id="code" formControlName="code"
+                [ngClass]="{ 'is-invalid': formSubmitError && providerForm.get('code').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="providerForm.get('code').errors?.required">
+                  {{'admin-flotravel-provider-panel.invalid-code' | translate }}
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4 col-6">
+              <label for="type">    {{'admin-flotravel-provider-panel.label-type' | translate }}</label>
+              <input class="form-control" id="type" formControlName="type"
+                [ngClass]="{ 'is-invalid': formSubmitError && providerForm.get('type').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="providerForm.get('type').errors?.required">
+                  {{'admin-flotravel-provider-panel.invalid-type' | translate }}
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4 col-6">
+              <label for="name">{{'admin-flotravel-provider-panel.label-name' | translate }}</label>
+              <input class="form-control" id="name" formControlName="name"
+                [ngClass]="{ 'is-invalid': formSubmitError && providerForm.get('name').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="providerForm.get('name').errors?.required">
+                  {{'admin-flotravel-provider-panel.invalid-name' | translate }}
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4 col-6">
+                <label for="transactionType"> {{'admin-flotravel-provider-panel.title-type' | translate }}</label>
+                <!-- <input class="form-control" id="transactionType" formControlName="transactionType"
+                  [ngClass]="{ 'is-invalid': formSubmitError && providerForm.get('transactionType').errors }"> -->
+                  <select class="form-control custom-select" formControlName="transactionType" [ngClass]="{ 'is-invalid': formSubmitError && providerForm.get('transactionType').errors }" >
+                    <option value=""> {{'admin-flotravel-provider-panel.label-option' | translate }}</option>
+                    <option value="0">{{'admin-flotravel-provider-panel.label-auth-success' | translate }}</option>
+                    <option value="1">{{'admin-flotravel-provider-panel.label-auth-attempt' | translate }}</option>
+                    <option value="2">{{'admin-flotravel-provider-panel.label-auth-fail' | translate }}</option>
+                  </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="providerForm.get('transactionType').errors?.required">
+                    {{'admin-flotravel-provider-panel.invalid-tran-type' | translate }}
+                  </span>
+                </span>
+              </div>
+            <div class="form-group col-md-4 col-6">
+              <label for="currency">{{'admin-flotravel-provider-panel.label-currency' | translate }}</label>
+              <!-- <input class="form-control" id="currency" formControlName="currency"
+                [ngClass]="{ 'is-invalid': formSubmitError && providerForm.get('currency').errors }"> -->
+                <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code"
+                [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="" class="form-control"
+                [ngClass]="{ 'is-invalid': formSubmitError && providerForm.get('currency').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="providerForm.get('currency').errors?.required">
+                  {{'admin-flotravel-provider-panel.invalid-currency' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </form>
+        <form [formGroup]="cardPaymentForm">
+          <div class="row pt-3">
+            <div class="col-md-6 mb-3">
+              <div class="card-container"></div>
+            </div>
+            <div class="col-md-6">
+              <div card container=".card-container" card-width="350" [messages]="messages" [placeholders]="placeholders"
+                [masks]="masks">
+                <div class="card-info">
+                  <div class="form-group">
+                    <label for="card_number"> {{'admin-flotravel-provider-panel.label-card-number' | translate }}</label>
+                    <input class="form-control" id="card_number" type="text" formControlName="cardNo"
+                      placeholder="xxxx xxxx xxxx xxxx" card-number
+                      [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardNo').errors }" />
+                    <span class="invalid-feedback">
+                      <span *ngIf="cardPaymentForm.get('cardNo').errors?.required">
+                        {{'admin-flotravel-provider-panel.invalid-card-number' | translate }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="form-group">
+                    <label for="full_name">  {{'admin-flotravel-provider-panel.label-full-name' | translate }}</label>
+                    <input class="form-control" id="full_name" type="text" formControlName="cardName" card-name
+                      [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardName').errors }" />
+                    <span class="invalid-feedback">
+                      <span *ngIf="cardPaymentForm.get('cardName').errors?.required">
+                        {{'admin-flotravel-provider-panel.invalid-full-name' | translate }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label for="expire_time">  {{'admin-flotravel-provider-panel.label-expiry' | translate }}</label>
+                        <input class="form-control" id="expire_time" type="text" formControlName="expiry"
+                          placeholder="mm/yy" card-expiry
+                          [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('expiry').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="cardPaymentForm.get('expiry').errors?.required">
+                            {{'admin-flotravel-provider-panel.invalid-expiry' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label for="cvv">{{'admin-flotravel-provider-panel.label-cvc' | translate }}</label>
+                        <input class="form-control" id="cvv" type="text" placeholder="xxx" formControlName="cvv"
+                          card-cvc [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cvv').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="cardPaymentForm.get('cvv').errors?.required">
+                            {{'admin-flotravel-provider-panel.invalid-cvc' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-12">
+            <button class="btn btn-primary mb-1 ml-1 float-right" (click)="submit()">{{'admin-flotravel-provider-panel.button-save' | translate }}</button>
+            <button class="btn btn-danger mb-1 float-right" (click)="closeModal()">{{'admin-flotravel-provider-panel.button-cancel' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

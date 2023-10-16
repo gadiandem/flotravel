@@ -1,0 +1,12 @@
+<div class="container mb-5" style="height: 500px; width: 100%;">
+    <form #redirectFormRef ngNoForm [formGroup]="redirectForm" action="{{redirect?.url}}" target="_self"
+        method="POST" style="margin-top: 200px;">
+        <div class="shadow-box p-3" fxLayout="row" fxLayoutAlign="center center">
+            <input hidden formControlName="MD" name="MD" />
+            <input hidden formControlName="PaReq" name="PaReq" />
+            <input hidden formControlName="TermUrl" name="TermUrl" />
+            <button class="btn btn-primary" type="submit" [disabled]="!redirectForm.valid" onclick="submit()">{{'package-redirect.button-continue' | translate }}</button>
+            <p class="mt-2 notify">{{'package-redirect.label-info' | translate }}/p> 
+        </div>
+    </form>
+</div>

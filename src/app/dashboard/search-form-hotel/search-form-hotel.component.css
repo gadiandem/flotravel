@@ -1,0 +1,13 @@
+.k-dateinput {
+  font-size: 18px;
+  background-color: #eeeeee !important;
+}
+.k-dateinput-wrap {
+  background-color: #eeeeee !important;
+}
+::ng-deep .k-input-inner{
+  width: 100% !important;
+  border: 0.888889px solid rgb(206, 212, 218) !important;
+  height: 100% !important;
+  background-color: transparent;
+}

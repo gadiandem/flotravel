@@ -1,0 +1,79 @@
+<div class="card card-outline card-primary">
+    <div class="card-header">
+      <h3 class="card-title">{{'wallet-ecommerce-settings.label-title' | translate }}</h3>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+          <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+          <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-tool" (click)="getMerchantSetting()">
+          <i class="fa fa-refresh"></i>
+        </button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div [collapse]="isCollapsed" [isAnimated]="true">
+      <div class="card-body">
+        <div *ngIf="editMode">
+          <app-edit-e-commerce-setting (editMode) = "closeEditMode()" [merchantSetting] = "merchantSettingRes? merchantSettingRes.merchantSetting : null"
+          [account] = "account"></app-edit-e-commerce-setting>
+        </div>
+        <div *ngIf="!editMode">
+          <div *ngIf="fetchFailed" class="mb-5 mt-3">
+            <alert type="danger" ngPreserveWhitespaces>
+              {{'wallet-ecommerce-settings.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+            </alert>
+            <button type="button" class="btn btn-danger" (click)="getMerchantSetting()">{{'wallet-ecommerce-settings.label-try-again' | translate }}</button>
+          </div>
+          <div *ngIf="fetching" class="text-center mt-3 loading-space">
+            <div class="spinner-border text-primary"></div>
+            <span ngPreserveWhitespaces>&emsp;{{'wallet-ecommerce-settings.label-loading' | translate }}</span>
+          </div>
+          <div *ngIf="!fetching && !fetchFailed" class="form-horizontal clearfix">
+            <alert *ngIf="needUpdateSetting" type="danger" ngPreserveWhitespaces>
+              {{'wallet-ecommerce-settings.title-settings' | translate }}
+            </alert>
+            <div class="form-group row">
+              <div class="pull-left col-sm-12">
+                <a style="cursor: pointer;" class="green" (click)="gotoEdit()">{{'wallet-ecommerce-settings.title-edit' | translate }}</a>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-ecommerce-settings.title-business-name' | translate }}</label>
+              <div class="col-7">
+                  <p class="form-control-static">{{merchantSettingRes?.merchantSetting?.merchantName}}</p>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-ecommerce-settings.title-return' | translate }}</label>
+              <div class="col-7">
+                <p class="form-control-static">{{merchantSettingRes?.merchantSetting?.url_return}}</p>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-ecommerce-settings.title-cancel' | translate }}</label>
+              <div class="col-7">
+                <p class="form-control-static">{{merchantSettingRes?.merchantSetting?.url_cancel}}</p>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-ecommerce-settings.title-notify' | translate }}</label>
+              <div class="col-7">
+                <p class="form-control-static">{{merchantSettingRes?.merchantSetting?.url_notify}}</p>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-ecommerce-settings.title-merchant' | translate }}</label>
+              <div class="col-7">
+                <p class="form-control-static">{{merchantSettingRes?.merchantSetting?.url_logo}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

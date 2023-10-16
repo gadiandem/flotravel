@@ -1,0 +1,123 @@
+<form [formGroup]="editEcommerceSettingForm">
+  <div class="row">
+    <div class="form-group col-6">
+      <label>{{'wallet-ecommerce-settings.title-business-name' | translate }}</label>
+      <input class="form-control" id="businessName" type="text" formControlName="businessName"
+        [ngClass]="{ 'is-invalid': formSubmitError && editEcommerceSettingForm.get('businessName').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editEcommerceSettingForm.get('businessName').errors?.required">
+          {{'wallet-ecommerce-settings.invalid-business-name' | translate }}
+        </span>
+      </span>
+    </div>
+    <div class="form-group col-6">
+      <label>{{'wallet-ecommerce-settings.title-return' | translate }}</label>
+      <input class="form-control" id="urlReturn" type="text" formControlName="urlReturn"
+        [ngClass]="{ 'is-invalid': formSubmitError && editEcommerceSettingForm.get('urlReturn').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editEcommerceSettingForm.get('urlReturn').errors?.required">
+          {{'wallet-ecommerce-settings.invalid-return' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-6">
+      <label> {{'wallet-ecommerce-settings.title-cancel' | translate }}</label>
+      <input class="form-control" id="urlCancel" type="text" formControlName="urlCancel"
+        [ngClass]="{ 'is-invalid': formSubmitError && editEcommerceSettingForm.get('urlCancel').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editEcommerceSettingForm.get('urlCancel').errors?.required">
+          {{'wallet-ecommerce-settings.invalid-cancel' | translate }}
+        </span>
+      </span>
+    </div>
+    <div class="form-group col-6">
+      <label> {{'wallet-ecommerce-settings.title-notify' | translate }}</label>
+      <input class="form-control" id="urlNotify" type="text" formControlName="urlNotify"
+        [ngClass]="{ 'is-invalid': formSubmitError && editEcommerceSettingForm.get('urlNotify').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editEcommerceSettingForm.get('urlNotify').errors?.required">
+          {{'wallet-ecommerce-settings.invalid-notify' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-6">
+      <label>{{'wallet-ecommerce-settings.title-logo' | translate }}</label>
+      <input class="form-control" id="urlLogo" type="text" formControlName="urlLogo"
+        [ngClass]="{ 'is-invalid': formSubmitError && editEcommerceSettingForm.get('urlLogo').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editEcommerceSettingForm.get('urlLogo').errors?.required">
+          {{'wallet-ecommerce-settings.invalid-logo' | translate }}
+        </span>
+      </span>
+    </div>
+    <div class="form-group col-6">
+      <label>{{'wallet-ecommerce-settings.title-key' | translate }}</label>
+      <input class="form-control" id="secretKey" type="text" formControlName="secretKey"
+        [ngClass]="{ 'is-invalid': formSubmitError && editEcommerceSettingForm.get('secretKey').errors }" />
+      <span class="invalid-feedback">
+        <span *ngIf="editEcommerceSettingForm.get('secretKey').errors?.required">
+          {{'wallet-ecommerce-settings.invalid-key' | translate }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-check">
+        <input class="form-check-input" id="vcnAgent" type="checkbox" formControlName="vcnAgent" />
+        <label class="form-check-label" for="vcnAgent"> {{'wallet-ecommerce-settings.title-agent' | translate }}</label>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-check">
+        <input class="form-check-input" id="requireOTPVcn" type="checkbox" formControlName="requireOTPVcn" />
+        <label class="form-check-label" for="requireOTPVcn"> {{'wallet-ecommerce-settings.title-otp' | translate }}</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-check">
+        <input class="form-check-input" id="autocapture" type="checkbox" formControlName="autocapture" />
+        <label class="form-check-label" for="autocapture">{{'wallet-ecommerce-settings.title-capture' | translate }}</label>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-check">
+        <input class="form-check-input" id="silentReturn" type="checkbox" formControlName="silentReturn" />
+        <label class="form-check-label" for="silentReturn">{{'wallet-ecommerce-settings.title-silent-return' | translate }}</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-check">
+        <input class="form-check-input" id="sendMail" type="checkbox" formControlName="sendMail" />
+        <label class="form-check-label" for="sendMail">{{'wallet-ecommerce-settings.title-mail' | translate }}</label>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-check">
+        <input class="form-check-input" id="twoStepMobile" type="checkbox" formControlName="twoStepMobile" />
+        <label class="form-check-label" for="twoStepMobile">{{'wallet-ecommerce-settings.title-mobile' | translate }}</label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row mt-2">
+    <div class="col-12">
+      <label for="subscription">{{'wallet-ecommerce-settings.title-subscription' | translate }}</label>
+      <input class="form-control" id="subscription" type="text" formControlName="subscription" readonly />
+    </div>
+  </div>
+  <hr />
+  <div class="clearfix">
+    <div class="pull-right">
+      <button type="button" class="btn btn-primary btn-sm mr-2" (click)="updateSetting()">{{'wallet-ecommerce-settings.button-submit' | translate }}</button>
+      <button type="button" class="btn btn-warning btn-sm" (click)="closeEditMode()">{{'wallet-ecommerce-settings.button-cancel' | translate }}</button>
+    </div>
+  </div>
+</form>

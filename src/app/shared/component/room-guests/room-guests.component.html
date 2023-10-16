@@ -1,0 +1,43 @@
+<form [formGroup]="searchForm" (ngSubmit)="updateRoomGuests()">
+  <div formArrayName="rooms">
+    <div *ngFor="let room of roomsControls; let i = index" [formGroupName]="i">
+      <p class="text-danger" style="font-size: 18px">Room {{i + 1}}</p>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>Adult</div>
+        <div>
+          <button class="guests-adult-minus btn btn-light rounded-circle" type="button" (click)="subtract(i, 'adult')">
+            <i class="fa fa-minus"></i>
+          </button>
+          <span class="guests-adult-num mx-2">{{adults[i]}}</span>
+          <button type="button" class="guests-adult-add btn btn-light rounded-circle" (click)="add(i, 'adult')">
+            <i class="fa fa-plus"></i>
+          </button>
+          <input type="hidden" formControlName="adult">
+        </div>
+      </div>
+      <div class="dropdown-divider"></div>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>Child</div>
+        <div>
+          <button type="button" class="guests-child-minus btn btn-light rounded-circle" (click)="subtract(i, 'children')">
+            <i class="fa fa-minus"></i>
+          </button>
+          <span class="guests-child-num mx-2">{{children[i]}}</span>
+          <button type="button" class="guests-child-add btn btn-light rounded-circle" (click)="add(i, 'children')">
+            <i class="fa fa-plus"></i>
+          </button>
+          <input type="hidden" formControlName="children">
+        </div>
+      </div>
+      <div class="d-flex justify-content-between align-items-center" *ngIf="i >= 1">
+        <div (click)="removeItem(i)" style="cursor: pointer;">
+          <i class="fa fa-times-circle"></i> Clear room
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex align-items-center" (click)="onAddRoom()">
+    <i class="fa fa-plus-circle"></i>&nbsp;Add more rooms
+  </div>
+  <button type="submit" class="guests-done btn btn-danger mt-3">Done</button>
+</form>

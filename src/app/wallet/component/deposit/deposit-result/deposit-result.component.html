@@ -1,0 +1,151 @@
+<div *ngIf="fetching" class="container pt-5 pb-5" style="text-align: center;">
+  <div class="spinner-border text-primary"></div>
+  <span class="text-center mt-3" ngPreserveWhitespaces>&emsp; {{'wallet-deposit-funds.deposit-loading' | translate }}</span>
+</div>
+<div *ngIf="!fetchFailed && !fetching" class="container pt-5 pb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-12 py-5 text-center">
+      <img class="mb-4" src="assets/ic_success.png" />
+      <h2 class="text-center mb-3">{{deopistOrder?.payer?.lastName || userInfo[0]?.lastName}} , {{'wallet-deposit-funds.deposit-request-success' | translate }} {{statusRequest}}</h2>
+      <h5 class="text-center mb-4">{{'wallet-deposit-funds.deposit-request-status' | translate }} {{deopistOrder?.status}} - {{deopistOrder?.statusDesc}} </h5>
+
+      <div class="card mt-5 mb-5 text-left1">
+        <div class="card-body text-left1">
+          <h4 class="heading">{{deopistOrder?.item_name}}</h4>
+          <div class="hotel-address" ngPreserveWhitespaces>
+            <span><i class="fa fa-envelope-o"></i>&emsp;{{deopistOrder?.payer?.email}}&emsp;<i class="fa fa-phone"></i>{{deopistOrder?.payer?.mobile}}</span>
+          </div>
+          <ul class="list-unstyled list mt-3 text-left">
+            <li>
+              <div class="row mt-2">
+                <div class="col-9">
+                  <h6>{{'wallet-deposit-funds.deposit-name' | translate }}&emsp;{{deopistOrder?.item_name}}</h6>
+                </div>
+                <div class="col-3">
+                  <p class="text-right"><span
+                      class="text-lg">{{(deopistOrder?.amount ) | currency:( deopistOrder?.currencyName || 'USD'):'symbol':'.0-2'}}</span>
+                  </p>
+                   <span>( {{depositFeeRes?.depositFee?.payAmount | currency:( depositFeeRes?.depositFee?.currency || 'USD'):'symbol':'.0-2'}})
+                  </span> 
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row mt-2">
+                <div class="col-9">
+                  <h6>{{'wallet-deposit-funds.deposit-bank' | translate }}&emsp;{{deopistOrder?.payOption?.displayName}} ({{deopistOrder?.payOption?.type}})</h6>
+                  
+                </div>
+                <div class="col-3">
+                  <p class="text-right"><span class="text-lg">
+                    <img [src]="deopistOrder?.payOption?.logo"></span>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row mt-2">
+                <div class="col-12">
+                  <h6>{{'wallet-deposit-funds.deposit-trace' | translate }}&emsp;{{deopistOrder?.traceNumber}}</h6>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row mt-2">
+                <div class="col-12">
+                  <h6>{{'wallet-deposit-funds.deposit-date' | translate }}&emsp;{{deopistOrder?.orderDate | date:'medium'}}</h6>
+                </div>
+              </div>
+            </li>
+            <li>
+            <li *ngIf="deopistOrder?.instruction">
+              <div class="row mt-2">
+                <div class="col-12">
+                  <p ngPreserveWhiteSpaces><strong>{{'wallet-deposit-funds.deposit-intructions' | translate }}&emsp;</strong></p><p [innerHTML]="deopistOrder?.instruction"></p>
+                </div>
+              </div>
+            </li>
+            <li *ngIf="deopistOrder?.partnerTxn">
+              <div class="row mt-2">
+                <div class="col-12">
+                  <p ngPreserveWhiteSpaces><strong>{{'wallet-deposit-funds.deposit-txn' | translate }}&emsp;</strong><span [innerHTML]="deopistOrder?.partnerTxn"></span></p>
+                </div>
+              </div>
+            </li>
+            <li *ngIf="deopistOrder?.redirect?.params?.transactionID">
+              <div class="row mt-2">
+                <div class="col-12">
+                  <p ngPreserveWhiteSpaces><strong>{{'wallet-deposit-funds.deposit-tran-id' | translate }}&emsp;</strong><span [innerHTML]="deopistOrder?.redirect?.params?.transactionID"></span></p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row mt-3">
+                <div class="col-9">
+                  <h5>{{'wallet-deposit-funds.deposit-total' | translate }}</h5>
+                </div>
+                <div class="col-3">
+                  <p class="text-right"><span class="text-lg">{{(deopistOrder?.amount | currency:( deopistOrder?.currencyName || 'USD'):'symbol':'.0-2')}}</span> </p>
+                  <span>( {{depositFeeRes?.depositFee?.payAmount}} - {{depositFeeRes?.depositFee?.currency}})</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="mb-5">
+        <a routerLink="/wallet" style="cursor: pointer;">
+          <h4 class="text-center" ngPreserveWhitespaces><i class="fa fa-arrow-left"></i>&emsp;{{'wallet-deposit-funds.deposit-go-back' | translate }}
+          </h4>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="gap"></div>
+</div>
+
+<div *ngIf="fetchFailed  && !fetching" class="container pt-5 pb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-12 py-5 text-center">
+      <img class="mb-4" src="assets/ic_fail.png" style="width:70px;" />
+      <h2 class="text-center mb-3">{{accountProfile?.user?.lastName || 'John'}}, {{'wallet-deposit-funds.deposit-request-failed' | translate }}</h2>
+      <p class="text-danger" *ngIf="errorMes !== ''" [innerHTML]="errorMes"></p>
+      <div class="card mt-5 mb-5 text-left1">
+        <div class="card-body text-left1">
+          <h4 class="heading">{{'Deposit Error'}}</h4>
+          <div class="hotel-address">
+            <span><i class="fa fa-envelope-o"></i>&emsp;{{accountProfile?.user?.email}}&emsp;<i class="fa fa-phone"></i>&emsp;{{accountProfile?.user?.mobile}}</span>
+          </div>
+          <ul class="order-payment-list list mt-3 text-left">
+            <li>
+              <div class="row mt-2">
+                <div class="col-9">
+                  <h6>{{'wallet-deposit-funds.deposit-name' | translate }}&emsp;{{deopistOrder?.item_name}}</h6>
+                </div>
+                <div class="col-3">
+                  <p class="text-right"><span class="text-lg">{{((depositStep1?.amount + depositFeeRes?.depositFee?.fee ) || 0 ) | currency:(depositStep1.currencyCode||'USD'):'symbol':'.0-2'}}</span> </p>
+                  <span>( {{depositFeeRes?.depositFee?.payAmount| currency:( depositFeeRes?.depositFee?.currency || 'USD'):'symbol':'.0-2'}})</span>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row mt-3">
+                <div class="col-9">
+                  <h5>{{'wallet-deposit-funds.deposit-total' | translate }} </h5>
+                </div>
+                <div class="col-3">
+                  <p class="text-right"><span class="text-lg">{{(((depositStep1?.amount + depositFeeRes?.depositFee?.fee ) || 0 ) | currency:(depositStep1.currencyCode||'USD'):'symbol':'.0-2')}}</span> </p>
+                  <span>( {{depositFeeRes?.depositFee?.payAmount}} - {{depositFeeRes?.depositFee?.currency}})</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <a routerLink="/wallet" style="cursor: pointer;">
+        <h4 class="text-center" ngPreserveWhitespaces><i class="fa fa-arrow-left"></i>&emsp;{{'wallet-deposit-funds.deposit-go-back' | translate }}
+        </h4>
+      </a>
+    </div>
+  </div>
+  <div class="gap"></div>
+</div>

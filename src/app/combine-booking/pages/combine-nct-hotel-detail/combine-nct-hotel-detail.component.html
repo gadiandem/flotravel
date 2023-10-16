@@ -1,0 +1,581 @@
+<div class="container-fluid my-5 pt-5 pb-3 shadow-box d-md-block p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0" placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <form [formGroup]="searchForm" class="hotel-search flight-search" (ngSubmit)="shoppingPackage()">
+      <div id="select-box-close" (click)="closeFormSearch()" class="text-right my-2"><i class="fa fa-times"></i></div>
+      <div class="row" style="cursor: pointer;">
+        <div class="col-lg-3 col-12">
+          <label class="mb-0 font-weight-light">{{'package-hotel.label-where' | translate }}</label>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+              </div>
+              <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+                     formControlName="destination" [value]="packageShoppingReq.destination" [typeaheadAsync]="true"
+                     [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="select($event.item)" class="form-control"
+                     placeholder="City or Station"
+                     [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6 pr-3">
+          <label class="mb-0 font-weight-light">{{'package-hotel.placeholder-check-in' | translate }}</label>
+          <div class="form-group">
+            <div class="input-group checkinDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" ngbDatepicker #checkin="ngbDatepicker" class="form-control" formControlName="startDate" [startDate]="minDateStart" [minDate]="minDateStart"
+                     (click)="checkin.toggle()" placeholder="DD/MM/YYYY" (dateSelect)="getStartDate($event)" placement="bottom"
+                     [value]="packageShoppingReq.date |  date:'dd/MM/yyyy'"
+                     [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('startDate').errors }"/>
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('startDate').errors?.required">
+                  {{'package-hotel.invalid-start-date' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6">
+          <label class="m-0 font-weight-light">{{'package-hotel.label-check-out' | translate }}</label>
+          <div class="form-group mb-md-0">
+            <div class="input-group checkoutDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" ngbDatepicker #checkout="ngbDatepicker" class="form-control" formControlName="endDate" [startDate]="startDate" [minDate]="startDate"
+                     (click)="checkout.toggle()" (dateSelect)="getEndDate($event)" placement="bottom"
+                     [value]="packageShoppingReq.endDate |  date:'dd/MM/yyyy'"
+                     [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('endDate').errors }"/>
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('endDate').errors?.required">
+                  {{'package-hotel.invalid-end-date' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-12">
+          <label class="mb-0 m-0 font-weight-light"> {{'package-hotel.label-guests' | translate }}</label>
+          <div class="form-group mb-md-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+              </div>
+              <input #menuDrop type="text" class="guests-input form-control" (click)="toggleDrop()"
+                     [value]="travellerCount +' travellers, ' + roomCount + ' rooms'" style="background:#fff;">
+              <app-room-guests *ngIf="showDropDown" [roomGuests] = "roomGuests" (roomGuestsNew)="updateRoomGuests($event)"
+                               (showDropDown)="changeShowDropDown($event)" class="guests-dropdown shadow-box p-3"></app-room-guests>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-12">
+          <label class="mb-0 font-weight-light invisible ">.</label><br>
+          <input type="submit" name="submit" class="btn btn-danger" value="Search" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div *ngIf="fetchFailed" class="mb-5" style="height: 500px; width: 100%;">
+    <alert type="danger" ngPreserveWhitespaces>
+      {{'package-hotel.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+    </alert>
+    <button type="button" class="btn btn-danger" (click)="fetchHotelDetail()">{{'package-hotel.label-try-again' | translate }}</button>
+  </div>
+  <div *ngIf="!fetching && !fetchFailed" class="row hotel-details">
+    <div class="col-md-10 mt-md-4">
+      <div class="shadow-box p-3">
+        <div class="row">
+          <div class="col-md-9">
+            <img class="img-fluid d-block d-md-none mb-4" [src]="selectedPackage?.hotelImage">
+            <h2 class="title">{{selectedPackage?.name}}</h2>
+            <div class="address">
+              <span><i class="fa fa-map-marker"></i> &nbsp;{{selectedPackage?.cityName}}</span><br>
+              <span style="color:#ffda23">
+                    <i *ngFor="let s of  [1, 2, 3, 4]" class="fa fa-star"></i>
+                  </span> &nbsp;{{starRating}}  {{'package-hotel.label-star-rating' | translate }}
+            </div>
+          </div>
+          <div class="col-md-3 mt-3 mt-md-0">
+            <p class="price"><small>{{'package-hotel.label-price-from' | translate }} </small> <span
+              style="font-size:22px;">{{selectedPackage?.price | currency:currency:'symbol':'.0-2'}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-8 d-none d-md-block">
+            <div class="col-12">
+              <ngx-gallery *ngIf="galleryOptions && galleryImages?.length" [options]="galleryOptions"
+                           [images]="galleryImages"></ngx-gallery>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mapType' [zoom]='12'
+                       mapTypeControl="true">
+                <agm-marker [latitude]="marker.lat" [longitude]="marker.lng" [title]="marker.label"
+                            [markerDraggable]="marker.draggable">
+                  <agm-info-window>
+                    <strong>{{marker.label}}</strong>
+                  </agm-info-window>
+                </agm-marker>
+              </agm-map>
+              <div style="font-size:16px;margin-top:5px; color: #666;"><i class="fa fa-map-marker"></i>
+                {{selectedPackage.name}}</div>
+            </div>
+            <div class="col-12 mb-4">
+              <h4 class="heading">{{'package-hotel.label-hotel-facilities' | translate }}</h4>
+              <ul class="hotel-facilities mb-0">
+                <li *ngFor="let facility of selectedPackage?.fullFacilityDescriptions">{{facility?.name}}</li>
+              </ul>
+              <a pageScroll href="#amenities"><b>{{'package-hotel.label-amenities' | translate }}</b></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--    <section class="mt-3">
+             <div class="flights-list">
+               <div class="flight-item shadow-box blue-bg mb-3">
+                 <div class="row d-flex p-3">
+                   <div class="col-md-6">
+                     <h6 class="text-danger mb-0">Trip Summary</h6>
+                     <small>Rules and restrictions apply</small>
+                   </div>
+                   <div class="col-md-6">
+                     <small class="font-weight-light"
+                            style="color: #444; padding-top: 8px; float: right; font-size: 16px;font-weight:300">
+                       Trip Cost <span style="font-weight:400">$ 2,421.00</span> </small>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div class="flights-list">
+               <div class="mb-3 flight-item">
+                 <div class="d-flex p-3 pb-0">
+                   <h6 class="text-danger d-flex w-100">Your selected departure
+                     <small class="font-weight-light ml-auto" style="color: #444; padding-top: 3px;">
+                       Thur 26, Feb | <a class="text-danger"
+                                         href="#">Change</a>
+                     </small>
+                   </h6>
+                 </div>
+                 <div class="row">
+                   <div class="col-md-9 col-7">
+                     <div class="row">
+                       <div class="col-md-7 col-12">
+                         <div class="px-3 pt-3">
+                           <h5 class="flight-title">07:10 - 09:45</h5>
+                           <p class="title"><img src="assets/flight-logo.jpg"
+                                                 style="width:30px;"> British Airways </p> -->
+      <!--<div class="text-muted" style="font-size: 14px;font-weight: bold;">1hr 35 hours (Direct)</div>
+              <p class="text-muted" style="font-size: 12px;margin-bottom:3px;line-height: 15px;">LHR - FRA</p>-->
+      <!--    </div>
+         </div>
+         <div class="col-md-5 d-none d-md-block px-3 pt-3">
+           <div class="text-muted" style="font-weight: bold;">1hr 35 hours (Direct)</div>
+           <p class="text-muted">LHR - FRA</p>
+         </div>
+       </div>
+       <div class="row">
+         <div class="col-md-7 col-12">
+           <div class="px-3 pt-3">
+             <h5 class="flight-title">07:10 - 09:45</h5>
+             <p class="title"><img src="assets/flight-logo.jpg"
+                                   style="width:30px;"> British Airways </p>
+             -->    <!--<div class="text-muted" style="font-size: 14px;font-weight: bold;">1hr 35 hours (Direct)</div>
+                              <p class="text-muted" style="font-size: 12px;margin-bottom:3px;line-height: 15px;">LHR - FRA</p>-->
+      <!--    </div>
+        </div>
+        <div class="col-md-5 d-none d-md-block px-3 pt-3">
+          <div class="text-muted" style="font-weight: bold;">1hr 35 hours (Direct)</div>
+          <p class="text-muted">LHR - FRA</p>
+        </div>
+      </div>
+      <div class="px-3 pb-3">
+        There may be an additional feeOpens in a new window based on your payment method.
+        Fee is not reflected in the ticket price.
+      </div>
+    </div>
+    <div class="col-md-3 col-5 p-3 pr-4">
+      <div class="text-right" style="text-align: right; padding-right: 10px;">
+        <span class="flight-price">$750</span><br>
+        <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+      -->  <!-- <a class="btn btn-success" href="flights-return.html">Reserve</a> -->
+      <!--  </div>
+        <div class="text-right paddingtop" style="text-align: right; padding-right: 10px;">
+          <span class="flight-price">$750</span><br>
+          <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+        --> <!-- <a class="btn btn-success" href="flights-return.html">Reserve</a> -->
+      <!--   </div>
+       </div>
+       <div class="col-md-12 collapsed" data-toggle="collapse" data-target="#collapse0">
+         <p class="px-3 py-2 m-0"
+            style="color:#007864; cursor:pointer; border-top:1px solid #ccc;">
+           <span>Some text here</span>
+           <span class="float-right" style="float: right;">View Details</span>
+         </p>
+       </div>
+       <div id="collapse0" class="col-12 collapse">
+         <div class="row">
+           <div class="col-md-6">
+             <div class="flight-cart-start"></div>
+             <div class="m-3 pl-3" style="border-left:1px solid #eee072;">
+               <p><strong>From</strong> Bole Intl. (ADD)<br>
+                 <strong>To</strong> Heathrow</p>
+               <p>Ethiopian Airlines<br>
+                 AIRBUS INDUSTRIES A3S503 | Breakfast<br>
+                 Economy (v)<br>
+                 1hr 35 hours (Direct)</p>
+               <p><strong>Total distance</strong> 3688 mi</p>
+             </div>
+             <div class="flight-cart-end"></div>
+           </div>
+           <div class="col-md-6">
+             <div class="p-3">
+               <p><strong>Estimated Bag Fees</strong><br>
+                 Hand baggage: No fee upto 7 kg<br>
+                 Hand baggage: No fee upto 7 kg<br>
+                 Hand baggage: No fee upto 7 kg<br>
+                 Confirm bags fees, weight and size restrictions with <span>Ethopian
+                                                 Airlines</span></p>
+             </div>
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-md-6">
+             <div class="flight-cart-start"></div>
+             <div class="m-3 pl-3" style="border-left:1px solid #eee072;">
+               <p><strong>From</strong> Bole Intl. (ADD)<br>
+                 <strong>To</strong> Heathrow</p>
+               <p>Ethiopian Airlines<br>
+                 AIRBUS INDUSTRIES A3S503 | Breakfast<br>
+                 Economy (v)<br>
+                 1hr 35 hours (Direct)</p>
+               <p><strong>Total distance</strong> 3688 mi</p>
+             </div>
+             <div class="flight-cart-end"></div>
+           </div>
+           <div class="col-md-6">
+             <div class="p-3">
+               <p><strong>Estimated Bag Fees</strong><br>
+                 Hand baggage: No fee upto 7 kg<br>
+                 Hand baggage: No fee upto 7 kg<br>
+                 Hand baggage: No fee upto 7 kg<br>
+                 Confirm bags fees, weight and size restrictions with <span>Ethopian
+                                                 Airlines</span></p>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+</section> -->
+      <h4 class="title">{{'package-hotel.label-choose-room' | translate }}</h4>
+      <div class="d-block d-md-none shadow-box p-2 mb-3">
+        <div class="font-weight-bold mt-1 text-danger"></div>
+        <div class="row">
+          <div class="col-6">
+            <div class="font-weight-bold">{{'package-hotel.placeholder-check-in' | translate }}</div>
+            {{packageShoppingReq.date | date}}
+          </div>
+          <div class="col-6">
+            <div class="font-weight-bold">{{'package-hotel.label-city-code' | translate}} </div>
+            {{packageShoppingReq?.cityCode}}
+          </div>
+        </div>
+        <div class="btn btn-default btn-sm mb-2">
+          {{'package-hotel.label-change' | translate }}
+        </div>
+      </div>
+      <div class="rooms-list">
+        <div *ngFor="let room of packageHotelDetailRes; let i = index;">
+          <div class="room-item d-block mb-3">
+            <div class="row">
+              <div class="col-md-4 d-none d-md-block">
+                <div class="room-img h-100"
+                     [ngStyle]="{'background-image': 'url(' + selectedPackage?.hotelImage + ')'}">
+                </div>
+              </div>
+              <div class="col-md-4 d-block d-md-none">
+                <img [src]="selectedPackage?.hotelImage" class="img-fluid">
+              </div>
+              <div class="col-md-8 room-info py-3">
+                <div class="row px-md-0 px-3">
+                  <div class="col-7">
+                    <h5 class="room-title">{{room?.roomType}}, {{roomCount}} {{'package-hotel.label-queen-bed' | translate}} </h5>
+                    <small class="hidden-xs"><i class="fas fa-users"></i> {{'package-hotel.label-sleeps' | translate}} {{travellerCount}}<br><i
+                      class="fas fa-bed"></i> {{roomCount}} {{'package-hotel.label-queen-bed' | translate}}<span *ngIf="roomCount > 1">s</span><br>
+                    </small><br><br>
+                    <div style="color:#007864;">{{'package-hotel.label-cancellation' | translate}} <br><small
+                      class="text-muted">{{'package-hotel.label-before' | translate}} {{packageShoppingReq?.date | date}}</small></div>
+                  </div>
+                  <div class="col-5 pr-3">
+                    <div class="text-right pr-1 px-md-3">
+                      <del class="room-price-cancel">
+                        {{((+room?.pricePerNight) * (1+defaultDiscount/100)) | currency:currency:'symbol':'.0-2'}}
+                        <!--                        {{((selectedPackage?.price) * (1+defaultDiscount/100)) | currency:currency:'symbol':'.0-2'}}-->
+                      </del> &nbsp;
+                      <!--                      <span class="room-price">{{(room?.pricePerNight) | currency:currency:'symbol':'.0-2'}}</span>-->
+                      <span class="room-price">{{(selectedPackage?.price) | currency:currency:'symbol':'.0-2'}}</span>
+                      <div>{{'package-hotel.label-for' | translate}} {{selectedPackage.dayCount}} {{'package-hotel.label-day' | translate}}</div>
+                      <button class="btn btn-danger mt-2" (click)="goToSupplement(room)">{{'package-hotel.button-reserve' | translate}}</button>
+                      <div style="font-size:10px;">{{'package-hotel.label-2-minutes' | translate}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-overview' | translate}} </h4>
+        <p>{{selectedPackage?.overview}}</p>
+      </div>
+      <div class="mt-3 p-3 shadow-box" id="amenities">
+        <h4 class="title">{{'package-hotel.label-full-facilities-description' | translate}}</h4>
+        <ul>
+          <li *ngFor="let facility of selectedPackage?.fullFacilityDescriptions">{{facility?.name}}</li>
+        </ul>
+      </div>
+      <div class="mt-4 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-breakfast' | translate}} </h4>
+        <p>{{selectedPackage?.breakfast ? 'Yes' : 'No'}}</p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-rating' | translate}}</h4>
+        <p>{{selectedPackage?.starRate || 5}}</p>
+      </div>
+      <div class="mt-3 mb-5 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-remarks' | translate}}</h4>
+        <p>{{selectedPackage?.remark || 'There is no hotel remark'}}</p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-additional-info' | translate}} </h4>
+        <p><span [innerHTML]="selectedPackage?.additionalInfo"></span></p>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <img class="sticky mt-5 w-100" style="height: auto; margin-top: 25px !important;top: 65px;"
+           src="../../../../assets/ads.jpg">
+    </div>
+  </div>
+</div>
+
+<div *ngIf="fetching" class="container">
+  <div class="row hotel-details">
+    <div class="col-md-10 mt-md-4">
+      <div class="shadow-box p-3">
+        <div class="row">
+          <div class="col-md-9">
+            <div class="img-fluid d-block d-md-none mb-4">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width.px': 264 , 'height.px' : 175}"></ngx-skeleton-loader>
+            </div>
+            <h2 class="title"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h2>
+            <div class="address">
+              <span><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader></span><br>
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '20%'}"></ngx-skeleton-loader>
+            </div>
+          </div>
+          <div class="col-md-3 mt-3 mt-md-0">
+            <p class="price"><small><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '40%'}"></ngx-skeleton-loader></small>
+              <span style="font-size:22px;"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 25}"></ngx-skeleton-loader></span>
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-8 d-none d-md-block">
+            <div class="col-12">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 375}"></ngx-skeleton-loader>
+              <div class="row" style="padding-left: 15px">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 115, 'width.px': 102.391}"></ngx-skeleton-loader>
+                <div style="padding-left: 10px" *ngFor="let i of [1, 2, 3, 4]">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 115, 'width.px': 102.391}"></ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3 col-12 center" style="justify-content: center">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 300, 'width.px': 245.98}"></ngx-skeleton-loader>
+              <div style="font-size:16px;margin-top:5px; color: #666;">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+              </div>
+            </div>
+            <div class="col-12 mb-4">
+              <h4 class="heading"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '60%'}"></ngx-skeleton-loader></h4>
+              <ul class="hotel-facilities mb-0">
+                <div *ngFor="let item of ([1, 2, 3, 4, 5] | slice:0:5)">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+                </div>
+              </ul>
+              <a pageScroll href="#"><strong><ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '50%'}"></ngx-skeleton-loader></strong></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section class="mt-3">
+        <div class="flights-list">
+          <div class="flight-item shadow-box blue-bg mb-3">
+            <div class="row d-flex p-3">
+              <div class="col-md-6">
+                <h6 class="text-danger mb-0">
+                  <ngx-skeleton-loader [theme]="{'background-color': 'rgb(220, 53, 69)','width': '30%', 'height.px': 19, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </h6>
+                <small>
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '40%', 'height.px': 14, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </small>
+              </div>
+              <div class="col-md-6 text-right">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '50%', 'height.px': 32, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flights-list">
+          <div class="mb-3 flight-item">
+            <div class="p-3 pb-0">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 19, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+            </div>
+            <div class="row">
+              <div class="col-md-9 col-7">
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <h5 class="flight-title">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '30%', 'height.px': 21, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                      </h5>
+                      <p class="title">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 46, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '50%', 'height.px': 42, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-7 col-12">
+                    <div class="px-3 pt-3">
+                      <h5 class="flight-title">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '30%', 'height.px': 21, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                      </h5>
+                      <p class="title">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 46, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-5 d-none d-md-block px-3 pt-3">
+                    <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '50%', 'height.px': 42, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="px-3 pb-3">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '90%', 'height.px': 58, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-md-3 col-5 p-3 pr-4">
+                <div class="text-right" style="text-align: right; padding-right: 10px;">
+                  <span>
+                    <ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 25, 89)', 'width': '25%', 'height.px': 25, 'margin-bottom.px': 0}"></ngx-skeleton-loader></span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">
+                    <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '75%', 'height.px': 18, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </p>
+                </div>
+                <div class="text-right paddingtop" style="text-align: right; padding-right: 10px;">
+                   <span>
+                    <ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 25, 89)', 'width': '25%', 'height.px': 25, 'margin-bottom.px': 0}"></ngx-skeleton-loader></span><br>
+                  <p style="font-size: 12px;margin-bottom:3px;">
+                    <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '75%', 'height.px': 18, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-12 collapsed" data-toggle="collapse" data-target="#collapse0">
+                <p class="px-3 py-2 m-0"
+                   style="color:#007864; cursor:pointer; border-top:1px solid #ccc;">
+                  <span><ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 120, 100)', 'height.px': 17, 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="rooms-list">
+        <div *ngFor="let room of [1, 2, 3, 4, 5]">
+          <a class="room-item d-block mb-3">
+            <div  class="row">
+              <div class="col-md-4 d-none d-md-block">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width.px': 286.66, 'height': '100%'}"></ngx-skeleton-loader>
+              </div>
+              <div class="col-md-4 d-block d-md-none">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width.px': 286.66, 'height': '100%'}"></ngx-skeleton-loader>
+              </div>
+              <div class="col-md-8 room-info py-3">
+                <div class="row px-md-0 px-3">
+                  <div class="col-7">
+                    <h5 style="margin-bottom: 0"> <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30}"></ngx-skeleton-loader></h5>
+                    <small class="hidden-xs">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '40%', 'height.px': 40}"></ngx-skeleton-loader>
+                    </small><br><br>
+                    <div style="color:#007864;"> <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '40%'}"></ngx-skeleton-loader><br>
+                      <small class="text-muted">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '40%'}"></ngx-skeleton-loader>
+                      </small></div>
+                  </div>
+                  <div class="col-5 pr-3">
+                    <div class="text-right pr-1 px-md-3">
+                      <span style="margin-top: 12px; margin-bottom: 12px">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width.px': 100}"></ngx-skeleton-loader>
+                      </span>
+                      <div><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 20, 'width.px': 60, 'margin-top.px': 0}"></ngx-skeleton-loader></div>
+                      <div class="">
+                        <ngx-skeleton-loader [theme]="{'background-color': 'rgb(10, 48, 73)', 'height.px': 40, 'width.px': 80}"></ngx-skeleton-loader>
+                      </div>
+                      <div style="font-size:10px;">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 10, 'width.px': 95}"></ngx-skeleton-loader>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}"></ngx-skeleton-loader></h4>
+        <p><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 40}"></ngx-skeleton-loader></p>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}"></ngx-skeleton-loader></h4>
+        <p><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 40}"></ngx-skeleton-loader></p>
+      </div>
+      <div class="mt-4 p-3 shadow-box">
+        <h4 class="title"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}"></ngx-skeleton-loader></h4>
+        <p><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 40}"></ngx-skeleton-loader></p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}"></ngx-skeleton-loader></h4>
+        <p><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 150}"></ngx-skeleton-loader></p>
+      </div>
+      <div class="mt-3 mb-5 p-3 shadow-box">
+        <h4 class="title"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}"></ngx-skeleton-loader></h4>
+        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 300}"></ngx-skeleton-loader>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <ngx-skeleton-loader [theme]="{'height.px': 600, 'width.px': 160, 'background-color': '#ccc'}"></ngx-skeleton-loader>
+    </div>
+  </div>
+</div>

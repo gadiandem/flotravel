@@ -1,0 +1,79 @@
+<div class="container-fluid">
+    <div class="card card-default my-3">
+        <div class="card-header">
+            {{editMode ? 'Edit' : 'Create'}} {{'admin-things-to-do.label-extra' | translate }}
+        </div>
+        <div class="card-body">
+            <form [formGroup]="scheduleForm">
+              <div class="col-12">
+                <!-- <div class="form-group row">
+                      <label for="logo">Profile</label>
+                      <input class="form-control" id="logo" formControlName="profileImg" #imagePath
+                      [ngClass]="{ 'is-invalid': formSubmitError && scheduleForm.get('profileImg').errors }">
+                      <span class="invalid-feedback">
+                        <span *ngIf="scheduleForm.get('profileImg').errors?.required">
+                          Please fill your profile image.
+                        </span>
+                      </span>
+                    </div> -->
+                <div class="form-group row">
+                  <label for="fromTime">{{'admin-things-to-do.label-from' | translate }}</label>
+                  <input class="form-control" id="fromTime" formControlName="fromTime"
+                    [ngClass]="{ 'is-invalid': formSubmitError && scheduleForm.get('fromTime').errors }">
+                  <!-- <span class="invalid-feedback">
+                        <span *ngIf="scheduleForm.get('firstName').errors?.required">
+                          Please enter your first name
+                        </span>
+                      </span> -->
+                </div>
+                <div class="form-group row">
+                  <label for="toTime">{{'admin-things-to-do.label-to' | translate }}</label>
+                  <input class="form-control" id="toTime" formControlName="toTime"
+                    [ngClass]="{ 'is-invalid': formSubmitError && scheduleForm.get('toTime').errors }">
+                  <!-- <span class="invalid-feedback">
+                        <span *ngIf="scheduleForm.get('toTime').errors?.required">
+                          Please enter your last name
+                        </span>
+                      </span> -->
+                </div>
+                <div class="form-group row">
+                  <label for="extraPrice">{{'admin-things-to-do.label-price' | translate }}</label>
+                  <input class="form-control" id="extraPrice" formControlName="extraPrice"
+                    [ngClass]="{ 'is-invalid': formSubmitError && scheduleForm.get('extraPrice').errors }">
+                  <!-- <span class="invalid-feedback">
+                        <span *ngIf="scheduleForm.get('email').errors?.required">
+                          Please enter your email.
+                        </span>
+                        <span *ngIf="scheduleForm.get('email').errors?.email">
+                          Please enter valid email.
+                        </span>
+                      </span> -->
+                </div>
+                <div class="form-group row">
+                  <label for="title">{{'admin-things-to-do.label-title' | translate }}</label>
+                  <input class="form-control" id="title" formControlName="title"
+                    [ngClass]="{ 'is-invalid': formSubmitError && scheduleForm.get('title').errors }">
+                  <!-- <span class="invalid-feedback">
+                        <span *ngIf="scheduleForm.get('password').errors?.required">
+                          Please enter your password
+                        </span>
+                      </span> -->
+                </div>
+                <div class="form-group row">
+                  <label for="description">{{'admin-things-to-do.label-desc' | translate }}</label>
+                  <textarea class="form-control" id="description" formControlName="description"
+                    [ngClass]="{ 'is-invalid': formSubmitError && scheduleForm.get('description').errors }"></textarea>
+                  <!-- <span class="invalid-feedback">
+                        <span *ngIf="scheduleForm.get('description').errors?.required">
+                          Please enter your mobile
+                        </span>
+                      </span> -->
+                </div>
+              </div>
+              <button type="button" class="search-hotel btn btn-danger" (click)="saveSchedule()">
+                {{'admin-things-to-do.label-save' | translate }}
+              </button>
+            </form>
+        </div>
+    </div>
+</div>

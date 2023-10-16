@@ -1,0 +1,7 @@
+.extra-img{
+    float: left;
+    width: 300px;
+    min-height: 220px;
+    background-size: cover;
+    background-position: center center;
+  }

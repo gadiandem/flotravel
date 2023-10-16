@@ -1,0 +1,92 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-cards.card-title' | translate }}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <form [formGroup]="cardPaymentForm">
+        <div class="row pt-3">
+          <div class="col-md-6 mb-3">
+            <div class="card-container"></div>
+          </div>
+          <div class="col-md-6">
+            <div card container=".card-container" card-width="350" [messages]="messages" [placeholders]="placeholders"
+              [masks]="masks">
+              <div class="card-info">
+                <div class="form-group">
+                  <label for="card_number">{{'wallet-cards.label-card-number' | translate }}</label>
+                  <input class="form-control" id="card_number" type="text" formControlName="cardNo"
+                    placeholder="xxxx xxxx xxxx xxxx" card-number
+                    [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardNo').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf="cardPaymentForm.get('cardNo').errors?.required">
+                      {{'wallet-cards.invalid-card-number' | translate }}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group">
+                  <label for="full_name">{{'wallet-cards.label-full-name' | translate }}</label>
+                  <input class="form-control" id="full_name" type="text" formControlName="cardName" card-name
+                    [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardName').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf="cardPaymentForm.get('cardName').errors?.required">
+                      {{'wallet-cards.invalid-full-name' | translate }}
+                    </span>
+                  </span>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-md-6">
+                    <div class="form-group">
+                      <label for="expire_time">{{'wallet-cards.label-expiry' | translate }}</label>
+                      <input class="form-control" id="expire_time" type="text" formControlName="expiry"
+                        placeholder="mm/yy" card-expiry
+                        [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('expiry').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="cardPaymentForm.get('expiry').errors?.required">
+                          {{'wallet-cards.invalid-expiry' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group">
+                      <label for="cvv">{{'wallet-cards.label-cvc' | translate }}</label>
+                      <input class="form-control" id="cvv" type="text" placeholder="xxxx" formControlName="cvv" card-cvc
+                        [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cvv').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="cardPaymentForm.get('cvv').errors?.required">
+                          {{'wallet-cards.invalid-cvc' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+        </div>
+      </form>
+      <hr />
+      <div class="clearfix">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary btn-sm mr-2" (click)="next()"> {{'wallet-cards.button-save' | translate }}</button>
+          <button type="button" style="color: white;" class="btn btn-warning btn-sm" (click)="cancel()"> {{'wallet-cards.button-cancel' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

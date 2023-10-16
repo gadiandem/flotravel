@@ -1,0 +1,56 @@
+<div class="shadow-box p-3 mt-3">
+    <div class="col-12" style="padding-left: 0px !important;">
+      <div class="fixtures select-answers pt-3">
+        <div class="chpage">
+          <div  class="d-flex justify-content-between align-items-center pbox">
+            <h3 style="font-weight: 400;">{{'flight-add-on.traceMe-title' | translate }}</h3>
+            <div class="product-price">
+              <p class="m-0"><span class="fw-bold priceb" style="font-size: 20px; font-weight: 700;float: right;">
+  <!--             {{quoteSelect?.currency | currency}}{{+quoteSelect?.premium | number: '1.1-2'}}</span></p>-->
+                {{+quoteSelect?.premium | number: '1.1-2' | currency:(currency || quoteSelect?.currency):'symbol':'.0-2'}}</span></p>
+              <p class="m-0" style="font-size: 15px; font-weight: 400;float: right"><span style="display: inline;">{{'flight-add-on.label-per-person' | translate }}</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="addonTracemeForm">
+      <div  class="form-group row">
+        <div id="myAnswers" class="col-12">
+          <div id="chooseButton" class="fixtures select-answers pt-3">
+            <div class="blue-bg p-3 chpage">
+              <div class="d-flex justify-content-between align-items-center pbox">
+                <h5 style="font-weight: 700">{{'flight-add-on.traceMe-subtitle' | translate }}</h5>
+              </div>
+              <p style="font-weight: 300;">{{'flight-add-on.traceMe-reasons' | translate }}.</p>
+              <div class="solicitation " [hidden]="isTraceMe">
+                <ul class="m-0 p-0 d-md-flex flex-md-wrap list-unstyled">
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.traceMe-point-one' | translate }}</li>
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.traceMe-point-two' | translate }}</li>
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.traceMe-point-three' | translate }}</li>
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.traceMe-point-four' | translate }}</li>
+                </ul>
+              </div>
+              <div class="mt-2" style="font-weight: 700; padding-left: 10px">
+                <a (click)="openTermsAndConditionComponent()" style="color: #007bff; text-decoration: none;background-color: transparent; cursor: pointer;"
+             class="alert-link"> {{'flight-add-on.label-terms' | translate }}</a>
+                <!-- <a href="https://www.tmlt.co.uk/consumer-terms/" target="_blank" class="alert-link">{{'flight-add-on.label-terms' | translate }}</a> -->
+              </div>
+            </div>
+            <div class="bg-light p-3 mt-3">
+              <label class="form-check-label m-0" for="traceme_yes">
+                <input class="form-check-input mx-1" id="traceme_yes" type="radio" value="YES" formControlName="quote"> &nbsp;
+                &nbsp; &nbsp; &nbsp; {{'flight-add-on.traceMe-yes' | translate }}
+              </label>
+            </div>
+            <div class="bg-light p-3 mt-3">
+              <label class="form-check-label m-0" for="traceme_no">
+                <input class="form-check-input mx-1" id="traceme_no" type="radio" value="NO" formControlName="quote" [checked]="true"> &nbsp;
+                &nbsp; &nbsp; &nbsp;{{'flight-add-on.traceMe-no' | translate }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>

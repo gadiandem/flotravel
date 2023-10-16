@@ -1,0 +1,44 @@
+<div class="card card-outline card-primary">
+    <div class="card-header">
+      <h3 class="card-title">{{'wallet-invoice-info.label-title' | translate }}</h3>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+          <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+          <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div [collapse]="isCollapsed" [isAnimated]="true">
+      <div class="card-body">
+        <div *ngIf="editMode">
+          <app-edit-invoicing (editMode) = "closeEditMode()"></app-edit-invoicing>
+        </div>
+        <div *ngIf="!editMode">
+          <div class="form-horizontal clearfix">
+            <div class="form-group row">
+              <div class="pull-left col-sm-12">
+                <a style="cursor: pointer;" class="green" (click)="gotoEdit()">{{'wallet-invoice-info.title-edit' | translate }}</a>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-invoice-info.title-tax-id' | translate }}</label>
+              <div class="col-7">
+                  <p class="form-control-static"></p>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-invoice-info.title-terms' | translate }}</label>
+              <div class="col-7">
+                <p class="form-control-static"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

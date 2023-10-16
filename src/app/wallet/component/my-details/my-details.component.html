@@ -1,0 +1,52 @@
+<div class="card card-outline card-success">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-account-info.label-my-details' | translate }}</h3>
+
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" (click)="getProfile()">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <div *ngIf="fetchFailed" class="mb-5 mt-3">
+        <alert type="danger" ngPreserveWhitespaces>
+          {{'wallet-account-info.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="getProfile()">{{'wallet-account-info.label-try-again' | translate }}</button>
+      </div>
+      <div *ngIf="fetching" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;{{'wallet-account-info.label-loading' | translate }}</span>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed">
+        <div class="clearfix">
+          <span class="float-left">{{'wallet-account-info.label-phone' | translate }} </span>
+          <span class="float-right">{{accountProfile?.user.mobile}}</span>
+        </div>
+        <hr />
+        <div *ngIf="!fetching && !fetchFailed" class="clearfix">
+          <span class="float-left">{{'wallet-account-info.label-account' | translate }} </span>
+          <span class="float-right">{{accountType}}</span>
+        </div>
+        <hr />
+        <div class="clearfix">
+          <span class="float-left">{{'wallet-account-info.label-active' | translate }} </span>
+          <span class="float-right badge badge-success" *ngIf="accountStatus === 'Verify'">{{accountStatus}}</span>
+          <span class="float-right badge badge-warning" *ngIf="accountStatus === 'Active'">{{accountStatus}}</span>
+          <span class="float-right badge badge-danger" *ngIf="accountStatus === 'Inactive'">{{accountStatus}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

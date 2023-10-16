@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="flight-navigation">
+      <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '40%'}"></ngx-skeleton-loader>
+    </div>
+    <div class="tab-content">
+      <div class="row pt-2">
+        <div class="col-lg-3 col-12">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 50, 'margin-top.px': 15}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-lg-3 col-12">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 50, 'margin-top.px': 15}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-lg-2 col-6">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 50, 'margin-top.px': 15}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-lg-2 col-6" *ngIf="typeFlight === 'ROUND_TRIP'">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 50, 'margin-top.px': 15}"></ngx-skeleton-loader>
+        </div>
+        <div *ngIf="typeFlight === 'ONE_WAY' || typeFlight === 'MULTI_CITY'" class="col-lg-2 col-6 d-md-none"></div>
+        <div class="col-lg-2 col-6 d-md-none">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 50, 'margin-top.px': 15}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-lg-2 col-12" *ngIf="typeFlight === 'ONE_WAY' || typeFlight === 'ROUND_TRIP'">
+          <ngx-skeleton-loader [theme]="{'background-color': 'rgb(10, 48, 73)', 'height.px': 38, 'width.px': 80, 'margin-top.px': 20}"></ngx-skeleton-loader>
+        </div>
+      </div>
+    </div>
+</div>

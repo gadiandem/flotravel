@@ -1,0 +1,1002 @@
+<div *ngIf="!fetching" class="we-body my-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h5 class="mt-4 mb-0" style="font-size: 26px;">{{'flight-checkout.label-where' | translate }}</h5>
+      </div>
+      <div class="col-md-8 order-2 order-md-1 mt-4">
+        <div *ngIf="user == null" class="shadow-box p-3 mb-3" (click)="openModalWithComponent()"
+          style="cursor: pointer;">
+          <span>
+            <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+              <i class="fa fa-lock"></i> &nbsp; {{'flight-checkout.label-points' | translate }}
+            </h3>
+          </span>
+        </div>
+        <div class="shadow-box p-3 mb-2" *ngIf="isAgent" style="display: none;">
+          <app-agency-booking (userSelected)="useSelected($event)" (agencyBooking)="agencyBooking($event)">
+          </app-agency-booking>
+        </div>
+        <div class="shadow-box p-3 mt-3">
+          <form [formGroup]="customersForm">
+            <div formArrayName="passengerList">
+              <div *ngFor="let schedule of passengerListControls; let i = index" [formGroupName]="i">
+                <h5 class="text-danger border-bottom pb-2 mb-3">{{'flight-checkout.label-customer-info' | translate }}
+                  <span *ngIf="((adultCount + childrenCount) > i && i >= adultCount)">{{i + 1}}
+                    ({{'flight-checkout.label-child' | translate }})</span>
+                  <span *ngIf="i >= (adultCount + childrenCount)">{{i + 1}} ({{'flight-checkout.label-infants' |
+                    translate }})</span>
+                </h5>
+                <div class="px-4">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" [id]="'male'+ i" type="radio" value="MALE"
+                            formControlName="gender"
+                            [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('gender').errors }">
+                          <label class="form-check-label" [for]="'male'+ i"
+                            [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('gender').errors }">{{'flight-checkout.label-male'
+                            | translate }} </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" [id]="'female'+ i" type="radio" value="FEMALE"
+                            formControlName="gender"
+                            [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('gender').errors }">
+                          <label class="form-check-label" [for]="'female'+ i"
+                            [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('gender').errors }">{{'flight-checkout.label-female'
+                            | translate }} </label>
+                        </div>
+                        <span class="invalid-feedback">
+                          <span *ngIf="formSubmitError && schedule?.get('gender').errors?.required">
+                            {{'flight-checkout.invalid-gender' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 col-12">
+                      <div class="form-group">
+                        <label>{{'flight-checkout.label-fname' | translate }} </label>
+                        <input class="form-control" type="text" formControlName="firstName"
+                          [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('firstName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="schedule.get('firstName').errors?.required">
+                            {{'flight-checkout.invalid-fname' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                      <div class="form-group">
+                        <label>{{'flight-checkout.label-middle-name' | translate }} </label>
+                        <input class="form-control" type="text" formControlName="middleName" />
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                      <div class="form-group">
+                        <label>{{'flight-checkout.label-lname' | translate }}</label>
+                        <input class="form-control" type="text" formControlName="lastName"
+                          [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('lastName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="schedule.get('lastName').errors?.required">
+                            {{'flight-checkout.invalid-lname' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <!--<div class="col-md-4 col-12" *ngIf="i===0">
+                      <div class="form-group">
+                        <label>{{'flight-checkout.label-address' | translate }}</label>
+                        <input class="form-control" type="text" formControlName="address"
+                          [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('address').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="schedule.get('address').errors?.required">
+                            {{'flight-checkout.invalid-address' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div> -->
+                    <div class="col-md-4 col-12" *ngIf="i===0">
+                      <div class="form-group">
+                        <label>{{'flight-checkout.label-passport' | translate }}</label>
+                        <input class="form-control" placeholder="" type="text" formControlName="passPort"
+                          [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('passPort').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="schedule.get('passPort').errors?.required">
+                            {{'flight-checkout.invalid-passport' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                      <div class="form-group">
+                        <label>{{'flight-checkout.label-country' | translate }}</label>
+                        <select class="custom-select" formControlName="country"
+                          (change)="onSelectCountry($event.target.value)"
+                          [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('country').errors }">
+                          <option value="" selected>---Select Country---</option>
+                          <option *ngFor="let country of countries" value="{{country?.code}}">{{country?.name}}</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <span *ngIf="schedule.get('country').errors?.required">
+                            {{'flight-checkout.invalid-country' | translate }}
+                          </span>
+                          <span *ngIf="errorMessage">
+                            {{errorMessage}}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                      <div class="form-group" *ngIf="i < adultCount">
+                        <label>{{'flight-checkout.label-mobile' | translate }}</label>
+                        <ngx-intl-tel-input   [cssClass]="'w-100'" [preferredCountries]="preferredCountries"
+                          [selectedCountryISO]="countryCode" [enableAutoCountrySelect]="true" [enablePlaceholder]="true"
+                          [searchCountryFlag]="true"
+                          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                          [selectFirstCountry]="false" [maxLength]="15" [tooltipField]="TooltipLabel.Name"
+                          [phoneValidation]="false" [separateDialCode]="true" formControlName="phoneNo">
+                        </ngx-intl-tel-input>
+                        <span class="invalid-feedback">
+                          <span *ngIf="schedule.get('phoneNo').errors?.required">
+                            {{'flight-checkout.invalid-mobile' | translate }}
+                          </span>
+                          <span *ngIf="schedule.get('phoneNo').errors?.validatePhoneNumber">
+                            {{'flight-checkout.label-country-code-required' | translate }}
+                          </span>
+                          <span *ngIf="schedule.get('phoneNo').errors?.maxlength">
+                            {{'flight-checkout.incorrect-mobile' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                      <!--  <div class="form-check mb-3" style="margin-top:-10px;" *ngIf="i === 0">
+                        <input class="form-check-input" type="checkbox" id="isNotify" formControlName="isNotify">
+                        <label class="form-check-label" for="isNotify"> {{'flight-checkout.label-alerts' | translate }}
+                        </label>
+                      </div> -->
+                    </div>
+                  <!--  <div class="col-md-5 col-12">
+                      <label>{{'flight-checkout.label-DOB' | translate }}</label>
+                      <div class="form-group row ">
+                        <div class="col-md-4 col-12  m-0 p-1">
+                          <select class="custom-select m-0" (change)="dateChanged($event.target.value)">
+                            <option value="" selected> Day </option>
+                            <option *ngFor="let date of dates" value="{{date}}">{{date}}</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4 col-12 m-0 p-1">
+                          <select class="custom-select" (change)="monthChanged($event.target.value)">
+                            <option value="" selected> Month </option>
+                            <option *ngFor="let month of calenderMonths" value="{{month.id}}">{{month.text}}</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4 col-12 m-0 p-1">
+                          <select class="custom-select" (change)="yearChanged($event.target.value)">
+                            <option value="" selected> Year</option>
+                            <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div> -->
+                    <div class="col-md-4 col-12">
+                      <div class="form-group">
+                        <label>{{'flight-checkout.label-DOB' | translate }}</label>
+                        <kendo-datepicker #datepicker class="form-control" formControlName="birthDate"
+                          calendarType="classic" (click)="onOpenDatepicker($event, datepicker)"
+                          [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('birthDate').errors }"
+                          title="Select Date" format="dd-MM-yyyy" placeholder="dd-MM-yyyy"
+                          [max]="maxDate"></kendo-datepicker>
+                        <span class="invalid-feedback">
+                          <span *ngIf="schedule.get('birthDate').errors?.required">
+                            {{'flight-checkout.invalid-DOB' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div *ngIf="!orderChange">
+        <app-add-on-refund-protect d-protect (refundProtectSelected)="refundProtectUpdate($event)" [currency]="currency"
+          (refundProtectPackage)="getRefundProtectPackage($event)"></app-add-on-refund-protect>
+        <app-add-on-traceme (tracemeSelected)="tracemeUpdate($event)" (quoteId)="quoteIdUpdate($event)" [currency]="currency"
+          (tracemeSelectedItem)="getTracemeCard($event)"></app-add-on-traceme>
+        <app-add-on-gca [departureFlight]="departureFlight" [returnFlight]="returnFlight" [currency]="currency"
+          [searchFlightForm]="searchFlightForm" (bookingId)="getGcaBookingId($event)"
+          (gcaBookingItem)="updateGcaBooking($event)"></app-add-on-gca>
+        <app-add-on-insurance (axaInsuranceSelected)="insuranceUpdate($event)" [currency]="currency"
+          (axaInsurancePackage)="getInsuranceItem($event)"></app-add-on-insurance>
+        <app-add-on-smart-delay (smartDelaySelected)="smartDelayUpdate($event)" [currency]="currency"
+          (smartDelaySelectedItem)="getSmartDelayPackage($event)"></app-add-on-smart-delay>
+        </div>
+        <form [formGroup]="userForm">
+          <div class="shadow-box p-3 my-4">
+            <p class="text-danger">{{'flight-checkout.label-email-confirmation' | translate }}</p>
+            <div class="row">
+              <div class="col-12 col-md-8">
+                <div class="form-group">
+                  <label for="email">{{'flight-checkout.label-email-notify' | translate }}</label>
+                  <input class="form-control" id="email"
+                    placeholder="{{'flight-checkout.placeholder-email' | translate }}" type="text"
+                    formControlName="email"
+                    [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('email').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf="userForm.get('email').errors?.required">
+                      {{'flight-checkout.incorrect-email' | translate }}
+                    </span>
+                    <span *ngIf="userForm.get('email').errors?.email">
+                      {{'flight-checkout.invalid-email' | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="user == null" class="row">
+              <div class="col-12 col-md-8">
+                <div class="p-4 mb-4" style="background: #eee;">
+                  <p>{{'flight-checkout.label-enter-password' | translate }}.</p>
+                  <div formGroupName="passwordGroup">
+                    <div class="row">
+                      <div class="col-10">
+                        <div class="form-group">
+                          <label>{{'flight-checkout.label-password' | translate }}</label>
+                          <input class="form-control" type="password" formControlName="password" autocomplete="false"
+                            [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('passwordGroup.password').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="userForm.get('passwordGroup.password').errors?.required">
+                              {{'flight-checkout.invalid-password' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-10">
+                        <div class="form-group">
+                          <label>{{'flight-checkout.label-confirm-password' | translate }}</label>
+                          <input class="form-control" type="password" formControlName="confirmPassword"
+                            [ngClass]="{ 'is-invalid': formSubmitError && (userForm.get('passwordGroup.confirmPassword').errors || userForm.get('passwordGroup').errors) }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="userForm.get('passwordGroup.confirmPassword').errors?.required">
+                              {{'flight-checkout.invalid-confirm-password' | translate }}
+                            </span>
+                            <span *ngIf="userForm.get('passwordGroup').errors?.match">
+                              {{'flight-checkout.incorrect-confirm-password' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <span class="invalid-feedback">
+                      <span *ngIf="userForm.get('passwordGroup').errors?.match">
+                        The confirmPassword does not match the password.
+                      </span>
+                    </span> -->
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-check mb-3" style="margin-top:-10px;">
+                        <input class="form-check-input" type="checkbox" id="createAccount"
+                          formControlName="createAccount">
+                        <label class="form-check-label" for="createAccount"> {{'flight-checkout.label-account' |
+                          translate }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a (click)="openTerminal()" style="cursor: pointer; color: #0065b8;">{{'flight-checkout.label-terms' |
+              translate }}</a>
+            <div class="row mt-1">
+              <div class="col-12">
+                <button *ngIf="!isEnoughBalance" class="btn btn-danger mr-5" type="submit"
+                  (click)="goToBankDeposit()">{{'flight-checkout.label-buy-now' |
+                  translate }} &emsp;<i class="fa fa-arrow-right"></i></button>
+
+                <button *ngIf="isEnoughBalance" class="btn btn-danger" type="submit" (click)="buyNow()">{{'hotel-checkout.label-wallet-payment'
+                  |
+                  translate }} &emsp;<i class="fa fa-arrow-right"></i></button>
+                <button *ngIf="!hahnairProvider && !orderChange" class="btn btn-danger ml-5" type="submit"
+                  (click)="saveBooking()">{{'hotel-checkout.label-pay-later' | translate }} &emsp;<i
+                    class="fa fa-arrow-right"></i></button>
+              </div>
+            </div>
+            <div><br><i class="fa fa-lock fa-2x"></i>&nbsp;{{'flight-checkout.label-encryption' | translate }}</div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-4 col-md-auto order-1 order-md-2 mt-4 pl-md-0 mt-3">
+        <div class="card shadow-box mb-3 rounded-0">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-12">
+                <h6 *ngIf="!aeroProvider" class="mt-2">
+                  {{'flight-checkout.flight-summary' | translate}}</h6>
+                <h6 *ngIf="aeroProvider" class="mt-2">{{'API Airways'}}</h6>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!aeroProvider && !orderChange" class="card-body">
+            <div>
+              <h5 class="text-danger mb-3"> {{'flight-checkout.label-departure' | translate }}
+              </h5>
+              <div *ngFor="let segment of departureFlight?.flight?.flightSegments" class="row mb-3">
+                <div class="col-3">
+                  {{segment.depDateTime.split(' ')[1]}}<br>
+                  <b>{{segment.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                  {{segment?.arrDateTime.split(' ')[1]}}<br>
+                  <b>{{segment?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                </div>
+                <div class="col-9" style="border-left: 1px solid #eee072;">
+                  <div class="flight-cart-start">
+                    {{segment?.depAirportName}}
+                    <!-- {{segment?.depAirportCode}} -->
+                    <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;">
+                      <i class="fa fa-clock-o"></i> {{segment?.duration}}
+                    </span>
+                    <br>
+                    <small>{{segment?.depAirportCode}}<br>
+                      <b>{{departureFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                  <div class="flight-cart-end">
+                    {{segment?.arrAirportName}}<br>
+                    <!-- {{segment?.arrAirportCode}}<br> -->
+                    <small>{{segment?.arrAirportCode}}<br>
+                      <b>{{departureFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                </div>
+                <br />
+                 <p class="airline-tile col-12 mt-3">{{adultCount}} {{'flight-checkout.label-adults' | translate}}, {{childrenCount}} {{'flight-checkout.label-child' | translate}}, {{infantCount}} {{'flight-checkout.label-infants' | translate}}</p>
+              </div>
+              <p class="flight-bags-detail collapsed" (click)="isCollapsed[0] = !isCollapsed[0]">
+                {{'flight-checkout.label-flight-details' | translate }}
+                <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[0] === true"></i>
+                <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[0] === true"></i>
+              </p>
+              <div id="collapseHahnAir0" class="collapse" [collapse]="isCollapsed[0]" [isAnimated]="true">
+                <p *ngIf="departureFlight?.flight?.offerItemList[0]?.weightAllowance">
+                  <strong>{{'flight-checkout.label-party' | translate
+                    }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                  {{'flight-checkout.label-weight' | translate
+                  }}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                  <span>{{departureFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+                </p>
+                <div class="p-3" *ngIf="departureFlight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                  <p><strong>{{'flight-checkout.label-party' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                  <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                  <p><strong>{{'flight-checkout.label-bag-type' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                    <!-- Maximum Weight:&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                    <span>{{departureFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                </div>
+                <div class="p-3" *ngIf="baggageRules">
+                  <p><strong>Baggage Rules</strong><span>&nbsp;</span><br>
+                  <ul>
+                    <li *ngFor="let bag of baggageInfoView;">&nbsp;{{bag}}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="typeFlight === 'ROUND_TRIP'">
+            <div *ngIf="typeFlight === 'ROUND_TRIP'">
+              <h5 class="text-danger mb-3">
+                {{'flight-checkout.label-return' | translate }}
+                <!-- <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                    class="fa fa-clock-o"></i> {{returnFlight?.flight?.flightSegments[0].duration}}</span> -->
+              </h5>
+              <div *ngFor="let segment of returnFlight?.flight?.flightSegments" class="row mb-3">
+                <div class="col-3">
+                  {{segment?.depDateTime.split(' ')[1]}}<br>
+                  <b>{{segment?.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                  {{segment?.arrDateTime.split(' ')[1]}}<br>
+                  <b>{{segment?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                </div>
+                <div class="col-9" style="border-left: 1px solid #eee072;">
+                  <div class="flight-cart-start">
+                    {{segment?.depAirportName}}
+                    <!-- {{segment?.depAirportCode}} -->
+                    <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;">
+                      <i class="fa fa-clock-o"></i> {{segment?.duration}}
+                    </span>
+                    <br>
+                    <small>{{segment?.depAirportCode}}<br>
+                      <b>{{returnFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                  <div class="flight-cart-end">
+                    <!-- {{segment?.arrAirportName}}<br> -->
+                    {{segment?.arrAirportCode}}<br>
+                    <small>{{segment?.arrAirportCode}}<br>
+                      <b>{{returnFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                </div>
+                <p class="airline-tile col-12 mt-3">{{adultCount}} {{'flight-checkout.label-adults' | translate}}, {{childrenCount}} {{'flight-checkout.label-child' | translate}}, {{infantCount}} {{'flight-checkout.label-infants' | translate}}</p>
+
+              </div>
+              <p class="flight-bags-detail collapsed" (click)="isCollapsed[1] = !isCollapsed[1]">
+                {{'flight-checkout.label-flight-details' | translate }}
+                <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[1] === true"></i>
+                <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[1] === true"></i>
+              </p>
+              <div id="collapseHahnAir1" class="col-12 collapse" [collapse]="isCollapsed[1]" [isAnimated]="true">
+                <p *ngIf="returnFlight?.flight?.offerItemList[0]?.weightAllowance">
+                  <strong>{{'flight-checkout.label-party' | translate
+                    }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                  {{'flight-checkout.label-weight' | translate
+                  }}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                  <span>{{returnFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+                </p>
+                <div class="p-3" *ngIf="returnFlight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                  <p><strong>{{'flight-checkout.label-party' | translate
+                      }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                  <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                      }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                  <p><strong>{{'flight-checkout.label-bag-type' | translate
+                      }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                    <!-- Maximum Weight:&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                    <span>{{returnFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                </div>
+                <div class="p-3" *ngIf="baggageRules">
+                  <p><strong>Baggage Rules</strong><span>&nbsp;</span><br>
+                  <ul>
+                    <li *ngFor="let bag of baggageInfoView;">&nbsp;{{bag}}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="typeFlight === 'MULTI_CITY'" />
+            <div *ngIf="typeFlight === 'MULTI_CITY'">
+              <div *ngFor="let flight of nextFlights; let i = index;">
+                <h5 class="text-danger mb-3">
+                  {{'flight-checkout.label-next-flight' | translate }}
+                  <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                      class="fa fa-clock-o"></i> {{flight?.flight?.flightSegments[0]?.duration}}</span>
+                </h5>
+                <div class="row mb-3">
+                  <div class="col-3">
+                    {{flight?.flight?.depDateTime.split(' ')[1]}}<br>
+                    <b>{{flight?.flight?.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                    {{flight?.flight?.arrDateTime.split(' ')[1]}}<br>
+                    <b>{{flight?.flight?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                  </div>
+                  <div class="col-9" style="border-left: 1px solid #eee072;">
+                    <div class="flight-cart-start">
+                      {{searchFlightForm?.flyFromNext[i]?.name}}<br>
+                      <small>{{searchFlightForm?.flyFromNext[i]?.name}}<br>
+                        <b>{{'flight-checkout.label-business' | translate }}</b></small>
+                    </div>
+                    <div class="flight-cart-end">
+                      {{searchFlightForm?.destinationNext[i]?.name}}<br>
+                      <small>{{searchFlightForm?.destinationNext[i]?.name}}<br>
+                        <b>{{'flight-checkout.label-business' | translate }}</b></small>
+                    </div>
+                  </div>
+                </div>
+                <p class="airline-tile col-12 mt-3">{{adultCount}} {{'flight-checkout.label-adults' | translate}}, {{childrenCount}} {{'flight-checkout.label-child' | translate}}, {{infantCount}} {{'flight-checkout.label-infants' | translate}}</p>
+
+                <p class="flight-bags-detail collapsed" (click)="isCollapsed[i+1] = !isCollapsed[i+1]">
+                  {{'flight-checkout.label-flight-details' | translate }}
+                  <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[i+1] === true"></i>
+                  <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[i+1] === true"></i>
+                </p>
+                <div id="collapseHahnAir{{i+1}}" class="col-12 collapse" [collapse]="isCollapsed[i+1]"
+                  [isAnimated]="true">
+                  <p *ngIf="flight?.flight?.offerItemList[0]?.weightAllowance">
+                    <strong>{{'flight-checkout.label-party' | translate
+                      }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                    {{'flight-checkout.label-weight' | translate
+                    }}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                    <span>{{departureFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+                  </p>
+                  <div class="p-3" *ngIf="flight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                    <p><strong>{{'flight-checkout.label-party' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                    <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                    <p><strong>{{'flight-checkout.label-bag-type' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                      <!-- Maximum Weight:&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                      <span>{{flight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                  </div>
+                  <div class="p-3" *ngIf="baggageRules">
+                    <p><strong>Baggage Rules</strong><span>&nbsp;</span><br>
+                    <ul>
+                      <li *ngFor="let bag of baggageInfoView;">&nbsp;{{bag}}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="offerPrices?.serviceDefinitionTypeList" />
+            <div *ngIf="offerPrices?.serviceDefinitionTypeList">
+              <h6 class="text-danger mb-2">{{'flight-servcice.label-title' | translate }} </h6>
+              <div class="row d-flex mb-2" *ngFor="let service of offerPrices?.serviceDefinitionTypeList">
+                <P class="mb-0 px-3 mb-2"> <i class="fa fa-circle" style="font-size:12px"></i>
+                  {{service?.name?.value}}</P>
+              </div>
+            </div>
+            <hr *ngIf="isRefundProtect" />
+            <div *ngIf="isRefundProtect">
+              <h6>{{'flight-checkout.label-refund-protect' | translate }}<small
+                  class="float-right text-danger">{{(refundProtectItem?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.totalAmount?.amount
+                  || 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+            </div>
+            <hr *ngIf="isTraceme" />
+            <div *ngIf="isTraceme">
+              <h6>{{tracemeItem?.name || 'Traceme Item:'}} <small
+                  class="float-right text-danger">{{(+tracemeItem?.premium|| 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+              <h6>{{'flight-checkout.label-benefit' | translate }}<span class="float-right text-danger">
+                  {{tracemeItem?.benefits[0]?.cover}} : {{tracemeItem?.benefits[0]?.amount | number:'.0-2'}} {{currency}}
+                </span>
+              </h6>
+            </div>
+            <hr *ngIf="isGcaAddon" />
+            <div *ngIf="isGcaAddon">
+              <h6>{{'flight-checkout.label-gac' | translate }}<small
+                  class="float-right text-danger">{{(+gcaBookingItem?.gcaQuoteResult?.billing?.grand_total|| 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+            </div>
+            <hr *ngIf="isAxaInsurance" />
+            <div *ngIf="isAxaInsurance">
+              <h6>{{insuranceItemItem?.name || 'Axa Insurance:'}} <small
+                  class="float-right text-danger">{{(+insuranceItemItem?.packagePrice || 0)| number:'.0-2'}} {{currency}}</small>
+              </h6>
+            </div>
+            <hr *ngIf="isSmartDelay" />
+            <div *ngIf="isSmartDelay">
+              <h6>{{smartDelayItem?.pricedProduct?.productInformation?.productDisplay?.productname || 'Smart Delay:'}}
+                <small
+                  class="float-right text-danger">{{(smartDelayItem?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.totalAmount?.amount
+                  || 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+              <!--    <h6>Category: <span class="float-right text-danger">
+                  {{smartDelayItem?.pricedProduct?.productInformation?.category}}
+                </span>
+              </h6>
+              <h6>Details: <span class="float-right text-danger">
+                 <small>{{(smartDelayItem?.pricedProduct?.productInformation?.productDisplay?.details?.item1
+                   || 'Receive a lounge access voucher automatically via text or email if your flight is delayed for more than 90 minutes.')}}</small>
+                </span>
+              </h6>
+              <h6>Term And Conditions: <span class="text-danger">
+                  <small>{{(smartDelayItem?.pricedProduct?.productInformation?.productMedia?.termsAndConditions ||
+                    'https://assets.hepstar.com/documents/SmartDelay_Terms_and_Conditions_(90_minutes).pdf')}}</small>
+                </span></h6>
+            <h6>Type: <span class="float-right text-danger">-->
+              <!--                  {{(smartDelayItem?.pricedProduct?.productInformation?.type || 'type')}}-->
+              <!--                </span></h6>-->
+            </div>
+          </div>
+
+          <div *ngIf="aeroProvider" class="card-body">
+            <div>
+              <h5 class="text-danger mb-3"> {{'flight-checkout.label-departure' | translate }}
+              </h5>
+              <div *ngIf="departureFlight?.flight?.depDateTime" class="col-3">
+                {{departureFlight?.flight?.depDateTime?.split(' ')[1]}}<br>
+                <b>{{departureFlight?.flight?.depDateTime?.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                {{departureFlight?.flight?.arrDateTime?.split(' ')[1]}}<br>
+                <b>{{departureFlight?.flight?.arrDateTime?.split(' ')[0] | date:'dd MMM'}}</b>
+              </div>
+              <div class="col-9" style="border-left: 1px solid #eee072;">
+                <div class="flight-cart-start">
+                  {{departureFlight?.flight?.depAirportCode}}
+                  <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;">
+                    <i class="fa fa-clock-o"></i> {{'3H 30'}}
+                    <!-- <i class="fa fa-clock-o"></i> {{departureFlight?.flight?.duration}} -->
+                  </span>
+                  <br>
+                  <small><b>{{departureFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                </div>
+                <div class="flight-cart-end">
+                  {{departureFlight?.flight?.arrAirportCode}}<br>
+                  <small> <b>{{departureFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                </div>
+              </div>
+              <br />
+              <p class="flight-bags-detail collapsed" (click)="isCollapsed[0] = !isCollapsed[0]">
+                {{'flight-checkout.label-flight-details' | translate }}
+                <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[0] === true"></i>
+                <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[0] === true"></i>
+              </p>
+              <div id="collapseAero0" class="collapse" [collapse]="isCollapsed[0]" [isAnimated]="true">
+                <p *ngIf="departureFlight?.flight?.offerItemList[0]?.weightAllowance">
+                  <strong>{{'flight-checkout.label-party' | translate
+                    }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                  {{'flight-checkout.label-weight' | translate
+                  }}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                  <span>{{'API Airways'}}</span>
+                </p>
+                <div class="p-3" *ngIf="departureFlight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                  <p><strong>{{'flight-checkout.label-party' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                  <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                  <p><strong>{{'flight-checkout.label-bag-type' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                    <!-- Maximum Weight:&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                    <span>{{departureFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="typeFlight === 'ROUND_TRIP'">
+            <div *ngIf="typeFlight === 'ROUND_TRIP'">
+              <h5 class="text-danger mb-3">
+                {{'flight-checkout.label-return' | translate }}
+                <!-- <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                    class="fa fa-clock-o"></i> {{returnFlight?.flight?.flightSegments[0].duration}}</span> -->
+              </h5>
+              <div *ngFor="let segment of returnFlight?.flight?.flightSegments" class="row mb-3">
+                <div *ngIf="segment?.depDateTime" class="col-3">
+                  {{segment?.depDateTime?.split(' ')[1]}}<br>
+                  <b>{{segment?.depDateTime?.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                  {{segment?.arrDateTime.split(' ')[1]}}<br>
+                  <b>{{segment?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                </div>
+                <div class="col-9" style="border-left: 1px solid #eee072;">
+                  <div class="flight-cart-start">
+                    {{segment?.depAirportCode}}
+                    <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;">
+                      <i class="fa fa-clock-o"></i> {{segment?.duration}}
+                    </span>
+                    <br>
+                    <small>{{segment?.depAirportCode}}<br>
+                      <b>{{returnFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                  <div class="flight-cart-end">
+                    {{segment?.arrAirportName}}<br>
+                    <small>{{segment?.arrAirportCode}}<br>
+                      <b>{{returnFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                </div>
+                <p class="airline-tile col-12 mt-3">{{adultCount}} {{'flight-checkout.label-adults' | translate}}, {{childrenCount}} {{'flight-checkout.label-child' | translate}}, {{infantCount}} {{'flight-checkout.label-infants' | translate}}</p>
+
+              </div>
+              <p class="flight-bags-detail collapsed" (click)="isCollapsed[1] = !isCollapsed[1]">
+                {{'flight-checkout.label-flight-details' | translate }}
+                <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[1] === true"></i>
+                <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[1] === true"></i>
+              </p>
+              <div id="collapseAero1" class="col-12 collapse" [collapse]="isCollapsed[1]" [isAnimated]="true">
+                <p *ngIf="returnFlight?.flight?.offerItemList[0]?.weightAllowance">
+                  <strong>{{'flight-checkout.label-party' | translate
+                    }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                  {{'flight-checkout.label-weight' | translate
+                  }}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                  <span>{{returnFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+                </p>
+              </div>
+              <div class="p-3" *ngIf="returnFlight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                <p><strong>{{'flight-checkout.label-party' | translate
+                    }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                    }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                <p><strong>{{'flight-checkout.label-bag-type' | translate
+                    }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                  <!-- Maximum Weight:&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                  <span>{{returnFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+              </div>
+            </div>
+            <hr *ngIf="typeFlight === 'MULTI_CITY'" />
+            <div *ngIf="typeFlight === 'MULTI_CITY'">
+              <div *ngFor="let flight of nextFlights; let i = index;">
+                <h5 class="text-danger mb-3">
+                  {{'flight-checkout.label-next-flight' | translate }}
+                  <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                      class="fa fa-clock-o"></i> {{flight?.flight?.flightSegments[0]?.duration}}</span>
+                </h5>
+                <div class="row mb-3">
+                  <div class="col-3">
+                    {{flight?.flight?.depDateTime.split(' ')[1]}}<br>
+                    <b>{{flight?.flight?.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                    {{flight?.flight?.arrDateTime.split(' ')[1]}}<br>
+                    <b>{{flight?.flight?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                  </div>
+                  <div class="col-9" style="border-left: 1px solid #eee072;">
+                    <div class="flight-cart-start">
+                      {{searchFlightForm?.flyFromNext[i]?.name}}<br>
+                      <small>{{searchFlightForm?.flyFromNext[i]?.name}}<br>
+                        <b>{{'flight-checkout.label-business' | translate }}</b></small>
+                    </div>
+                    <div class="flight-cart-end">
+                      {{searchFlightForm?.destinationNext[i]?.name}}<br>
+                      <small>{{searchFlightForm?.destinationNext[i]?.name}}<br>
+                        <b>{{'flight-checkout.label-business' | translate }}</b></small>
+                    </div>
+                  </div>
+                </div>
+                <p class="airline-tile col-12 mt-3">{{adultCount}} {{'flight-checkout.label-adults' | translate}}, {{childrenCount}} {{'flight-checkout.label-child' | translate}}, {{infantCount}} {{'flight-checkout.label-infants' | translate}}</p>
+                <p class="flight-bags-detail collapsed" (click)="isCollapsed[i+1] = !isCollapsed[i+1]">
+                  {{'flight-checkout.label-flight-details' | translate }}
+                  <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[i+1] === true"></i>
+                  <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[i+1] === true"></i>
+                </p>
+                <div id="collapseAero{{i+1}}" class="col-12 collapse" [collapse]="isCollapsed[i+1]" [isAnimated]="true">
+                  <p *ngIf="flight?.flight?.offerItemList[0]?.weightAllowance">
+                    <strong>{{'flight-checkout.label-party' | translate
+                      }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                    {{'flight-checkout.label-weight' | translate
+                    }}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                    <span>{{departureFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+                  </p>
+                  <div class="p-3" *ngIf="flight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                    <p><strong>{{'flight-checkout.label-party' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                    <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                    <p><strong>{{'flight-checkout.label-bag-type' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                      <!-- Maximum Weight:&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                      <span>{{flight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="isRefundProtect" />
+            <div *ngIf="isRefundProtect">
+              <h6>{{'flight-checkout.label-refund-protect' | translate }} <small
+                  class="float-right text-danger">{{(refundProtectItem?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.totalAmount?.amount
+                  || 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+            </div>
+            <hr *ngIf="isTraceme" />
+            <div *ngIf="isTraceme">
+              <h6>{{tracemeItem?.name || 'Traceme Item:'}} <small
+                  class="float-right text-danger">{{(+tracemeItem?.premium|| 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+              <h6>{{'flight-checkout.label-benefit' | translate }} <span class="float-right text-danger">
+                  {{tracemeItem?.benefits[0]?.cover}} : {{tracemeItem?.benefits[0]?.amount | number:'.0-2'}} {{currency}}
+                </span>
+              </h6>
+            </div>
+            <hr *ngIf="isGcaAddon" />
+            <div *ngIf="isGcaAddon">
+              <h6>{{'flight-checkout.label-gac' | translate }} <small
+                  class="float-right text-danger">{{(+gcaBookingItem?.gcaQuoteResult?.billing?.grand_total|| 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+            </div>
+            <hr *ngIf="isAxaInsurance" />
+            <div *ngIf="isAxaInsurance">
+              <h6>{{insuranceItemItem?.name || 'Axa Insurance:'}} <small
+                  class="float-right text-danger">{{(+insuranceItemItem?.packagePrice|| 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+            </div>
+            <hr *ngIf="isSmartDelay" />
+            <div *ngIf="isSmartDelay">
+              <h6>{{smartDelayItem?.pricedProduct?.productInformation?.productDisplay?.productname || 'Smart Delay:'}}
+                <small
+                  class="float-right text-danger">{{(smartDelayItem?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.totalAmount?.amount
+                  || 0) | number:'.0-2'}} {{currency}}</small>
+              </h6>
+            </div>
+          </div>
+
+          <div *ngIf="orderChange" class="card-body">
+            <div>
+              <h5 class="text-danger mb-3"> {{'flight-checkout.label-departure' | translate }}
+              </h5>
+              <div *ngFor="let segment of departureFlight?.flight?.flightSegments" class="row mb-3">
+                <div class="col-3">
+                  {{segment.depDateTime.split(' ')[1]}}<br>
+                  <b>{{segment.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                  {{segment?.arrDateTime.split(' ')[1]}}<br>
+                  <b>{{segment?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                </div>
+                <div class="col-9" style="border-left: 1px solid #eee072;">
+                  <div class="flight-cart-start">
+                    {{segment?.depAirportName}}
+                    <!-- {{segment?.depAirportCode}} -->
+                    <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;">
+                      <i class="fa fa-clock-o"></i> {{segment?.duration}}
+                    </span>
+                    <br>
+                    <small>{{segment?.depAirportCode}}<br>
+                      <b>{{departureFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                  <div class="flight-cart-end">
+                    {{segment?.arrAirportName}}<br>
+                    <!-- {{segment?.arrAirportCode}}<br> -->
+                    <small>{{segment?.arrAirportCode}}<br>
+                      <b>{{departureFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                </div>
+                <br />
+                <p class="airline-tile col-12 mt-3">{{adultCount}} {{'flight-checkout.label-adults' | translate}}, {{childrenCount}} {{'flight-checkout.label-child' | translate}}, {{infantCount}} {{'flight-checkout.label-infants' | translate}}</p>
+
+              </div>
+              <p class="flight-bags-detail collapsed" (click)="isCollapsed[0] = !isCollapsed[0]">
+                {{'flight-checkout.label-flight-details' | translate }}
+                <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[0] === true"></i>
+                <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[0] === true"></i>
+              </p>
+              <div id="collapseHahnAir0" class="collapse" [collapse]="isCollapsed[0]" [isAnimated]="true">
+                <p *ngIf="departureFlight?.flight?.offerItemList[0]?.weightAllowance">
+                  <strong>{{'flight-checkout.label-party' | translate
+
+                    }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                  {{'flight-checkout.label-weight' | translate
+                  }}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                  <span>{{departureFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+                </p>
+                <div class="p-3" *ngIf="departureFlight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                  <p><strong>{{'flight-checkout.label-party' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                  <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                  <p><strong>{{'flight-checkout.label-bag-type' | translate
+                      }}</strong><span>&nbsp;{{departureFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                    <!-- Maximum Weight:&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{departureFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                    <span>{{departureFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                </div>
+                <div class="p-3" *ngIf="baggageRules">
+                  <p><strong>Baggage Rules</strong><span>&nbsp;</span><br>
+                  <ul>
+                    <li *ngFor="let bag of baggageInfoView;">&nbsp;{{bag}}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="typeFlight === 'ROUND_TRIP'">
+            <div *ngIf="typeFlight === 'ROUND_TRIP'">
+              <h5 class="text-danger mb-3">
+                {{'flight-checkout.label-return' | translate }}
+                <!-- <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                    class="fa fa-clock-o"></i> {{returnFlight?.flight?.flightSegments[0].duration}}</span> -->
+              </h5>
+              <div *ngFor="let segment of returnFlight?.flight?.flightSegments" class="row mb-3">
+                <div class="col-3">
+                  {{segment?.depDateTime.split(' ')[1]}}<br>
+                  <b>{{segment?.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                  {{segment?.arrDateTime.split(' ')[1]}}<br>
+                  <b>{{segment?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                </div>
+                <div class="col-9" style="border-left: 1px solid #eee072;">
+                  <div class="flight-cart-start">
+                    {{segment?.depAirportName}}
+                    <!-- {{segment?.depAirportCode}} -->
+                    <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;">
+                      <i class="fa fa-clock-o"></i> {{segment?.duration}}
+                    </span>
+                    <br>
+                    <small>{{segment?.depAirportCode}}<br>
+                      <b>{{returnFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                  <div class="flight-cart-end">
+                    <!-- {{segment?.arrAirportName}}<br> -->
+                    {{segment?.arrAirportCode}}<br>
+                    <small>{{segment?.arrAirportCode}}<br>
+                      <b>{{returnFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                  </div>
+                </div>
+                <p class="airline-tile col-12 mt-3">{{adultCount}} {{'flight-checkout.label-adults' | translate}}, {{childrenCount}} {{'flight-checkout.label-child' | translate}}, {{infantCount}} {{'flight-checkout.label-infants' | translate}}</p>
+
+              </div>
+              <p class="flight-bags-detail collapsed" (click)="isCollapsed[1] = !isCollapsed[1]">
+                {{'flight-checkout.label-flight-details' | translate }}
+                <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[1] === true"></i>
+                <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[1] === true"></i>
+              </p>
+              <div id="collapseHahnAir1" class="col-12 collapse" [collapse]="isCollapsed[1]" [isAnimated]="true">
+                <p *ngIf="returnFlight?.flight?.offerItemList[0]?.weightAllowance">
+                  <strong>{{'flight-checkout.label-party' | translate
+                    }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                  {{'flight-checkout.label-weight' | translate
+                  }}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                  <span>{{returnFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+                </p>
+                <div class="p-3" *ngIf="returnFlight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                  <p><strong>{{'flight-checkout.label-party' | translate
+                      }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                  <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                      }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                  <p><strong>{{'flight-checkout.label-bag-type' | translate
+                      }}</strong><span>&nbsp;{{returnFlight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                    <!-- Maximum Weight:&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{returnFlight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                    <span>{{returnFlight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                </div>
+                <div class="p-3" *ngIf="baggageRules">
+                  <p><strong>Baggage Rules</strong><span>&nbsp;</span><br>
+                  <ul>
+                    <li *ngFor="let bag of baggageInfoView;">&nbsp;{{bag}}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="typeFlight === 'MULTI_CITY'" />
+            <div *ngIf="typeFlight === 'MULTI_CITY'">
+              <div *ngFor="let flight of nextFlights; let i = index;">
+                <h5 class="text-danger mb-3">
+                  {{'flight-checkout.label-next-flight' | translate }}
+                  <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                      class="fa fa-clock-o"></i> {{flight?.flight?.flightSegments[0]?.duration}}</span>
+                </h5>
+                <div class="row mb-3">
+                  <div class="col-3">
+                    {{flight?.flight?.depDateTime.split(' ')[1]}}<br>
+                    <b>{{flight?.flight?.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                    {{flight?.flight?.arrDateTime.split(' ')[1]}}<br>
+                    <b>{{flight?.flight?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                  </div>
+                  <div class="col-9" style="border-left: 1px solid #eee072;">
+                    <div class="flight-cart-start">
+                      {{searchFlightForm?.flyFromNext[i]?.name}}<br>
+                      <small>{{searchFlightForm?.flyFromNext[i]?.name}}<br>
+                        <b>{{'flight-checkout.label-business' | translate }}</b></small>
+                    </div>
+                    <div class="flight-cart-end">
+                      {{searchFlightForm?.destinationNext[i]?.name}}<br>
+                      <small>{{searchFlightForm?.destinationNext[i]?.name}}<br>
+                        <b>{{'flight-checkout.label-business' | translate }}</b></small>
+                    </div>
+                  </div>
+                </div>
+                <p class="airline-tile col-12 mt-3">{{adultCount}} {{'flight-checkout.label-adults' | translate}}, {{childrenCount}} {{'flight-checkout.label-child' | translate}}, {{infantCount}} {{'flight-checkout.label-infants' | translate}}</p>
+
+                <p class="flight-bags-detail collapsed" (click)="isCollapsed[i+1] = !isCollapsed[i+1]">
+                  {{'flight-checkout.label-flight-details' | translate }}
+                  <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[i+1] === true"></i>
+                  <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[i+1] === true"></i>
+                </p>
+                <div id="collapseHahnAir{{i+1}}" class="col-12 collapse" [collapse]="isCollapsed[i+1]"
+                  [isAnimated]="true">
+                  <p *ngIf="flight?.flight?.offerItemList[0]?.weightAllowance">
+                    <strong>{{'flight-checkout.label-party' | translate
+                      }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.applicableParty}}</span><br>
+                    {{'flight-checkout.label-weight' | translate
+                    }}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                    <span>{{departureFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+                  </p>
+                  <div class="p-3" *ngIf="flight?.flight?.offerItemList[0]?.pieceAllowances?.length > 0">
+                    <p><strong>{{'flight-checkout.label-party' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.applicableParty}}</span><br>
+                    <p><strong>{{'flight-checkout.label-total-quantitiy' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.totalQuantity}}</span><br>
+                    <p><strong>{{'flight-checkout.label-bag-type' | translate
+                        }}</strong><span>&nbsp;{{flight?.flight?.offerItemList[0]?.pieceAllowances[0]?.bagType}}</span><br>
+                      <!-- Maximum Weight:&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.value}}&nbsp;{{flight?.flight?.offerItemList[0]?.weightAllowance?.maximumWeight[0]?.uom}}<br>
+                      <span>{{flight?.flight.flightSegments[0].airline.split('-')[1]}}</span></p> -->
+                  </div>
+                  <div class="p-3" *ngIf="baggageRules">
+                    <p><strong>Baggage Rules</strong><span>&nbsp;</span><br>
+                    <ul>
+                      <li *ngFor="let bag of baggageInfoView;">&nbsp;{{bag}}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="selectedServices" />
+            <div *ngIf="selectedServices">
+              <h6 class="text-danger mb-2">{{'flight-servcice.label-title' | translate }} </h6>
+              <div class="row d-flex mb-2" *ngFor="let service of selectedServices">
+                <p class="mb-0 px-3 mb-2" style="font-size:12px" >
+                    <span>{{service?.serviceDefinition?.name }}</span> &nbsp; - &nbsp;
+                    <span> {{service?.alaCarteOfferItem?.unitPrice?.totalAmount | number:'.0-2'}} {{currency}}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer text-muted">
+            {{'flight-checkout.label-base-amount' | translate }} <span class="float-right text-danger">{{totalBaseAmount | number:'.0-2'}} {{currency}}</span>
+            <br>
+            {{'flight-checkout.label-taxes' | translate }} <span class="float-right text-danger">{{totalTaxes |number:'.0-2'}} {{currency}}</span>
+          </div>
+          <div class="card-footer text-muted">
+            {{'flight-checkout.label-total' | translate }} <span class="float-right text-danger">{{totalTripPriceCache | number:'.0-2'}} {{currency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<app-flight-payment-info-skeleton *ngIf="fetching"></app-flight-payment-info-skeleton>

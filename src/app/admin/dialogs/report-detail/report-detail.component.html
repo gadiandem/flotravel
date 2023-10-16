@@ -1,0 +1,153 @@
+<div class="modal-header">
+  <h3 class="modal-title pull-left">{{'admin-report-detail.label-title' | translate }}</h3>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" *ngIf="(bookingDetail$ | async) as booking">
+  <div *ngIf="fetching" class="text-center mt-3 loading-space">
+    <div class="spinner-border text-primary"></div>
+    <span ngPreserveWhitespaces>&emsp;{{'wallet-contact-details.label-loading' | translate }}</span>
+  </div>
+  <div *ngIf="!fetching && !fetchFailed" class="form-horizontal clearfix">
+    <div class="row">
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.booking-id' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.id}}</p>
+          <!--          <p class="form-control-static">{{booking?.currencyName}} {{booking?.amount}}</p>-->
+        </div>
+      </div>
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.created-date' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.createDate}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-amount' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.amount}}&nbsp;{{booking?.currencyName}}</p>
+          <!--          <p class="form-control-static">{{booking?.currencyName}} {{booking?.amount}}</p>-->
+        </div>
+      </div>
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-capture-amount' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.capturedAmount}}&nbsp;{{booking?.currencyName}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-item-name' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.item_name}}</p>
+          <!--          <p class="form-control-static">{{booking?.currencyName}} {{booking?.amount}}</p>-->
+        </div>
+      </div>
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-trace-number' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.traceNumber}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-partner-message' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.partnerMessage}}</p>
+          <!--          <p class="form-control-static">{{booking?.currencyName}} {{booking?.amount}}</p>-->
+        </div>
+      </div>
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-status' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.status}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-status-desc' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.statusDesc}}</p>
+          <!--          <p class="form-control-static">{{booking?.currencyName}} {{booking?.amount}}</p>-->
+        </div>
+      </div>
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-payment-channel' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.paymentChannel}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-approve-code' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.approveCode}}</p>
+          <!--          <p class="form-control-static">{{booking?.currencyName}} {{booking?.amount}}</p>-->
+        </div>
+      </div>
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-booking-status' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.bookingStatus}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-flotravel-commission' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.commissionFlotravel?.margin}}&nbsp;{{booking?.commissionFlotravel?.unit}}</p>
+          <!--          <p class="form-control-static">{{booking?.currencyName}} {{booking?.amount}}</p>-->
+        </div>
+      </div>
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-agency-commission' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.commissionAgent?.margin}}&nbsp;{{booking?.commissionAgent?.unit}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-check-in-date' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.checkInDate}}</p>
+          <!--          <p class="form-control-static">{{booking?.currencyName}} {{booking?.amount}}</p>-->
+        </div>
+      </div>
+      <div class="form-group col-6 row">
+        <label class="col-4 col-form-label text-sm-right">{{'admin-report-detail.label-check-out-date' | translate }}:
+        </label>
+        <div class="col-7">
+          <p class="form-control-static">{{booking?.checkOutDate}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="bsModalRef.hide()">{{'admin-report-detail.label-close-button' | translate }}</button>
+</div>

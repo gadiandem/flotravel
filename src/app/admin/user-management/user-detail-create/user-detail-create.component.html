@@ -1,0 +1,107 @@
+<div class="container mt-5">
+  <div class="row mb-3">
+    <div class="col-sm-8 offset-2">
+      <div class="card">
+        <div class="card-header">
+          {{'admin-user-management-create.label-title' | translate }}
+        </div>
+        <div class="card-body">
+          <form [formGroup]="userForm">
+            <div class="col-12">
+              <div class="form-group row mt-1">
+                <label for="agent"> {{'admin-user-management-create.title-agent' | translate }}</label>
+                <select class="form-control" id="agent" formControlName="agent"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('agent').errors }">
+                  <option value=""> {{'admin-user-management-create.label-option' | translate }}</option>
+                  <option *ngFor="let agent of agentList" [value]="agent.id">{{agent.name}}</option>
+                </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('agent').errors?.required">
+                    {{'admin-user-management-create.invalid-agent' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="userGroup">{{'admin-user-management-create.label-user-group' | translate }}</label>
+                <select class="form-control" id="userGroup" formControlName="userGroup"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('userGroup').errors }">
+                  <option value="">{{'admin-user-management-create.label-option' | translate }}</option>
+                  <option *ngFor="let userGroup of userGroupList" [value]="userGroup.id">{{userGroup.value}}</option>
+                  <!-- <option value="USER">User</option> -->
+                </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('userGroup').errors?.required">
+                    {{'admin-user-management-create.invalid-user-group' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="firstName">{{'admin-user-management-create.label-fname' | translate }}</label>
+                <input class="form-control" id="firstName" formControlName="firstName"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('firstName').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('firstName').errors?.required">
+                    {{'admin-user-management-create.invalid-fname' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="lastName">{{'admin-user-management-create.label-lname' | translate }}</label>
+                <input class="form-control" id="lastName" formControlName="lastName"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('lastName').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('lastName').errors?.required">
+                    {{'admin-user-management-create.invalid-lname' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="email">{{'admin-user-management-create.label-email' | translate }}</label>
+                <input class="form-control" id="email" formControlName="email"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('email').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('email').errors?.required">
+                    {{'admin-user-management-create.incorrect-email' | translate }}
+                  </span>
+                  <span *ngIf="userForm.get('email').errors?.email">
+                    {{'admin-user-management-create.invalid-email' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="password">{{'admin-user-management-create.label-password' | translate }}</label>
+                <input class="form-control" id="password" formControlName="password" type="password"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('password').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('password').errors?.required">
+                    {{'admin-user-management-create.invalid-password' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="mobile">{{'admin-user-management-create.label-mobile' | translate }}</label>
+                <input class="form-control" id="mobile" formControlName="mobile"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('mobile').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('mobile').errors?.required">
+                    {{'admin-user-management-create.invalid-mobile' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="currency">{{'admin-user-management-create.label-currency' | translate }}</label>
+                <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code"
+                  [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="{{'admin-user-management-create.placeholder-currency' | translate }}" class="form-control">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="search-hotel btn btn-danger" (click)="saveUser()">
+            {{'admin-user-management-create.button-create' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

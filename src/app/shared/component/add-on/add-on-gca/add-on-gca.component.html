@@ -1,0 +1,47 @@
+<div class="shadow-box p-3 mt-3" *ngIf="productExist">
+    <h5>{{'flight-add-on.gac-title' | translate }}</h5>
+    <p style="font-weight: 700;">{{'flight-add-on.gac-subheading' | translate }}</p>
+    <div *ngIf="fetching || checkingPrice" class="container mt-5 mb-5 text-center" style="width: 100%;">
+      <div class="spinner-border text-primary"></div>
+      <span class="text-center mt-3" ngPreserveWhitespaces>&emsp; {{'flight-add-on.label-loading' | translate }}</span>
+    </div>
+    <span *ngIf="!checkingPrice && checkingPriceSuccessful" class="float-right text-danger">{{currency}}{{(+quoteCreateRes?.gcaQuoteResult?.billing?.grand_total || 0) | number: '1.1-2'}} {{'flight-add-on.label-per-person' | translate }}</span>
+    <form *ngIf="!fetchFailed && !fetching" [formGroup]="addonGcaForm">
+      <div>
+        <h5>{{'flight-add-on.gac-airport' | translate }}&nbsp;{{terminalListDeparture[0]?.terminal_name}}</h5>
+        <ul class="list-group">
+          <!-- <li  *ngFor="let service of terminalListDeparture[0]?.services;let i= index;" -->
+          <li  formArrayName="departureService" *ngFor="let order of departureFormArray.controls; let i = index"
+               class="list-group-item border-0" style="padding:0.5rem 0rem;">
+            <input class="form-check-input mx-1" id="gca_dep_select{{i}}" type="checkbox" [formControlName]="i"
+                   aria-label="...">
+            &nbsp; &nbsp; &nbsp; &nbsp;{{terminalListDeparture[0]?.services[i]?.service_name}}
+          </li>
+        </ul>
+        <h5>{{'flight-add-on.gac-airport' | translate }}&nbsp;{{terminalListArrival[0]?.terminal_name}}</h5>
+        <ul class="list-group">
+          <li formArrayName="arrivalService" *ngFor="let order of arrivalFormArray.controls; let j = index"
+              class="list-group-item border-0" style="padding:0.5rem 0rem;">
+            <input class="form-check-input mx-1" id="gca_arr_select{{j}}" type="checkbox" [formControlName]="j"
+                   aria-label="...">
+            &nbsp; &nbsp; &nbsp; &nbsp;{{terminalListArrival[0]?.services[j].service_name}}
+          </li>
+        </ul>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button class="btn btn-info" type="submit" (click)="getSelectedService()">{{'flight-add-on.gac-price' | translate }}</button>
+          <button *ngIf="checkingPriceSuccessful" class="btn btn-primary ml-2" type="submit" (click)="updateBookingSelection()">{{'flight-add-on.gac-add' | translate }}</button>
+          <button *ngIf="checkingPriceSuccessful" class="btn btn-danger ml-2" type="submit" (click)="removeGca()">{{'flight-add-on.gac-remove' | translate }}</button>
+        </div>
+      </div>
+    </form>
+  <div class="shadow-box p-3 mt-3"  *ngIf="!fetching && !fetchFailed && !productExist" >
+    <div *ngIf="!productExist">
+      <alert type="danger" ngPreserveWhitespaces>
+        {{'flight-add-on.gac-unavailable' | translate }}
+      </alert>
+      <!-- <button type="button" class="btn btn-danger" (click)="fetchProductPriceList()">Try Again</button> -->
+    </div>
+</div>
+</div>

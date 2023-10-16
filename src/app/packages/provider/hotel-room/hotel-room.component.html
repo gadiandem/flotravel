@@ -1,0 +1,103 @@
+<div class="container mt-3 pb-5">
+  <div class="card mb-3">
+    <div class="card-header">
+      HotelRoom Search
+    </div>
+    <div class="card-body">
+      <form [formGroup]="searchForm" (ngSubmit)="getPackageHotelRoomList()">
+        <div class="form-group mt-2">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Hotel
+              </span>
+            </div>
+            <input [(ngModel)]="searchHotel" typeaheadOptionField="name" [typeahead]="hotels$" formControlName="hotel"
+              [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="selectHotel($event.item)"
+              class="form-control" placeholder="hotel" />
+            <span class="invalid-feedback">
+              <span *ngIf="searchForm.get('hotel').errors?.required">
+                Please enter Hotel.
+              </span>
+            </span>
+            <!-- <input formControlName="hotel" class="form-control" placeholder="hotel" /> -->
+          </div>
+        </div>
+        <input type="submit" name="submit" style="float:right;" class="btn btn-danger" value="Search Room" />
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <kendo-grid [data]="gridView" kendoGridSelectBy="id" (pageChange)="pageChange($event)" [skip]="skip" [pageSize]="20" [pageable]="true"
+        [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+        <ng-template kendoGridToolbarTemplate>
+          <input placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event.target.value)" />
+          <span *ngIf="fetching">
+            <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+            </div><span ngPreserveWhiteSpaces>&emsp;Loading...</span>
+          </span>
+          <button kendoGridExcelCommand type="button" icon="file-excel">Export to
+            Excel</button>
+          <button kendoGridPDFCommand icon="file-pdf">Export to PDF</button>
+          <button class="btn btn-success btn-sm" style="float:right;" (click)="createRoom()"><i
+            class="icon fa fa-plus"></i>&emsp; Create Room</button>
+        </ng-template>
+
+        <kendo-grid-column-group title="Hotel Room List" [columnMenu]="false">
+          <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+            <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+              <div>{{rowIndex + 1}}</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column field="type" title="Type" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>
+                {{ dataItem.roomType | uppercase }}</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column field="desciption" title="Description" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.roomDescription}}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="customerInformationPack" title="Customer Information Pack" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.customerInformationPack}}</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column field="region" title="People Allow" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.adultCount}} adult(s), {{dataItem.childCount}} child(s)</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="price" title="Price Per Room" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.pricePerNight | currency: dataItem.currency: 'symbol'}}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column title="Action" [width]="120" [class]="{'text-center': true}" [columnMenu]="false"
+            filter="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="text-center">
+                <button class="btn btn-warning btn-sm" (click)="editRoom(dataItem)">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-danger btn-sm ml-1" (click)="remvoveRoom(dataItem.id)">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+        </kendo-grid-column-group>
+
+        <kendo-grid-pdf fileName="HotelRoomList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+        <kendo-grid-excel fileName="HotelRoomList.xlsx"></kendo-grid-excel>
+      </kendo-grid>
+    </div>
+  </div>
+</div>

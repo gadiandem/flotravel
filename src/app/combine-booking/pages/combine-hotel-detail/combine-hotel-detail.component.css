@@ -1,0 +1,19 @@
+agm-map {
+    height:300px; /* height is required */ }
+  
+    .room-img{
+      background-repeat:no-repeat;
+      background-position: center;
+      background-size: cover;
+      width: 100%;
+      min-height: 200px;
+      height: 100%;
+    }
+    .hotel-img{
+      float: left;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center center;
+    }
+    

@@ -1,0 +1,284 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header">
+      Hotel Info Simulator
+    </div>
+    <div class="card-body">
+      <form [formGroup]="hotelSimulatorForm" (ngSubmit)="updateHotel()">
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Hotel Name
+                </span>
+            </div>
+            <input formControlName="name" class="form-control" placeholder=""
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('name').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('name').errors?.required">
+                Please enter hotel name.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Overview
+                </span>
+            </div>
+            <input formControlName="overview" class="form-control" placeholder=""
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('overview').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('overview').errors?.required">
+                Please enter hotel overview.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Hotel Image
+              </span>
+            </div>
+            <input formControlName="hotelImage" class="form-control"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('hotelImage').errors }"/>
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('hotelImage').errors?.required">
+                Please enter your Hotel imageUrl
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Region
+              </span>
+            </div>
+            <input [(ngModel)]="searchRegion" typeaheadOptionField="name" [typeahead]="regions$"
+                   formControlName="region" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+                   (typeaheadOnSelect)="selectRegion($event.item)" class="form-control"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('region').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('region').errors?.required">
+                Please enter Region.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                City
+              </span>
+            </div>
+            <input [(ngModel)]="searchCity" typeaheadOptionField="displayName" [typeahead]="citys$"
+                   formControlName="city" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+                   (typeaheadOnSelect)="selectCity($event.item)" class="form-control"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('city').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('city').errors?.required">
+                Please enter city.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Address
+                </span>
+            </div>
+            <input formControlName="address" class="form-control" placeholder="5 Old Baladiya Street"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('address').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('address').errors?.required">
+                Please enter hotel address detail.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Remark
+              </span>
+            </div>
+            <input formControlName="remark" class="form-control" [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('remark').errors }"/>
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('remark').errors?.required">
+                Please Enter Remark.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Star Rate
+              </span>
+            </div>
+            <input formControlName="starRate" class="form-control" [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('starRate').errors }"/>
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('starRate').errors?.required">
+                Please Enter StarRate value( number).
+              </span>
+               <span *ngIf="hotelSimulatorForm.get('starRate').errors?.pattern">
+                Star rating only contains number.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Latitude
+              </span>
+            </div>
+            <input formControlName="latitude" class="form-control" [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('latitude').errors }"/>
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('latitude').errors?.required">
+                Please Enter Latitude value( number).
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Longitude
+              </span>
+            </div>
+            <input formControlName="longitude" class="form-control" [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('longitude').errors }"/>
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('longitude').errors?.required">
+                Please Enter Longitude value( number).
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Min Price
+                </span>
+            </div>
+            <input formControlName="minPrice" class="form-control"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('minPrice').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('minPrice').errors?.required">
+                Please enter hotel min price.
+              </span>
+              <span *ngIf="hotelSimulatorForm.get('minPrice').errors?.pattern">
+                Price only contains number.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Currency
+                </span>
+            </div>
+            <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code"
+                   [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="" class="form-control"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('currency').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('currency').errors?.required">
+                Please enter hotel currency.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Additional Info
+              </span>
+            </div>
+            <textarea formControlName="additionalInfo" class="form-control" [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('additionalInfo').errors }">
+            </textarea>
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('additionalInfo').errors?.required">
+                Please Enter AdditionalInfo.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                  Discount
+                </span>
+            </div>
+            <input formControlName="discount" class="form-control"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelSimulatorForm.get('discount').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelSimulatorForm.get('discount').errors?.required">
+                Please enter hotel discount.
+              </span>
+              <span *ngIf="hotelSimulatorForm.get('discount').errors?.pattern">
+                Discount only contains number.
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="m-0">Full Facility Description</label>
+          <tag-input formControlName="fullFacilityDescriptions" [onlyFromAutocomplete]="true" theme='bootstrap'
+                     [placeholder]="'Add facility'"
+                     displayBy="name"
+                     identifyBy="id">
+            <tag-input-dropdown
+              [showDropdownIfEmpty]="true"
+              displayBy="name"
+              identifyBy="id"
+              [autocompleteObservable]="facilityListAutoComplete">
+            </tag-input-dropdown>
+          </tag-input>
+        </div>
+        <div class="roomImages">
+          <div formArrayName="romImages">
+            <div class="row" *ngFor="let roomImage of roomImagesControls; let i = index" [formGroupName]="i">
+              <div class="col-2"><b>Image</b> <span class="rcount text-danger border text-center"
+                                                    style="background: #eeeeee;">
+                  {{i + 1}}</span></div>
+              <div class="col-9">
+                <div class="form-group">
+                  <label class="m-0">Image</label>
+                  <input formControlName='image' class="form-control" />
+                </div>
+              </div>
+              <div class="col-1 d-flex align-items-center align-self-center mt-sm-2 mb-sm-2" *ngIf="i >= 1">
+                <div (click)="removeRomImage(i)" style="cursor: pointer;">
+                  <i class="fa fa-times-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="add-room" (click)="addRomImage()" style="cursor:pointer;">
+          <i class="fa fa-plus-circle"></i> Add Room Image
+        </div>
+        <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Update Hotel Simulator" />
+      </form>
+    </div>
+  </div>
+</div>
+

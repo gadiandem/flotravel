@@ -1,0 +1,13 @@
+.bgimage{
+    background:url(../../../assets/login.jpg);
+}
+
+.passwordpage {
+    -webkit-box-shadow: -1px 0px 8px 3px rgba(0,0,0,0.41);
+    -moz-box-shadow: -1px 0px 8px 3px rgba(0,0,0,0.41);
+    box-shadow: -1px 0px 8px 3px rgba(0,0,0,0.41);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}

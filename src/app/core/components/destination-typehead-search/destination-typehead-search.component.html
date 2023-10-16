@@ -1,0 +1,23 @@
+<div class="form-group">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="icon fa fa-map-marker"></i><span
+                class="d-none d-md-block">&nbsp;{{'dashboard-hotel.label-where' | translate }}</span>
+              </span>
+    </div>
+    <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+           formControlName="destination" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+           (typeaheadOnSelect)="select($event.item)" type="search" class="form-control"
+           placeholder=" {{'dashboard-hotel.placeholder-where' | translate }}"
+           [ngClass]="{ 'is-invalid': formSubmitError && errors }"/>
+    <span class="invalid-feedback">
+              <span *ngIf="errors?.required">
+                {{'dashboard-hotel.invalid-location' | translate }}
+              </span>
+              <span *ngIf="errors?.minlength">
+                {{'dashboard-hotel.incorrect-location' | translate }}
+              </span>
+            </span>
+  </div>
+</div>

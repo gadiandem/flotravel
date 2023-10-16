@@ -1,0 +1,160 @@
+<div class="container-fluid my-m2-5 mt-5 pt-2 pb-3 col-lg-10">
+<main role="main">
+      <div class="container mt-3 pt-3 pb-5">
+        <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+          <div class="spinner-border text-primary"></div>
+          <span ngPreserveWhitespaces>&emsp;{{'insurance-transactions-details.label-loading' | translate }}</span>
+        </div>
+        <div class="row" *ngIf="!isLoading">
+          <div class="col-12">
+            <h4 class='text-danger mb-4'>{{'insurance-transactions-details.label-title' | translate }}</h4>
+          </div>
+          <div class="card shadow-sm col-md-8">
+            <alert
+              *ngIf="(insuranceDetail?.subscriptionStatus?.value ==='CANCEL') || (insuranceDetail?.subscriptionStatus === undefined)"
+              type="danger" ngPreserveWhitespaces>
+              {{'insurance-transactions-details.label-cancelled' | translate }}
+            </alert>
+            <div class="row mt-5 mt-sm-3 my-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'insurance-transactions-details.label-booking-details' | translate }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'insurance-transactions-details.label-id' | translate }}</label>&emsp;
+                  {{insuranceId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'insurance-transactions-details.label-reservation' | translate }}</label>&emsp;{{insuranceDetail?.subscriptionStatus?.value}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'insurance-transactions-details.label-policyId' | translate }} </label>&emsp;{{insuranceDetail?.policyId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'insurance-transactions-details.label-policyNumber' | translate }} </label>&emsp;{{insuranceDetail?.policyNumber}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'insurance-transactions-details.label-draftPolicyNumber' | translate }} </label>&emsp;{{insuranceDetail?.draftPolicyNumber}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'insurance-transactions-details.label-subscriptionCountry' | translate }} </label>&emsp;{{insuranceDetail?.subscriptionCountry}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'insurance-transactions-details.label-guarantees' | translate }}</h5>
+              </div>
+              <div class="col-12">
+                <div *ngFor="let item of insuranceDetail.guarantees; let i = index" class="row">
+                  <hr *ngIf="i !== 0" />
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>{{'insurance-transactions-details.label-code' | translate }} </label>&emsp; {{item?.code}}
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>{{'insurance-transactions-details.label-excess' | translate }}</label>&emsp;{{item?.excess}}
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>{{'insurance-transactions-details.label-label' | translate }}</label>&emsp; {{item?.label}}
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>{{'insurance-transactions-details.label-limit' | translate }} </label>&emsp;{{item?.limit}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'insurance-transactions-details.label-contact-detail' | translate }}</h5>
+              </div>
+              <div class="col-12">
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>{{'insurance-transactions-details.label-name' | translate }} </label>&emsp; {{insuranceDetail?.policyHolder?.firstName}}  {{insuranceDetail?.policyHolder?.lastName}}
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>{{'insurance-transactions-details.label-phone' | translate }}</label>&emsp;{{insuranceDetail?.policyHolder?.phone?.number}}
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>{{'insurance-transactions-details.label-email' | translate }}</label>&emsp; {{insuranceDetail?.policyHolder?.email}}
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'insurance-transactions-details.label-remarks' | translate }}</h5>
+              </div>
+              <div class="col-12">
+                <div *ngFor="let attachment of insuranceDetail.attachments; let i= index" class="row">
+                  <div class="col-126">
+                    <div class="form-group" ngPreserveWhitespaces>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3  shadow-sm" style="border-radius: 0px;">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img
+                      src="/assets/no-image.png"
+                      class="img-fluid" style="width:100%" />
+                  </div>
+                  <div class="col-md-8">
+                    <h6 class="mt-2">{{insuranceDetail.item_name}}</h6>
+                    <ul class="icon-group">
+                      <i *ngFor="let item of [1, 2, 3, 4] index as i" class="fa fa-star"></i>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{'insurance-transactions-details.label-booking' | translate }}</h5>
+                <h6>{{'insurance-transactions-details.label-package' | translate }}<small class="float-right text-danger">
+                    {{insuranceDetail?.price?.priceAfterDiscountIncTax | currency:currency:'symbol':'.0-2'}}</small></h6>
+                <span escapse="false" [innerHTML]="insuranceDetail.item_name"></span>
+              </div>
+              <div class="card-footer text-muted">
+                <span>{{'insurance-transactions-details.label-total' | translate }} {{insuranceDetail?.price?.priceAfterDiscountIncTax | currency:currency:'symbol':'.0-2'}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="" *ngIf="!isLoading && (insuranceDetail?.subscriptionStatus?.value ==='ACTIVE')">
+            <button type="button" class="btn btn-danger" (click)="openModalWithComponent()"
+              [disabled]="insuranceDetail.insuranceRefundAmount > 0">{{'insurance-transactions-details.label-cancel' | translate }}</button>
+          </div>
+       <!--   <div class="ml-3" *ngIf="!isLoading && (insuranceDetail?.subscriptionStatus?.value ==='ACTIVE')">
+            <button type="button" class="btn btn-danger" (click)="updateInsurance()">{{'insurance-transactions-details.label-update' | translate }}</button>
+          </div> -->
+        </div>
+      </div>
+</main>
+</div>

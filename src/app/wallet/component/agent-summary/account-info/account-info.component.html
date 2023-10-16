@@ -1,0 +1,65 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title"> {{'wallet-agent-summary.account-info-welcome' | translate }} {{accountProfile?.user?.name || accountProfile?.user?.lastName || accountProfile?.user?.email}}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" (click)="refresh()">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <div *ngIf="fetchFailed" class="mb-5 mt-3">
+        <alert type="danger" ngPreserveWhitespaces>
+          {{'wallet-agent-summary.error-message' | translate }} &emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="refresh()">{{'wallet-agent-summary.label-try-again' | translate }} </button>
+      </div>
+      <div *ngIf="fetching" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;{{'wallet-agent-summary.label-loading' | translate }} </span>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed">
+        <div class="clearfix">
+          <span class="float-left">{{'wallet-agent-summary.account-info-last-transaction' | translate }} </span>
+          <span class="float-right">{{balanceSummary[0]?.lastTransaction}}</span>
+        </div>
+        <hr />
+        <div class="clearfix">
+          <span class="float-left">{{'wallet-agent-summary.account-info-login-success' | translate }}</span>
+          <span class="float-right">{{balanceSummary[0]?.lastSuccessLogin}}</span>
+        </div>
+        <hr />
+        <div class="clearfix">
+          <span class="float-left">{{'wallet-agent-summary.account-info-account-type' | translate }} </span>
+          <span class="float-right ">{{balanceSummary[0]?.accountType}}</span>
+        </div>
+        <hr />
+        <div class="clearfix">
+          <span class="float-left">{{'wallet-agent-summary.account-info-address-verified' | translate }}</span>
+          <span class="float-right badge badge-success" *ngIf="accountStatus === 'Verify'">{{accountStatus}}</span>
+          <span class="float-right badge badge-warning" *ngIf="accountStatus === 'Active'">{{accountStatus}}</span>
+          <span class="float-right badge badge-danger" *ngIf="accountStatus === 'Inactive'">{{accountStatus}}</span>
+        </div>
+        <hr />
+        <div class="clearfix">
+          <div class="pull-left">
+            <button *ngIf="accountStatus === 'Inactive'" type="button" class="btn btn-success mr-2" (click)="verifyAddress()">{{'wallet-agent-summary.account-info-verify-address' | translate }}</button>
+            <button *ngIf="accountStatus !== 'Inactive'" type="button" class="btn btn-success mr-2" (click)="uploadDocument()">{{'wallet-agent-summary.account-info-upload-doc' | translate }}</button>
+            <button *ngIf="accountStatus !== 'Inactive'" type="button" class="btn btn-primary" (click)="documentList()">{{'wallet-agent-summary.account-info-doc-list' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

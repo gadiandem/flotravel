@@ -1,0 +1,154 @@
+<div class="container-fluid my-md-5 mt-5 pt-5 pb-3 shadow-box p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0"
+             placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <app-special-package-list-search-box [packageShoppingReq]="packageShoppingReq" [roomGuests]="roomGuests"
+                                 [travellerCount]="travellerCount" [roomCount]="roomCount"
+                                 (searchRequest)="shoppingPackage($event)"></app-special-package-list-search-box>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div class="row mt-2">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter"
+              (click)="showFormFilter()">{{'package-shopping.label-sort-filter' | translate }}</span>
+        <span class="float-right show-map" (click)="showMap()">{{'package-shopping.label-show-map' | translate }}</span>
+      </div>
+      <div *ngIf="mapOpen" class="mb-4 text-center border we-map" style="background: #CAE5CD;">
+        <img alt="map" class="img-fluid" src="/assets/google-map.jpg">
+      </div>
+    </div>
+    <div id="sortFilter" class="col-md-2 we-sort-filter">
+      <!-- <div class="mb-4 d-none d-md-block">
+            <img alt="map" class="img-fluid" src="assets/google-map.jpg">
+          </div> -->
+      <div class="mb-4 mt-2">
+        <h5 class=" border-bottom pl-3 pb-2"><i class="fa fa-list text-default"></i> Sort & Filter</h5>
+        <div class="custom-control pl-0">
+          <select name="" class="form-control custom-select" (change)="onSortChange($event.target.value)">
+            <option value="priceIncrease">Price( increase)</option>
+            <option value="priceDecrease">Price( Decrease)</option>
+            <option value="popularity">Popularity</option>
+          <!-- <option value="new">New First</option> -->
+            <option value="rating">Rating</option>
+          </select>
+        </div>
+      </div>
+      <div class="star-rating mb-4">
+        <h5 class=" border-bottom pl-0 pb-2"><i
+          class="fa fa-star text-default"></i> {{'package-shopping.label-star-rating' | translate }}</h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start5" [checked]="ratingStarFiler.fiveStar"
+                 (change)="fiveStarFilter()">
+          <label class="custom-control-label"
+                 for="start5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'package-shopping.label-star-five' | translate }}
+            <small>( {{ratingStarCount.fiveStar}}
+              )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start4" [checked]="ratingStarFiler.fourStar"
+                 (change)="fourStarFilter()">
+          <label class="custom-control-label"
+                 for="start4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'package-shopping.label-star-four' | translate }}
+            <small>( {{ratingStarCount.fourStar}}
+              )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start3" [checked]="ratingStarFiler.threeStar"
+                 (change)="threeStarFilter()">
+          <label class="custom-control-label"
+                 for="start3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'package-shopping.label-star-three' | translate }}
+            <small>( {{ratingStarCount.threeStar}} )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start2" [checked]="ratingStarFiler.twoStar"
+                 (change)="twoStarFilter()">
+          <label class="custom-control-label"
+                 for="start2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'package-shopping.label-star-two' | translate }}
+            <small>( {{ratingStarCount.twoStar}}
+              )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start1" [checked]="ratingStarFiler.oneStar"
+                 (change)="oneStarFilter()">
+          <label class="custom-control-label"
+                 for="start1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'package-shopping.label-star-one' | translate }}
+            <small>( {{ratingStarCount.oneStar}}
+              )</small></label>
+        </div>
+      </div>
+      <div class="facility mb-4 ml-2">
+        <h5 class="pb-2 border-bottom pl-3 pb-2"><i class="fa fa-star-of-life text-default"></i> Region</h5>
+        <div class="custom-control custom-checkbox" *ngFor="let region of regionList">
+          <input type="checkbox" class="custom-control-input" id="{{region?.id}}">
+          <label class="custom-control-label" for="{{region?.id}}">{{region?.name}}</label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div *ngIf="fetchFailed">
+        <alert type="danger" ngPreserveWhitespaces>
+          There is some erros.&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="fetchPackagesList()">Try Again</button>
+      </div>
+      <div *ngIf="!fetchFailed" class="supplement-list">
+        <div *ngIf="packagesListView.length === 0">
+          <alert type="danger" ngPreserveWhitespaces>
+            <strong>There is no available package for this search</strong>
+          </alert>
+          <button type="button" class="btn btn-danger" (click)="fetchPackagesList()">Try Again</button>
+        </div>
+        <div *ngFor="let packages of packagesListView |  paginate: { itemsPerPage: 10, currentPage : p };let i = index"
+          class="row hotel-item mb-3">
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-12 tour-img" [ngStyle]="{'background-image': 'url(' + packages?.hotelImage + ')'}"></div>
+            </div>
+            <div class="pt-2 d-none d-md-block">{{packages?.name}}</div>
+          </div>
+          <div class="col-md-8 pl-md-0 pt-3 pt-md-0 hotel-info">
+            <div class="row pl-md-3">
+              <div class="col-8 pb-1">
+                <h5 class="hotel-title">{{packages?.packageName}}</h5>
+                <p style="font-size: 12px;"><i class="fa fa-map-marker"></i> {{packages?.cityName}},
+                  {{packages?.regionName}}
+                </p>
+                <div class="d-none d-md-block">
+                  <div style="color:#666666;font-size: 14px;font-weight: bold;">{{packages?.basicDescription |
+                    truncatetext: 150}}</div>
+                    <p [ngClass]="{'limitTextHeight': readMore[i]}" style="color:#666666;font-size: 14px;margin-bottom:0px;">
+                      {{packages?.overview}} </p>
+                    <a style="color:#4169E1;font-size: 12px; cursor: pointer" (click)="showText(i)"> {{ readMore[i] ? 'Read More': 'Read Less' }}</a>
+                </div>
+              <div class="d-none d-md-block">
+                <b>{{packages?.starRate}}/5</b> {{'package-shopping.label-star' | translate }}
+                </div>
+              </div>
+              <div class="col-4 text-right"><span class="hotel-price mt-md-2">{{packages.price | currency:currency: 'symbol':'.0-2'}}</span>
+                <div style="margin-bottom:15px">for {{packages?.dayCount}} day(s)</div>
+                <button class="btn btn-danger btn-sm" (click)="gotoDetail(packages)">Book Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pagination-controls *ngIf="!fetching && !fetchFailed" (pageChange)="p = $event" directionLinks="true"
+        autoHide="true">
+      </pagination-controls>
+    </div>
+    <div class="col-md-2">
+      <img class="sticky mt-5 w-100 d-none d-md-block mb-2" style="height: auto; margin-top: 0px !important;top: 65px;"
+               src="/assets/ads.jpg">
+    </div>
+  </div>
+</div>
+<app-special-package-list-skeleton *ngIf="fetching"></app-special-package-list-skeleton>

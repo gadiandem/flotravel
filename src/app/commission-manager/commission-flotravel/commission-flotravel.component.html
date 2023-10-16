@@ -1,0 +1,82 @@
+<div class="container my-5 pt-5">
+    <div class="row mt-2">
+        <div class="col-12 mb-4">
+            <h2 class="heading">{{'commission-flotravel.title' | translate }}</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection"
+                [pageSize]="10" [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true"
+                [columnMenu]="{ filter: true }">
+                <ng-template kendoGridToolbarTemplate>
+                    <input placeholder="{{'commission-flotravel.table-placeholder' | translate }}" kendoTextBox
+                        (input)="onFilter($event.target.value)" />
+                    <span *ngIf="isLoading">
+                        <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+                        </div><span ngPreserveWhiteSpaces>&emsp;{{'commission-flotravel.loading' | translate }}</span>
+                    </span>
+                    <button kendoGridExcelCommand type="button" icon="file-excel">{{'commission-flotravel.label-excel'
+                        | translate }}</button>
+                    <button kendoGridPDFCommand icon="file-pdf" icon="file-pdf">{{'commission-flotravel.label-pdf' |
+                        translate}}</button>
+                    <button class="btn btn-success btn-sm" style="float:right;" (click)="createRule()"><i
+                            class="icon fa fa-plus"></i>&emsp; {{'commission-flotravel.button-create-commission' | translate
+                        }}</button>
+                </ng-template>
+
+                <kendo-grid-column-group title="{{'commission-flotravel.table-title' | translate }}"
+                    [columnMenu]="false">
+                    <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+                        <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                            <div>{{rowIndex + 1}}</div>
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <kendo-grid-column field="code" title="Code" [width]="150">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <div class="" ngPreserveWhitespaces>
+                                {{ dataItem.code | uppercase }}</div>
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <kendo-grid-column field="name" title="Name" [width]="200">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <div class="" ngPreserveWhitespaces>{{ dataItem.name }}</div>
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <kendo-grid-column field="type" title="Type" [width]="120">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <div class="" ngPreserveWhitespaces>{{ dataItem.type }}</div>
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <kendo-grid-column field="margin" title="Margin" [width]="150">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <div class="" ngPreserveWhitespaces>{{ dataItem.margin }}&nbsp;{{dataItem.unit}}</div>
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <kendo-grid-column title="Action" [width]="150" [class]="{'text-center': true}" [columnMenu]="false"
+                        filter="boolean">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <div class="text-center">
+                                <button class="btn btn-info btn-sm mr-1" (click)="viewDetail(dataItem)"><i
+                                        class="icon fa fa-info-circle" style="color: white;"
+                                        aria-hidden="true"></i></button>
+                                <button class="btn btn-warning btn-sm mr-1" (click)="editRule(dataItem)"><i
+                                        class="icon fa fa-pencil" style="color: white;" aria-hidden="true"></i></button>
+                                <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)"><i
+                                        class="icon fa fa-times" style="color: white;" aria-hidden="true"></i></button>
+                            </div>
+                        </ng-template>
+                    </kendo-grid-column>
+                </kendo-grid-column-group>
+
+                <kendo-grid-pdf fileName="CommissionFlotravelList.pdf" [repeatHeaders]="true" paperSize="A2" [allPages]="true"></kendo-grid-pdf>
+                <kendo-grid-excel fileName="CommissionFlotravelList.xlsx"></kendo-grid-excel>
+            </kendo-grid>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.custom-control-label {
+  margin: 0px 0px 0px 20px;
+  font: 12px Roboto;
+  font-weight: normal !important;
+  padding-top: 5px;
+}
+.custom-control {
+  margin-left: -20px;
+}
+
+.border-bottom {
+  font: 14px Roboto;
+  color: #000000;
+  font-weight: 700 !important;
+}

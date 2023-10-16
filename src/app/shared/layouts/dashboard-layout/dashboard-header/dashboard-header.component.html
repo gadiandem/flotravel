@@ -1,0 +1,120 @@
+<nav id="we-menu" class="navbar navbar-expand-md p-1">
+  <div class="container d-flex justify-content-between py-2">
+    <button class="navbar-toggler navbar-light" type="button"
+    (click)="toggleNavbar()">
+      <i class='navbar-toggler-icon'></i>
+    </button>
+     <a class="navbar-brand" routerLink="/dashboard">
+      <img class="img-responsive" src="assets/flotravel-logo.png" alt="" height="30" style="cursor: pointer;" (click)="homePage()">
+     </a>
+    <a routerLink="/" class="d-block d-md-none" style="width:46px;font-size: 22px;text-align: center;color: #FFF;">
+      <i class='lni lni-user'></i>
+    </a>
+    <div class="collapse navbar-light navbar-collapse justify-content-between" [ngClass]="{ 'show': navbarOpen }">
+      <ul class="navbar-nav">
+        <li class="nav-item active mr-2">
+          <a class="nav-link" routerLink="/dashboard">{{'dashboard-header.link-home' | translate }}<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown d-flex align-items-center mr-2">
+          <div dropdown>
+            <a  id="button-basic-2" dropdownToggle type="button"  class="dropdown-toggle" aria-controls="dropdown-basic">
+              {{'dashboard-header.customer-booking'  | translate  | uppercase}}
+            </a>
+            <ul id="dropdown-basic-2" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+              <li role="menuitem" (click)="toggleNavbar()">
+                <a *ngIf="!user" class="dropdown-item" routerLink="/dashboard/hotel">{{'dashboard-header.link-hotel' | translate }}</a>
+                <a *ngIf="user && hotelSupplierSimulator === 'disable'" class="dropdown-item" routerLink="/hotel/history">{{'dashboard-header.link-hotel' | translate }}</a>
+                <a *ngIf="user && hotelSupplierSimulator === 'enable'" class="dropdown-item" routerLink="/simulator/hotel/history">{{'dashboard-header.link-hotel' | translate }}</a>
+              </li>
+              <li role="menuitem" (click)="toggleNavbar()">
+                <a *ngIf="user" class="dropdown-item" routerLink="/flight/history">{{'dashboard-header.link-flights' | translate }}</a>
+                <a *ngIf="!user" class="dropdown-item" routerLink="/dashboard/flight">{{'dashboard-header.link-flights' | translate }}</a>
+              </li>
+              <li role="menuitem" (click)="toggleNavbar()">
+                <a *ngIf="user" class="dropdown-item" routerLink="/flight/hold-booking-result">{{'dashboard-header.link-hold-flights' | translate }}</a>
+                <a *ngIf="!user" class="dropdown-item" routerLink="/dashboard/flight">{{'dashboard-header.link-flights' | translate }}</a>
+              </li>
+              <li role="menuitem" (click)="toggleNavbar()">
+                <a *ngIf="!user" class="dropdown-item" routerLink="/dashboard/flight">{{'dashboard-header.link-flights' | translate }}</a>
+              </li>
+              <li  role="menuitem" (click)="toggleNavbar()">
+                <a *ngIf="user" class="dropdown-item" routerLink="/specialPackages/history">{{'dashboard-header.link-deals' | translate }}</a>
+                <a *ngIf="!user" class="dropdown-item" routerLink="/dashboard/specialPackages">{{'dashboard-header.link-deals' | translate }}</a>
+              </li>
+              <li  role="menuitem"  (click)="toggleNavbar()">
+                <a *ngIf="user" class="dropdown-item" routerLink="/packages/history">{{'dashboard-header.link-packages' | translate }}</a>
+                <a *ngIf="!user" class="dropdown-item" routerLink="/dashboard/packages">{{'dashboard-header.link-packages' | translate }}</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item dropdown d-flex align-items-center mr-2">
+          <div dropdown>
+            <a  id="button-basic-2" dropdownToggle type="button"  class="dropdown-toggle" aria-controls="dropdown-basic">
+              {{'dashboard-header.booking-ancillaries'  | translate  | uppercase}}
+            </a>
+            <ul id="dropdown-basic-2" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+              <li  role="menuitem"  (click)="toggleNavbar()">
+                <a *ngIf="user" class="dropdown-item" routerLink="/transactions/insurance-transactions">{{'main-header.link-insurance' | translate }}</a>
+              </li>
+              <li role="menuitem"  (click)="toggleNavbar()">
+                <a *ngIf="user" class="dropdown-item" routerLink="/traceme/history">{{'main-header.link-traceme' | translate }}</a>
+              </li>
+              <li role="menuitem"  (click)="toggleNavbar()">
+                <a *ngIf="user" class="dropdown-item" routerLink="/transactions/gac-transactions">{{'main-header.link-gac' | translate }}</a>
+              </li>
+              <li role="menuitem"  (click)="toggleNavbar()">
+                <a *ngIf="user" class="dropdown-item" routerLink="/transactions/hepstar-transactions">{{'main-header.link-hepstar' | translate }}</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item dropdown d-flex align-items-center" *ngIf="user != null">
+          <div dropdown>
+            <a  id="button-basic" dropdownToggle type="button"  class="dropdown-toggle nav-link"
+              aria-controls="dropdown-basic">
+              {{user?.firstName + '_' + user?.lastName | uppercase}}
+            </a>
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+              <!-- <li role="menuitem"><a class="dropdown-item" routerLink="/auth">History</a></li> -->
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/report">{{'dashboard-header.link-admin-report' | translate }}</a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/insurance/admin" style="cursor: pointer;">{{'dashboard-header.link-ancillaries-insurance' | translate }}</a></li>
+              <li *ngIf="enableAgent" role="menuitem"><a class="dropdown-item" (click)="commissionNav()" style="cursor: pointer;">{{'dashboard-header.commission-configure' | translate }}</a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/commission/agent">{{'dashboard-header.commission-agency-configure' | translate }}</a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/combine-configure">{{'dashboard-header.combine-configure' | translate }}</a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/flight/list"> FloAir</a></li>
+           <!--   <li *ngIf="isSAdmin && enableDemo" role="menuitem"><a class="dropdown-item" routerLink="/simulator"> Hotel Simulator</a></li> -->
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/setting">{{'dashboard-header.link-admin-setting' | translate }}</a></li>
+              <li  *ngIf="user"><a class="dropdown-item" (click)="walletNav()" style="cursor: pointer;">{{'dashboard-header.link-admin-wallet' | translate }}</a></li>
+              <!-- <li  *ngIf="user"><a class="dropdown-item" routerLink="/wallet"  style="cursor: pointer;">Wallet</a></li> -->
+              <li  *ngIf="enableAgent"><a class="dropdown-item" (click)="userNav()" style="cursor: pointer;">{{'dashboard-header.link-admin-users' | translate }}</a></li>
+              <li *ngIf="enableAgent" role="menuitem"><a class="dropdown-item" (click)="agentNav()" style="cursor: pointer;">{{'dashboard-header.link-admin-agency' | translate }}</a></li>
+              <li role="menuitem" (click)="profileNav()" style="cursor: pointer;"><a class="dropdown-item">{{'dashboard-header.link-admin-profile' | translate }}</a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/userGroup">{{'dashboard-header.link-admin-user-group' | translate }}</a></li>
+              <!-- <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/tour/admin">Extras Insert</a></li> -->
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/flotravelLogs">{{'dashboard-header.link-admin-flotravel-logs' | translate }}</a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/transactions/hotel-transactions"> Transactions </a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/packagesProvider">{{'dashboard-header.link-admin-packages' | translate }}</a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/specialPackagesProvider">{{'dashboard-header.link-admin-special-packages' | translate }}</a></li>
+              <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/hotelSimulatorAdmin">{{'dashboard-header.link-admin-hotel-simulator' | translate }}</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="isDemo && enableDemo" style="cursor: pointer;">
+          <a class="nav-link" (click)="toggleDemo()">{{'dashboard-header.button-demo' | translate }}</a>
+        </li>
+        <li class="nav-item ml-1" *ngIf="!isDemo && enableDemo" style="cursor: pointer;">
+          <button class="btn btn-danger btn-sm" (click)="toggleDemo()">{{'dashboard-header.button-demo' | translate }}</button>
+        </li>
+        <li class="nav-item" *ngIf="user == null">
+          <a class="nav-link" routerLink="/auth/login">{{'dashboard-header.button-login' | translate }}</a>
+        </li>
+        <li class="nav-item" style="cursor: pointer;" *ngIf="user != null">
+          <button class="btn btn-danger btn-sm" (click)="logout()">{{'dashboard-header.button-logout' | translate }}</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

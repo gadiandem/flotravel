@@ -1,0 +1,61 @@
+<div class="container my-md-5 mt-5 pt-5 pb-3 col-lg-8 offset-lg-2">
+  <div class="hotel-item shadow-box1 bg-white py-2 mb-3">
+    <div class="row d-flex p-3 py-4">
+      <div class="col-md-4">
+        <img [lazyLoad]="selectedBookingDetail.hotelInfo?.image?.baseUrl+ '/' + selectedBookingDetail.hotelInfo?.image?.name" [useSrcset]="true" class="img-fluid rounded">
+      </div>
+      <div class="col-md-8 pt-3 pt-md-0 ">
+        <div class="row">
+          <div class="col-md-9">
+            <h5 class="hotel-title">{{selectedBookingDetail?.hotelInfo?.name}}</h5>
+            <div class="my-2">
+              <span>{{selectedBookingDetail?.checkInDate | date : 'mediumDate'}}</span> -
+              <span>{{selectedBookingDetail?.checkOutDate | date : 'mediumDate'}}</span>
+              <span class="ml-md-4">Malmö</span>
+            </div>
+            <div>{{selectedBookingDetail?.status}}</div>
+            <hr>
+            <div class="fs-5 fw-bold text-dark mt-4">{{'hotel-cancel.label-rules' | translate }}</div>
+            <p class="small">{{'hotel-cancel.label-cancellation time' | translate }} {{getFreeCancelTime(selectedBookingDetail?.cancelPoliciesInfos?.cancelPolicyInfos[0]?.cancelTime)  | date : 'MMM d yyyy'}} {{'hotel-cancel.label-ast' | translate }}</p>
+            <p class="small">{{'hotel-cancel.label-cancel-policy' | translate }}</p>
+            <p class="small">{{'hotel-cancel.label-cancel-policy-1' | translate }} {{getFreeCancelTime(selectedBookingDetail?.cancelPoliciesInfos?.cancelPolicyInfos[0]?.cancelTime)  | date : 'MMM d yyyy'}} {{'hotel-cancel.label-cancel-policy-2' | translate }}</p>
+          <!--- <div class="fs-6 fw-bold text-dark">Room,2 Twin Beds, Non Smoking, City View</div> -->
+            <div class="bcancel-btn d-block text-center fw-bold px-3 py-2 mt-3 mb-4" [attr.aria-expanded]="!isCollapsed" (click)="showStatementCancel()">
+              <img class="mr-1" src="assets/booking-cancellation-btn-icon.PNG" width="20" height="auto" alt="">{{'hotel-cancel.label-cancel' | translate }}
+            </div>
+            <div id="collapsed" [collapse]="isCollapsed" [isAnimated]="true" class="collapse text-dark">
+              <form [formGroup]="cancellationForm" (ngSubmit)="cancelBooking()">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input formControlName="reason" class="form-control bcancel-btn d-block text-center fw-bold px-3 py-2 mt-3"
+                           placeholder="{{'hotel-cancel.label-reason' | translate }}"
+                           [ngClass]="{ 'is-invalid': formSubmitError && cancellationForm.get('reason').errors }"/>
+                    <span class="invalid-feedback">
+                      <span *ngIf="cancellationForm.get('reason').errors?.required">
+                        {{'hotel-cancel.invalid-reason' | translate }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-danger mb-4" (click)="cancelBooking()">{{'hotel-cancel.label-cancel' | translate }}</button>
+              </form>
+            </div>
+            <div class="fs-5 fw-bold text-dark"> {{'hotel-cancel.label-support' | translate }}</div>
+            <p> {{'hotel-cancel.label-contact' | translate }}</p>
+            <div class="fw-bold">{{'hotel-cancel.label-Itinerary-number' | translate }}</div>
+            <div>{{bookingId}}</div>
+            <div class="d-flex justify-content-between pr-lg-5 mt-5">
+              <div>{{'hotel-cancel.label-modify' | translate }}</div>
+              <div class="mx-3">{{'hotel-cancel.label-cancel' | translate }}</div>
+              <div>{{'hotel-cancel.label-print-invoice' | translate }}</div>
+            </div>
+          </div>
+          <div class="col-md-3 text-right d-flex flex-column justify-content-end">
+            <div style="color:#007864;" data-toggle="collapse" data-target="#collapse0">
+              {{'hotel-cancel.label-view-details' | translate }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

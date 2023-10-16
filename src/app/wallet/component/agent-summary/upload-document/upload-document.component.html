@@ -1,0 +1,110 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title"> {{'wallet-agent-summary.upload-documents-title' | translate }}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <form [formGroup]="uploadDocumentForm" class="form-horizontal clearfix">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="documentName">{{'wallet-agent-summary.upload-documents-document-name' | translate }}</label>
+              <input class="form-control" id="documentName" type="text" formControlName="documentName"
+                [ngClass]="{ 'is-invalid': formSubmitError && uploadDocumentForm.get('documentName').errors }" />
+              <span class="invalid-feedback">
+                <span *ngIf="uploadDocumentForm.get('documentName').errors?.required">
+                  {{'wallet-agent-summary.upload-documents-document-name-error' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="documentNumber"> {{'wallet-agent-summary.upload-documents-document-number' | translate }}</label>
+              <input class="form-control" id="documentNumber" type="text" formControlName="documentNumber"
+                [ngClass]="{ 'is-invalid': formSubmitError && uploadDocumentForm.get('documentNumber').errors }" />
+              <span class="invalid-feedback">
+                <span *ngIf="uploadDocumentForm.get('documentNumber').errors?.required">
+                  {{'wallet-agent-summary.upload-documents-document-number-error' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="description">{{'wallet-agent-summary.upload-documents-description' | translate }}</label>
+              <textarea class="form-control" id="description" type="text" formControlName="description"
+                [ngClass]="{ 'is-invalid': formSubmitError && uploadDocumentForm.get('description').errors }">
+                </textarea>
+              <span class="invalid-feedback">
+                <span *ngIf="uploadDocumentForm.get('description').errors?.required">
+                  {{'wallet-agent-summary.upload-documents-description-error' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="type">{{'wallet-agent-summary.upload-documents-type' | translate }}</label>
+              <select class="form-control" id="type" formControlName="type"
+                [ngClass]="{ 'is-invalid': formSubmitError && uploadDocumentForm.get('type').errors }">
+                <option value="">{{'wallet-agent-summary.upload-documents-select-type' | translate }}</option>
+                <option *ngFor="let type of types" [value]="type?.id">{{type?.name}}</option>
+              </select>
+              <span class="invalid-feedback">
+                <span *ngIf="uploadDocumentForm.get('type').errors?.required">
+                  {{'wallet-agent-summary.upload-documents-error-type' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="file"> {{'wallet-agent-summary.upload-documents-choose' | translate }}</label>
+              <input class="form-control-file" id="file" type="file" formControlName="file"
+              (change)="handleFileInput($event.target.files)"
+                [ngClass]="{ 'is-invalid': formSubmitError && uploadDocumentForm.get('file').errors }" />
+              <span class="invalid-feedback">
+                <span *ngIf="uploadDocumentForm.get('file').errors?.required">
+                  {{'wallet-agent-summary.upload-documents-error' | translate }}
+                </span>
+              </span>
+              <span class="invalid-feedback">
+                <span *ngIf="uploadDocumentForm.get('file').errors?.fileMaxSize">
+                  {{'wallet-agent-summary.upload-documents-size' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr />
+      <div class="clearfix">
+        <div class="pull-right">
+            <button type="button" class="btn btn-warning mr-2" (click)="cancel()">{{'wallet-agent-summary.upload-documents-cancel' | translate }}</button>
+          <button type="button" class="btn btn-primary" (click)="upload()">{{'wallet-agent-summary.upload-documents-upload' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

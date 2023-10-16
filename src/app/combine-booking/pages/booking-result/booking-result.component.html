@@ -1,0 +1,198 @@
+<main role="main">
+    <div *ngIf="isPayment" class="container my-5 pt-5 mt-5 mb-5 text-center" style="height: 500px; width: 100%;">
+      <div class="spinner-border text-primary"></div>
+      <span class="text-center mt-3" ngPreserveWhitespaces>&emsp; {{'combine-booking.label-payment' | translate }}</span>
+    </div>
+    <div *ngIf="!fetchFailed && !isPayment" class="container my-5 pt-5 mt-5 mb-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-12 text-center">
+          <img class="mb-4" src="../../../../assets/ic_success.png" alt=""/>
+          <h2 class="text-center mb-3">{{combineOrderRequest?.customerInfos[0]?.firstName || bookingOrderRes?.paymentFlight?.customerInfos[0]?.firstName}} {{'combine-booking.label-successful' | translate }}</h2>
+          <h5 class="text-center mb-4">{{'combine-booking.label-booking-details' | translate }} {{combineOrderRequest?.bookingContact?.email || bookingOrderRes?.paymentFlight?.bookingContact?.email}}</h5>
+
+          <div class="card mt-5 mb-5 text-left1">
+            <div class="card-body text-left1">
+              <h4 class="heading">{{departureFlight?.flight?.flightSegments[0]?.airline}}</h4>
+              <div class="hotel-address" ngPreserveWhitespaces>
+                <span><i class="fa fa-map-marker"></i>&emsp;{{combineOrderRequest?.customerInfos[0]?.country}}</span>&emsp;<i class="fa fa-phone"></i>&emsp;
+                {{combineOrderRequest?.customerInfos[0]?.phoneNo}}
+              </div>
+              <div class="mt-2">
+                <h6 style="text-align: center;">{{'combine-booking.label-fly-from' | translate }} <small>{{searchListRequest?.leaveFrom?.displayName}}&emsp;({{searchListRequest?.leaveFrom?.airportCode}})</small></h6>
+                <h6 style="text-align: center;">{{'combine-booking.label-to' | translate }} <small>{{searchListRequest?.destination?.displayName}}&emsp;({{searchListRequest?.destination?.airportCode}})</small></h6>
+                <p ngPreserveWhitespaces>{{searchListRequest?.checkinDate | date}} &emsp;
+                  <span *ngIf="searchListRequest?.checkoutDate !== undefined">
+                  <i class="fa fa-arrow-right"></i>
+                  &emsp; {{searchListRequest?.checkoutDate | date}}
+                </span>
+              </p>
+              </div>
+              <ul class="order-payment-list list mt-3 text-left">
+                <li *ngFor="let room of bookingOrderRes?.paymentHotel?.roomDetails?.roomDetails; let i = index">
+                  <div class="row mt-2">
+                    <div class="col-9">
+                      <h6><i class="fa fa-hotel"></i> {{'combine-booking.label-room' | translate }} {{i+1}}: {{room?.roomDescription}}</h6>
+                      <small>{{'combine-booking.label-adults' | translate }} {{room?.adultCount}} , {{'combine-booking.label-children' | translate }}{{room?.childCount}} </small><br>
+                      <small> {{bookingOrderRes?.paymentHotel?.noOfNight}} {{'combine-booking.label-nights' | translate }} </small><br>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-right">
+                        <span class="text-lg">
+                          {{(bookingOrderRes?.paymentHotel?.roomDetails?.totalRate | currency:currency:'symbol':'.0-2')}}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="row mt-2">
+                    <div class="col-md-9 col-8">
+                      <h6><i class="fa fa-plane"></i> {{'combine-booking.label-flight-1' | translate }}</h6>
+                      <small>{{'combine-booking.label-adults' | translate }}  {{searchListRequest?.rooms[0]?.adult|| 1}} , {{'combine-booking.label-children' | translate }} {{searchListRequest?.rooms[0]?.children|| 0}} </small><br>
+                      <div *ngFor="let segment of departureFlight?.flight?.flightSegments">
+                        <small>{{'combine-booking.label-fly-from' | translate }} {{segment?.depAirportCode}} - {{segment?.depAirportName}}</small><br/>
+                        <small>{{'combine-booking.label-to' | translate }} {{segment?.arrAirportCode}} - {{segment?.arrAirportName}}</small><br/>
+                        <small>{{'combine-booking.label-duration' | translate }} {{segment?.duration}} | {{'combine-booking.label-flight-number' | translate }} {{segment?.flightNumber}}</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-4">
+                      <p class="text-right"><span
+                          class="text-lg">{{departureFlight?.offerItem?.totalAmount | currency:currency:'symbol':'.0-2'}}</span> </p>
+                    </div>
+                  </div>
+                </li>
+                <!-- <li *ngIf="returnFlight">
+                  <div class="row mt-2">
+                    <div class="col-md-9 col-8">
+                      <h6><i class="fa fa-plane"></i> Flight 2</h6>
+                      <small>Adults : {{searchFlightForm?.adults|| 1}} , Childrens :{{searchFlightForm?.children|| 0}} </small><br>
+                      <div *ngFor="let segment of returnFlight?.flight?.flightSegments">
+                        <small>From: {{segment?.depAirportCode}} - {{segment?.depAirportName}}</small><br/>
+                        <small>To: {{segment?.arrAirportCode}} - {{segment?.arrAirportName}}</small><br/>
+                        <small>Duration: {{segment?.duration}} | Flight Number: {{segment?.flightNumber}}</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-4">
+                      <p class="text-right"><span
+                          class="text-lg">{{returnFlight?.offerItem?.totalAmount | currency:currency:'symbol':'.0-2'}}</span> </p>
+                    </div>
+                  </div>
+                </li> -->
+                <li>
+                  <div class="row mt-3">
+                    <div class="col-md-9 col-8">
+                      <h5>Total : </h5>
+                    </div>
+                    <div class="col-md-3 col-4">
+                      <p class="text-right"><span
+                          class="text-lg">{{combineOrderRequest?.paymentInfo.price | currency:currency:'symbol':'.0-2'}}</span> </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <a class="btn btn-danger mr-2" routerLink="#"><i class="fa fa-download"></i> {{'combine-booking.label-download' | translate }}</a>
+            <a class="btn btn-danger" routerLink="#"><i class="fa fa-envelope"></i> {{'combine-booking.label-email' | translate }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="gap"></div>
+    </div>
+
+    <div *ngIf="fetchFailed  && !isPayment" class="container my-5 pt-5 mt-5 mb-5">
+      <div class="row justify-content-md-center">
+        <div class="col-md-8 col-sm-12 text-center">
+          <img class="mb-4" src="../../../../assets/ic_fail.png" style="width:70px;" />
+          <h2 class="text-center mb-3">{{combineOrderRequest?.customerInfos[0]?.firstName}}{{'combine-booking.label-failed' | translate }}</h2>
+          <p *ngIf="errorMes !== ''" [innerHTML] = "errorMes"></p>
+          <div class="card mt-5 mb-5 text-left1">
+            <div class="card-body text-left1">
+              <h4 class="heading">{{departureFlight?.flight?.flightSegments[0]?.airline}}</h4>
+              <div class="hotel-address" ngPreserveWhitespaces>
+                <span><i class="fa fa-map-marker"></i>&emsp;{{combineOrderRequest?.customerInfos[0]?.country}}</span>&emsp;<i
+                  class="fa fa-phone"></i>&emsp;{{combineOrderRequest?.customerInfos[0]?.phoneNo}}
+              </div>
+              <div class="mt-2 text-center">
+                <h6 style="text-align: center;">{{'combine-booking.label-fly-from' | translate }} <small>{{searchListRequest?.leaveFrom?.displayName}}&emsp;({{searchListRequest?.leaveFrom?.airportCode}})</small></h6>
+                <h6 style="text-align: center;">{{'combine-booking.label-to' | translate }} <small>{{searchListRequest?.destination?.displayName}}&emsp;({{searchListRequest?.destination?.airportCode}})</small></h6>
+                <p ngPreserveWhitespaces>{{searchListRequest?.checkinDate | date}} &emsp;
+                  <span *ngIf="searchListRequest?.checkoutDate !== undefined">
+                  <i class="fa fa-arrow-right"></i>
+                  &emsp; {{searchListRequest?.checkoutDate | date}}
+                </span>
+              </div>
+              <ul class="order-payment-list list mt-3 text-left">
+                <li *ngFor="let room of bookingOrderRes?.paymentHotel?.roomDetails?.roomDetails; let i = index">
+                  <div class="row mt-2">
+                    <div class="col-9">
+                      <h6><i class="fa fa-hotel"></i> {{'combine-booking.label-room' | translate }} {{i+1}}: {{room?.roomDescription}}</h6>
+                      <small>{{'combine-booking.label-adults' | translate }} {{room?.adultCount}} , {{'combine-booking.label-children' | translate }} {{room?.childCount}} </small><br>
+                      <small> {{bookingOrderRes?.paymentHotel?.noOfNight}} {{'combine-booking.label-nights' | translate }} </small><br>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-right">
+                        <span class="text-lg">
+                          {{(bookingOrderRes?.paymentHotel?.roomDetails?.totalRate | currency:currency:'symbol':'.0-2')}}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="row mt-2">
+                    <div class="col-md-9 col-8">
+                      <h6><i class="fa fa-plane"></i> {{'combine-booking.label-flight-1' | translate }}</h6>
+                      <small>{{'combine-booking.label-adults' | translate }} {{searchListRequest?.rooms[0]?.adult|| 1}} , {{'combine-booking.label-children' | translate }}{{searchListRequest?.rooms[0]?.children|| 0}} </small><br>
+                      <div *ngFor="let segment of departureFlight?.flight?.flightSegments">
+                        <small>{{'combine-booking.label-fly-from' | translate }} {{segment?.depAirportCode}} - {{segment?.depAirportName}}</small><br/>
+                        <small>{{'combine-booking.label-to' | translate }} {{segment?.arrAirportCode}} - {{segment?.arrAirportName}}</small><br/>
+                        <small>{{'combine-booking.label-duration' | translate }} {{segment?.duration}} | {{'combine-booking.label-flight-number' | translate }} {{segment?.flightNumber}}</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-4">
+                      <p class="text-right"><span class="text-lg">{{departureFlight?.offerItem?.totalAmount | currency:currency:'symbol':'.0-2'}}</span> </p>
+                    </div>
+                  </div>
+                </li>
+                <!-- <li *ngIf="returnFlight">
+                  <div class="row mt-2">
+                    <div class="col-md-9 col-8">
+                      <h6><i class="fa fa-plane"></i> Flight 2</h6>
+                      <small>Adults : {{searchFlightForm?.adults|| 1}} , Childrens :{{searchFlightForm?.children|| 0}} </small><br>
+                      <div *ngFor="let segment of returnFlight?.flight?.flightSegments">
+                        <small>From: {{segment?.depAirportCode}} - {{segment?.depAirportName}}</small><br/>
+                        <small>To: {{segment?.arrAirportCode}} - {{segment?.arrAirportName}}</small><br/>
+                        <small>Duration: {{segment?.duration}} | Flight Number: {{segment?.flightNumber}}</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-4">
+                      <p class="text-right"><span
+                          class="text-lg">{{returnFlight?.offerItem?.totalAmount | currency:currency:'symbol':'.0-2'}}</span> </p>
+                    </div>
+                  </div>
+                </li> -->
+                <li>
+                  <div class="row mt-3">
+                    <div class="col-md-9 col-8">
+                      <h5>{{'combine-booking.label-total' | translate }} </h5>
+                    </div>
+                    <div class="col-md-3 col-4">
+                      <p class="text-right"><span class="text-lg">{{totalTripPrice | currency:currency:'symbol':'.0-2'}}</span> </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <a routerLink="/combine/cart">
+            <h4 class="text-center" ngPreserveWhitespaces><i class="fa fa-arrow-left"></i>&emsp;{{'combine-booking.label-go-back' | translate }}
+            </h4>
+          </a>
+        </div>
+      </div>
+      <div class="gap"></div>
+    </div>
+  </main>

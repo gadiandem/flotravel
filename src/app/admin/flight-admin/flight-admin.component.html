@@ -1,0 +1,83 @@
+<div class="row mt-2">
+    <div class="col-12 mb-4">
+      <h2 class="heading">{{'flo-air-list.label-title' | translate }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+        [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+        <ng-template kendoGridToolbarTemplate>
+          <input placeholder="{{'flo-air-list.label-searching' | translate }}" kendoTextBox
+            (input)="onFilter($event.target.value)" />
+          <span *ngIf="isLoading">
+            <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+            </div><span ngPreserveWhiteSpaces>&emsp;{{'flight-rule-configure.loading' | translate }}</span>
+          </span>
+          <button kendoGridExcelCommand type="button" icon="file-excel">{{'flight-rule-configure.export-excel' | translate }}</button>
+          <button kendoGridPDFCommand icon="file-pdf" icon="file-pdf">{{'flight-rule-configure.export-pdf' | translate}}</button>
+          <button class="btn btn-success btn-sm" style="float:right;" (click)="createFlight()"><i
+            class="icon fa fa-plus"></i>&emsp; {{'flight-rule-configure.button-create-rule' | translate }}</button>
+        </ng-template>
+  
+        <kendo-grid-column-group title="{{'flo-air-list.label-flights' | translate }}" [columnMenu]="false">
+          <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+            <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+              <div>{{rowIndex + 1}}</div>
+            </ng-template>
+          </kendo-grid-column>
+  
+          <kendo-grid-column field="airline" title="{{'flo-air-list.label-airline' | translate }}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="" ngPreserveWhitespaces>
+                {{ dataItem.airline | uppercase }}</div>
+            </ng-template>
+          </kendo-grid-column>
+  
+          <kendo-grid-column field="from" title="{{'flo-air-list.label-flying-from' | translate }}" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.from}} {{dataItem.depCountry}}</div>
+            </ng-template>
+          </kendo-grid-column>
+  
+          <kendo-grid-column field="to" title="{{'flo-air-list.label-destination' | translate }}" [width]="120">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="" ngPreserveWhitespaces>{{ dataItem.to }} {{dataItem.arrCountry}}</div>
+            </ng-template>
+          </kendo-grid-column>
+  
+          <kendo-grid-column field="totalFare" title="{{'flo-air-list.label-amount' | translate }}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.totalFare}}</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column field="flightClass" title="{{'flo-air-list.label-class' | translate }}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.flightClass}}</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column field="flightType" title="{{'flo-air-list.label-type' | translate }}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.flightType}}</div>
+            </ng-template>
+          </kendo-grid-column>
+        </kendo-grid-column-group>
+  
+        <kendo-grid-column title="{{'flo-air-list.label-action' | translate }}" [width]="150" [class]="{'text-center': true}" [columnMenu]="false"
+          filter="boolean">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="text-center">
+              <button class="btn btn-warning btn-sm mr-1" (click)="editFlight(dataItem)"><i class="icon fa fa-pencil" style="color: white;" aria-hidden="true"></i></button>
+              <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)"><i class="icon fa fa-times" style="color: white;" aria-hidden="true"></i></button>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-pdf fileName="FlightList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+        <kendo-grid-excel fileName="FlightList.xlsx"></kendo-grid-excel>
+      </kendo-grid>
+    </div>
+  </div>
+  

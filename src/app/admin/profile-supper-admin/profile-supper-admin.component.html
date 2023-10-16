@@ -1,0 +1,61 @@
+<div class="container mt-5">
+  <div class="row mb-3">
+    <div class="col-sm-8 offset-2">
+      <div class="card">
+        <div class="card-header">
+          {{'admin-supper-admin-profile.label-title' | translate }}
+        </div>
+        <div class="card-body">
+          <form [formGroup]="userForm">
+            <div class="col-12">
+              <div class="form-group row mt-1">
+                <label for="agent">{{'admin-user-profile.label-agent' | translate }}</label>
+                <!-- <input class="form-control" id="agent" formControlName="agent" readonly> -->
+                <select class="form-control" id="agent" formControlName="agent" [value]="userDataForEdit?.agentId"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('agent').errors }">
+                  <option value="">{{'admin-user-profile.label-option' | translate }}</option>
+                  <option *ngFor="let agent of userDataForEdit?.agentList" [value]="agent?.id">{{agent?.name}}</option>
+                </select>
+              </div>
+              <div class="form-group row">
+                <label for="type">{{'admin-supper-admin-profile.label-user-type' | translate }}</label>
+                <input class="form-control" id="type" formControlName="type" readonly>
+              </div>
+              <div class="form-group row">
+                <label for="firstName">{{'admin-supper-admin-profile.label-fname' | translate }}</label>
+                <input class="form-control" id="firstName" formControlName="firstName">
+              </div>
+              <div class="form-group row">
+                <label for="lastName">{{'admin-supper-admin-profile.label-lname' | translate }}</label>
+                <input class="form-control" id="lastName" formControlName="lastName">
+              </div>
+              <div class="form-group row">
+                <label for="email">{{'admin-supper-admin-profile.label-email' | translate }}</label>
+                <input class="form-control" id="email" formControlName="email" readonly>
+              </div>
+              <div class="form-group row">
+                <label for="mobile">{{'admin-supper-admin-profile.label-mobile' | translate }}</label>
+                <input class="form-control" id="mobile" formControlName="mobile">
+              </div>
+              <div class="form-group row">
+                <label for="currency">{{'admin-supper-admin-profile.label-currency' | translate }}</label>
+                <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code" id="currency"
+                  [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="{{'admin-supper-admin-profile.placeholder-currency' | translate }}" class="form-control">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="search-hotel btn btn-danger" (click)="saveUser()">
+            {{'admin-supper-admin-profile.button-update' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-12">
+      <app-flotravel-provider></app-flotravel-provider>
+    </div>
+  </div>
+</div>

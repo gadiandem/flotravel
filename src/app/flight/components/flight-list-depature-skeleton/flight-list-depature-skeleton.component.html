@@ -1,0 +1,97 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter"> <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 17, 'width': '30%'}"></ngx-skeleton-loader></span>
+      </div>
+    </div>
+    <div class="col-md-2 we-sort-filter">
+      <div class="mb-4 d-none d-md-block">
+        <h5 class=" border-bottom pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <div class="custom-control pl-0">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30}"></ngx-skeleton-loader>
+        </div>
+      </div>
+      <div class="star-rating mb-4 d-none d-md-block">
+        <h5 class=" border-bottom pl-0 pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="2" [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+      </div>
+      <div class="facility mb-4 d-none d-md-block">
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="4" [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+      </div>
+      <div class="facility mb-4 d-none d-md-block">
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+        <ngx-skeleton-loader [count]="4" [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <h1 class="flight-title mb-3" style="font-size:26px;">
+        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '40%'}"></ngx-skeleton-loader>
+      </h1>
+      <div class="row mb-4">
+        <div class="col-4" style="padding-right: 0px;">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-4" style="padding-right: 0px;padding-left: 0px;">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-4" style="padding-left: 0px;">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+        </div>
+      </div>
+      <div class="flights-list">
+        <div class="flight-item mb-3" *ngFor="let flight of [1, 2, 3, 4]; let i = index;">
+          <div class="row">
+            <div class="col-md-5 col-7">
+              <div class="px-3 pt-3">
+                <h5 class="flight-title">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 25, 'width': '30%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </h5>
+                <p class="title">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 15, 'width': '50%'}"></ngx-skeleton-loader>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-3 d-none d-md-block px-3 pt-3">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 40, 'width': '50%'}"></ngx-skeleton-loader>
+            </div>
+            <div class="col-md-4 col-5">
+              <div class="text-right p-3 pr-4">
+                <span>
+                   <ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 25, 89)', 'height.px': 25, 'width': '50%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </span><br>
+                <p style="font-size: 12px;">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 10, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-9">
+              <div class="px-3 pb-md-3">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 42, 'width': '90%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-right pt-md-0 p-3 pr-4">
+                <ngx-skeleton-loader [theme]="{'background-color': 'rgb(10, 48, 73)', 'height.px': 38, 'width.px': 80}"></ngx-skeleton-loader>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 collapsed">
+              <p class="px-3 py-2 m-0" style="background:#eee; color:#007864; cursor:pointer;">
+                <span><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 17, 'width.px': 93.58 , 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+                <span class="float-right"><ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 21, 'width.px': 76.52 , 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <ngx-skeleton-loader [theme]="{'height.px': 600, 'width.px': 160, 'background-color': '#ccc'}"></ngx-skeleton-loader>
+    </div>
+  </div>
+</div>

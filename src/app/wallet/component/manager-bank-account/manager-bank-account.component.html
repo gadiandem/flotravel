@@ -1,0 +1,58 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">  {{'wallet-banks.manage-bank-title' | translate }}
+    </h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" (click)="getBankList()">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <p>{{'wallet-banks.manage-bank-info' | translate }}</p>
+      <div class="clearfix">
+        <div class="pull-left">
+          <button type="button" class="btn btn-primary btn-sm mr-2" (click)="next()">{{'wallet-banks.manage-bank-new-account' | translate }}</button>
+        </div>
+      </div>
+      <div *ngIf="fetchFailed" class="mb-5 mt-3">
+        <alert type="danger" ngPreserveWhitespaces>
+          {{'wallet-banks.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="getBankList()">{{'wallet-banks.label-try-again' | translate }}</button>
+      </div>
+      <div *ngIf="fetching" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;{{'wallet-banks.label-loading' | translate }}</span>
+      </div>
+      <table class="table" *ngIf="!fetching && !fetchFailed">
+        <thead>
+          <tr>
+            <th scope="col">{{'wallet-banks.manage-bank-name' | translate }}</th>
+            <th scope="col">{{'wallet-banks.manage-bank-iban' | translate }}</th>
+            <th scope="col">{{'wallet-banks.manage-bank-account-status' | translate }}</th>
+            <th scope="col">{{'wallet-banks.manage-bank-action' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor = "let bank of bankList;">
+            <td>{{bank?.bankName}}</td>
+            <td>{{bank?.accountNumber}}</td>
+            <td><p class="badge badge-success">{{'wallet-banks.manage-bank-account-verified' | translate }}</p></td>
+            <td><button class="btn btn-sm btn-danger" type="button" (click)="confirmDelete(bank)"><i class="fa fa-times"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

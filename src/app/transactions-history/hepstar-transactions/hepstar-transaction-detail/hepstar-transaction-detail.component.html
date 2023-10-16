@@ -1,0 +1,110 @@
+<div class="container-fluid my-m2-5 mt-5 pt-2 pb-3 col-lg-10">
+<main role="main">
+      <div class="container mt-3 pt-3 pb-5">
+        <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+          <div class="spinner-border text-primary"></div>
+          <span ngPreserveWhitespaces>&emsp;{{'hepstar-transactions-details.label-loading' | translate }}</span>
+        </div>
+        <div class="row" *ngIf="!isLoading">
+          <div class="col-12">
+            <h4 class='text-danger mb-4'>{{'hepstar-transactions-details.label-title' | translate }}</h4>
+          </div>
+          <div class="col-md-8 shadow-box">
+            <alert *ngIf="hepstarBookingDetail?.status !== '0000'" type="danger" ngPreserveWhitespaces>
+              {{'hepstar-transactions-details.label-cancelled' | translate }}
+            </alert>
+            <!-- <alert *ngIf="gcaBookingDetail?.gcaStatus.code !== 200" type="warning" ngPreserveWhitespaces>
+              This booking is pending wait response from admin
+            </alert> -->
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'hepstar-transactions-details.label-booking-details' | translate }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-id' | translate }}</label>&emsp;
+                  {{hepstarBookingDetail?.id}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-booking-status' | translate }} </label>&emsp;
+                  {{hepstarBookingDetail?.status}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'hepstar-transactions-details.label-contact-detail' | translate }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-email' | translate }}</label>&emsp;{{hepstarBookingDetail?.payer?.email}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-phone' | translate }}</label>&emsp;{{hepstarBookingDetail?.payer?.mobile}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-fname' | translate }}</label>&emsp;{{hepstarBookingDetail?.payer?.firstName}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-lname' | translate }}</label>&emsp;{{hepstarBookingDetail?.payer?.lastName}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'hepstar-transactions-details.label-transaction-detail' | translate }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-order-no' | translate }}</label>&emsp;{{hepstarBookingDetail?.orderId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-trace-number' | translate }}</label>&emsp;{{hepstarBookingDetail?.traceNumber}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-masterPurchaseNumber' | translate }}</label>&emsp;{{hepstarBookingDetail?.masterPurchaseNumber}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'hepstar-transactions-details.label-purchaseNumber' | translate }} </label>&emsp;{{hepstarBookingDetail?.purchaseNumber}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3" style="border-radius: 0px;">
+              <img class="img-fluid" [src]="'/assets/no-image.png'" [title]="hepstarBookingDetail?.item_name" style="width:100%" />
+              <div class="card-body">
+                <h5 class="card-title">{{hepstarBookingDetail?.item_name}}</h5>
+                <!-- <h5 class="card-title">Booking for: {{gcaBookingDetail?.name}}</h5> -->
+                <!-- <span escapse="false" [innerHTML]="gcaBookingDetail?.hotelPackage?.overview"></span>
+                <hr>
+                <h6>{{gcaBookingDetail?.rooms[0]?.roomType}} <small class="float-right text-danger">Hotel Room</small></h6>
+                <span [innerHTML]="gcaBookingDetail?.rooms[0]?.roomDescription | truncatetext:200"></span>
+                 -->
+              </div>
+              <div class="card-footer text-muted">
+                <p>{{'hepstar-transactions-details.label-total' | translate }} <span class="float-right text-danger">{{hepstarBookingDetail?.amount | currency:currency:'symbol':'.0-2'}}</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <!--  <div class="row" *ngIf="!isLoading && (hepstarBookingDetail?.status === '0000')">
+          <button type="button" class="btn btn-danger" (click)="openModalWithComponent()"  [disabled]="hepstarBookingDetail.refundedAmount > 0">{{'hepstar-transactions-details.button-cancel' | translate }}</button>
+        </div> -->
+      </div>
+</main>
+</div>

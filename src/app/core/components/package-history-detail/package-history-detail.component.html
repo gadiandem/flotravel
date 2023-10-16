@@ -1,0 +1,150 @@
+<div style="background: #f0f2f6;">
+    <main-header></main-header>
+      <div class="container mt-5 pt-3 pb-5">
+        <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+          <div class="spinner-border text-primary"></div>
+          <span ngPreserveWhitespaces>&emsp;{{'package-history-detail.label-loading' | translate }}</span>
+        </div>
+        <div class="row" *ngIf="!isLoading">
+          <div class="col-md-8">
+            <alert *ngIf="orderPackageDetail?.bookingStatus ==='CANCEL'" type="danger" ngPreserveWhitespaces>
+              {{'package-history-detail.label-booking-cancelled' | translate }}
+            </alert>
+            <alert *ngIf="orderPackageDetail?.bookingStatus ==='PENDING'" type="warning" ngPreserveWhitespaces>
+              {{'package-history-detail.label-booking-pending' | translate }}
+            </alert>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'package-history-detail.label-booking-details' | translate }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'package-history-detail.label-booking-id' | translate }}</label>&emsp;
+                  {{orderPackageDetail?.orderId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'package-history-detail.label-reservation' | translate }}</label>&emsp;{{orderPackageDetail?.bookingStatus}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'package-history-detail.label-contact-details' | translate }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'package-history-detail.title-email' | translate }}</label>&emsp;{{orderPackageDetail?.payer?.email}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'package-history-detail.title-fname' | translate }}</label>&emsp;{{orderPackageDetail?.payer?.firstName}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'package-history-detail.title-lname' | translate }}</label>&emsp;{{orderPackageDetail?.payer?.lastName}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'package-history-detail.title-Transaction-details' | translate }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'package-history-detail.title-order-no' | translate }}</label>&emsp;{{orderPackageDetail?.orderId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'package-history-detail.title-trace-number' | translate }} </label>&emsp;{{orderPackageDetail?.traceNumber}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'package-history-detail.title-package-itineraries' | translate }} </h5>
+              </div>
+              <div class="col-12" ngPreserveWhitespaces>
+                <span [innerHTML]="orderPackageDetail?.packageInfo?.itineraries"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3" style="border-radius: 0px;">
+              <img class="img-fluid" [src]="orderPackageDetail?.hotelPackage?.hotelImage" [title]="orderPackageDetail?.packageInfo?.name" style="width:100%" />
+              <div class="card-body">
+                <h5 class="card-title">{{'package-history-detail.label-booking' | translate }} {{orderPackageDetail?.name}}</h5>
+                <p> {{'package-history-detail.label-duration' | translate }} {{orderPackageDetail?.packageInfo?.dayCount}} <span ngPreserveWhitespaces>
+                    {{orderPackageDetail?.startDate}}</span></p>
+                <p ngPreserveWhitespaces>{{'package-history-detail.label-date-booking' | translate }} &emsp;{{orderPackageDetail?.createDate | date: 'medium'}}</p>
+                <h6>{{orderPackageDetail?.hotelPackage?.name}} <small class="float-right text-danger">
+                    {{orderPackageDetail?.packageInfo.price | currency:currency:'symbol':'.0-2'}}
+                    x {{orderPackageDetail?.packageInfo?.dayCount || 1}} {{'package-history-detail.label-days-due' | translate }}</small></h6>
+                <span escapse="false" [innerHTML]="orderPackageDetail?.hotelPackage?.overview"></span>
+                <hr>
+                <h6>{{orderPackageDetail?.rooms[0]?.roomType}} <small class="float-right text-danger">{{'package-history-detail.title-hotel-room' | translate }}</small></h6>
+                <span [innerHTML]="orderPackageDetail?.rooms[0]?.roomDescription | truncatetext:200"></span>
+                <div *ngIf="orderPackageDetail?.supplements && orderPackageDetail?.supplements.length > 0">
+                  <div *ngFor="let selectedSupplement of orderPackageDetail?.supplements; let i = index">
+                    <hr>
+                    <h6>{{selectedSupplement?.name}}<small class="float-right text-danger">{{'package-history-detail.title-supplement' | translate }}</small></h6>
+                    <span [innerHTML]="selectedSupplement?.shortDescription | truncatetext:200"></span><small class="float-right text-danger">{{+selectedSupplement?.price | currency:currency:'symbol':'.0-2'}}
+                      <!-- <span *ngIf="summaryReq?.supplements[i]?.count > 1"> x {{summaryReq?.supplements[i]?.count}}</span> -->
+                    </small>
+                  </div>
+                </div>
+                <div *ngIf="orderPackageDetail?.tourInPackages && orderPackageDetail?.tourInPackages.length > 0">
+                  <div *ngFor="let selectedTour of orderPackageDetail?.tourInPackages; let i = index">
+                    <hr>
+                    <h6>{{selectedTour?.name}} <small class="float-right text-danger">{{'package-history-detail.title-tour' | translate }}</small></h6>
+                    <span [innerHTML]="(selectedTour?.shortDescription || selectedTour?.description) | truncatetext:200"></span><small class="float-right text-danger">{{+selectedTour?.price | currency:currency:'symbol':'.0-2'}}
+                      <!-- <span *ngIf="summaryReq?.tours[i]?.count > 1"> x {{summaryReq?.tours[i]?.count}}</span> -->
+                    </small>
+                  </div>
+                </div>
+                <div *ngIf="orderPackageDetail?.transferInPackages && orderPackageDetail?.transferInPackages.length > 0">
+                  <div *ngFor="let selectedTransfer of orderPackageDetail?.transferInPackages; let i = index">
+                    <hr>
+                    <h6>{{selectedTransfer?.transferType}}<small class="float-right text-danger">{{'package-history-detail.title-transfer' | translate }}</small></h6>
+                    <span [innerHTML]="selectedTransfer?.note | truncatetext:200"></span><small class="float-right text-danger">{{selectedTransfer?.amount | currency:currency:'symbol':'.0-2'}}
+                      <!-- <span *ngIf="summaryReq?.transfers[i]?.count > 1"> x {{summaryReq?.transfers[i]?.count}}</span> -->
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-muted">
+                <p>{{'package-history-detail.title-total-trip' | translate }} <span class="float-right text-danger">{{orderPackageDetail?.amount | currency:currency:'symbol':'.0-2'}}</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!isLoading && (orderPackageDetail?.bookingStatus ==='CONFIRMED')">
+          <button type="button" class="btn btn-danger" (click)="openModalWithComponent()"  [disabled]="orderPackageDetail.refundedAmount > 0">{{'package-history-detail.title-cancel-booking' | translate }}</button>
+        </div>
+
+        <div class="card card-default shadow-sm" *ngIf="!isLoading && (orderPackageDetail?.bookingStatus ==='PENDING')">
+          <div class="card-header">{{'package-history-detail.label-update-refund' | translate }}</div>
+          <div class="card-body">
+            <form class="form-horizontal" [formGroup]="packageOrderForm">
+              <div class="form-group row"><label for="traceNumber" class="col-md-2 col-form-label">{{'package-history-detail.label-TraceNumber' | translate }}</label>
+                <div class="col-md-10"><input id="traceNumber" class="form-control form-control-rounded"
+                                              formControlName="traceNumber" type="text"
+                                              [ngClass]="{ 'is-invalid': formSubmitError && packageOrderForm.get('traceNumber').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="packageOrderForm.get('traceNumber').errors?.required">
+                      {{'package-history-detail.invalid-TraceNumber' | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-primary" type="button" (click)="getOrderUpdate()">{{'package-history-detail.button-refund' | translate }}</button>
+            </form>
+          </div>
+        </div>
+      </div>
+  </div>
+  <main-footer></main-footer>

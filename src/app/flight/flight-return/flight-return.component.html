@@ -1,0 +1,85 @@
+<div class="container-fluid mb-md-5 mt-5 pt-4 pb-3 shadow-box d-md-block px-3 p-0">
+  <div class="flight-search-mobile px-3 d-md-none">
+    <p class="d-flex align-items-center justify-content-center">
+      <span class="mr-2">London to Dubai</span>|
+      <span class="mx-2">15 Apr - 20 Apr</span>|
+      <span class="ml-2 change-search btn-danger px-2 rounded" (click)="showFormSearch()">{{'flight-summary.label-changes' | translate }}</span>
+    </p>
+    <div class="d-flex justify-content-between px-3">
+      <span class="flight-search-filters" (click)="showFormFilter()"><i class="fa fa-filter text-info" aria-hidden="true"></i> <span class="font-weight-bold text-dark">&nbsp;{{'flight-return.label-filters' | translate }}</span></span>
+      <span><span class="font-weight-bold text-dark">{{'flight-return.label-sort' | translate }}</span> {{'flight-return.label-airline' | translate }}</span>
+    </div>
+  </div>
+  <div id="select-box-mobile" class="d-md-none hotel-search">
+    <div id="select-box-close" class="text-right my-3" (click)="closeFormSearch()"><i class="fa fa-times"></i></div>
+    <div id="select-box-btns" class="btn-group btn-group-toggle d-flex d-md-none mb-3" data-toggle="buttons">
+      <label class="btn btn-secondary active w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="1" autocomplete="off" [checked]="typeFlightIndex == 1" (click)="valueChanged('1')"> {{'flight-return.label-one-way' | translate }}
+      </label>
+      <label class="btn btn-secondary w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="2" autocomplete="off" [checked]="typeFlightIndex == 2" (click)="valueChanged('2')"> {{'flight-return.label-round-trip' | translate }}
+      </label>
+      <label class="btn btn-secondary w-100" style="font-weight: 400;">
+        <input type="radio" name="selectBoxBnts" value="3" autocomplete="off" [checked]="typeFlightIndex == 3" (click)="valueChanged('3')"> {{'flight-return.label-multi-city' | translate }}
+      </label>
+    </div>
+  </div>
+  <app-flight-search-box [typeFlight]="typeFlight" [searchFlightFormInit]="searchFlightForm"
+     (searchFlightBox)="searchFlight($event)"
+     [fetching]="fetching"></app-flight-search-box>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div class="row mt-4">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter" (click)="showFormFilter()">{{'flight-return.label-sort-filter' | translate }}</span>
+      </div>
+    </div>
+    <div id="sortFilter" class="col-md-2 we-sort-filter">
+      <app-flight-sidebar (directFilter)="directFilter($event)"
+      (upTo1StopFilter)="upTo1StopFilter($event)"
+      (earlyMorningDepatureFilter)="earlyMorningDepatureFilter($event)"
+      (morningDepatureFilter)="morningDepatureFilter($event)"
+      (afternoonDepatureFilter)="afternoonDepatureFilter($event)"
+      (eveningDepatureFilter)="eveningDepatureFilter($event)"
+      (earlyMorningArrivalFilter)="earlyMorningArrivalFilter($event)"
+      (morningArrivalFilter)="morningArrivalFilter($event)"
+      (afternoonArrivalFilter)="afternoonArrivalFilter($event)"
+      (eveningArrivalFilter)="eveningArrivalFilter($event)"
+      (airlinesFilter)="airlineFilter($event)"
+      [arilines] = "arilineCodeList"></app-flight-sidebar>
+    </div>
+    <div class="col-md-8">
+      <app-flight-depature-selected [departureFlight]="departureFlight"></app-flight-depature-selected>
+      <h1 class="flight-title mb-3" style="font-size:26px;">{{'flight-return.label-return-date' | translate }}</h1>
+      <div class="row mb-4">
+        <div class="col-4" style="padding-right: 0px;">
+          <div class="shadow-box1 p-2 text-center" style="cursor: pointer; background:#eee;">
+            <label class="ml-41 small-date">{{dateBefore | date: 'yyyy-MM-dd'}}</label><br>
+            <div class="ml-41" style="font-weight:bold; ">{{dateBefore | date: 'EEEE'}}</div>
+          </div>
+        </div>
+        <div class="col-4" style="padding-right: 0px;padding-left: 0px;">
+          <div class="shadow-box1 p-2 text-center" style="cursor: pointer; background:#fff; border:1px solid #ccc;">
+            <label class="ml-41 small-date">{{returningDate | date: 'yyyy-MM-dd'}}</label><br>
+            <div class="ml-41" style="font-weight:bold; ">{{returningDate | date: 'EEEE'}}</div>
+          </div>
+        </div>
+        <div class="col-4" style="padding-left: 0px;">
+          <div class="shadow-box1 p-2 text-center" style="cursor: pointer; background:#eee;">
+            <label class="ml-41 small-date">{{dateAfter | date: 'yyyy-MM-dd'}}</label><br>
+            <div class="ml-41" style="font-weight:bold;">{{dateAfter | date: 'EEEE'}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="flights-list">
+        <app-flight-list-component (selectFlight)="reserve($event)" [flightList]="flightListView"></app-flight-list-component>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <img class="sticky mt-5 w-100" style="height: auto; margin-top: 0px !important;top: 65px;" src="assets/ads.jpg">
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<app-flight-list-return-skeleton *ngIf="fetching"></app-flight-list-return-skeleton>

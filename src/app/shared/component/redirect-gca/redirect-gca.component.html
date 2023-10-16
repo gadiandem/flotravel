@@ -1,0 +1,127 @@
+<div *ngIf="fetching" class="container mb-5" style="height: 500px; width: 100%;">
+    <div class="row justify-content-center loading-space pt-5">
+      <div class="spinner-border text-primary"></div>
+      <span class="text-center mt-3" ngPreserveWhitespaces>&emsp; Payment...</span>
+    </div>
+  </div>
+  <div *ngIf="!fetching && !fetchFailed" class="container-fluid mt-5 mb-5">
+    <div class="row justify-content-md-center">
+      <div class="col-md-8 col-sm-12 text-center">
+        <img class="mb-4" src="assets/ic_success.png" />
+        <h2 class="text-center mb-3">{{gcaPaymentRes?.payer?.lastName}} , your payment was successful!</h2>
+        <h5 class="text-center mb-4">Booking details has been send to {{gcaPaymentRes?.payer?.email}} </h5>
+
+        <div class="card mt-5 mb-5 text-left1">
+          <div class="card-body text-left1">
+            <h4 class="heading">{{gcaPaymentRes?.serviceName + ': ' + gcaPaymentRes?.item_name}}</h4>
+            <div class="hotel-address" ngPreserveWhitespaces>
+              <span><i class="fa fa-map-marker"></i>&emsp;{{'Ethiopia'}}</span>&emsp;<i class="fa fa-phone"></i>&emsp;
+              {{(gcaPaymentRes?.payer?.mobile) || '+1 (543) 461-7550'}}
+            </div>
+
+            <div class="mt-2">
+              <h6 style="text-align: center;">Departure Airport: <small>{{departureAirport?.name}}&emsp;({{departureAirport?.code}})</small></h6>
+              <h6 style="text-align: center;">Arrival Airport: <small>{{arrivalAirport?.name}}&emsp;({{arrivalAirport?.code}})</small></h6>
+            </div>
+            <ul class="order-payment-list list mt-3 text-left">
+              <li>
+                <div class="row mt-2">
+                  <div class="col-9">
+                    <h6><i class="fa fa-shield"></i> {{gcaPaymentRes?.item_name || "Gca Test"}}:</h6>
+                    <small>Adults : {{adults|| 1}} , Children :{{children|| 0}} , Infants :{{infants || 0}}</small><br>
+                    <small>Departure Airport: {{departureAirport?.code}} - {{departureAirport?.name}}</small><br/>
+                    <small>Arrival Airport: {{arrivalAirport?.code}} - {{arrivalAirport?.name}}</small><br/>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-right"><span
+                        class="text-lg">{{(gcaPaymentRes?.amount || 0) | currency:currency:'symbol':'.0-2'}}</span>
+                    </p>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="row mt-3">
+                  <div class="col-9">
+                    <h5>Total : </h5>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-right"><span
+                        class="text-lg">{{(gcaPaymentRes?.amount || 0) | currency:currency:'symbol':'.0-2'}}</span>
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="mb-5">
+          <a class="btn btn-danger mr-2" routerLink="#"><i class="fa fa-download"></i> Download</a>
+          <a class="btn btn-danger" routerLink="#"><i class="fa fa-envelope"></i> Email</a>
+        </div>
+      </div>
+    </div>
+    <div class="gap"></div>
+  </div>
+
+  <div *ngIf="!fetching  && fetchFailed" class="container mt-5 mb-5">
+    <div class="row justify-content-md-center">
+      <div class="col-md-8 col-sm-12 text-center">
+        <img class="mb-4" src="assets/ic_fail.png" style="width:70px;" />
+        <h2 class="text-center mb-3">{{ gcaPaymentRes?.payer?.lastName}}, your payment was Failed!</h2>
+        <alert type="danger" ngPreserveWhitespaces *ngIf="errorMes !== ''">
+            <strong>{{errorMes}}</strong>
+        </alert>
+        <div class="card mt-5 mb-5 text-left1">
+          <div class="card-body text-left1">
+            <h4 class="heading">{{gcaPaymentRes?.serviceName + ': ' + gcaPaymentRes?.item_name}}</h4>
+            <div class="hotel-address" ngPreserveWhitespaces>
+              <span><i class="fa fa-map-marker"></i>
+                &emsp;{{gcaPaymentRes?.payer?.email}}</span>&emsp;<i class="fa fa-phone"></i>&emsp;+1
+              {{gcaPaymentRes?.payer?.mobile || '(543) 461-7550'}}
+            </div>
+            <div class="mt-2">
+              <h6 style="text-align: center;">Departure Airport: <small>{{departureAirport?.name}}&emsp;({{departureAirport?.code}})</small></h6>
+              <h6 style="text-align: center;">Arrival Airport: <small>{{arrivalAirport?.name}}&emsp;({{arrivalAirport?.code}})</small></h6>
+            </div>
+            <ul class="order-payment-list list mt-3 text-left">
+              <li>
+                  <div class="row mt-2">
+                    <div class="col-9">
+                      <h6><i class="fa fa-shield"></i> {{gcaPaymentRes?.item_name || "Gca Test"}}:
+                        <!-- <small>Benefit : {{gcaPaymentRes?.quote?.benefits[0]?.amount || 1}}</small> -->
+                    </h6>
+                      <div>
+                        <!-- <p><strong>Benefit:</strong><em>{{gcaPaymentRes?.quote?.benefits[0]?.amount || 1}}</em></p>
+                        <p><strong>Cover:</strong><em>{{gcaPaymentRes?.quote?.benefits[0]?.cover}}</em></p> -->
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-right"><span
+                          class="text-lg">{{(gcaQuoteResult?.gcaQuoteResult?.billing?.grand_total || 0) | currency:currency:'symbol':'.0-2'}}</span>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              <li>
+                <div class="row mt-3">
+                  <div class="col-9">
+                    <h5>Total : </h5>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-right"><span
+                        class="text-lg">{{(gcaQuoteResult?.gcaQuoteResult?.billing?.grand_total  || 0) | currency:currency:'symbol':'.0-2'}}</span>
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <a routerLink="/gca/cart">
+          <h4 class="text-center" ngPreserveWhitespaces><i class="fa fa-arrow-left"></i>&emsp;Go Back to Payment Page
+          </h4>
+        </a>
+      </div>
+    </div>
+    <div class="gap"></div>
+  </div>

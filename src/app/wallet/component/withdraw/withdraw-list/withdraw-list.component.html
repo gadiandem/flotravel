@@ -1,0 +1,56 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-withdraw-funds.withdraw-list-title' | translate }}</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" (click)="getWithdrawList()">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">{{'wallet-withdraw-funds.withdraw-list-name' | translate }}</th>
+            <th scope="col">{{'wallet-withdraw-funds.withdraw-list-account' | translate }}</th>
+            <th scope="col">{{'wallet-withdraw-funds.withdraw-list-date' | translate }}</th>
+            <th scope="col">{{'wallet-withdraw-funds.withdraw-list-amount' | translate }}</th>
+            <th scope="col">{{'wallet-withdraw-funds.withdraw-list-status' | translate }}</th>
+            <th scope="col">{{'wallet-withdraw-funds.withdraw-list-action' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf = "withdrawListView.length === 0">
+            <p>{{'wallet-withdraw-funds.withdraw-list-no-tran' | translate }}</p>
+          </tr>
+          <tr *ngFor="let item of withdrawListView; let i = index;">
+            <td>{{item?.bank?.bankName}}</td>
+            <td>{{item?.bank?.accountHolder}}<br/>
+                {{item?.bank?.accountNumber}}
+            </td>
+            <td>{{item?.createDate | date: 'medium'}}</td>
+            <td>{{item?.amount | currency: (item?.currency || 'USD'):'symbol': '.0-2'}}</td>
+            <td *ngIf="item?.status !== 'CANCEL'"><span class="badge" [ngClass]="(item?.status === 'CONFIRM') ? 'badge-success' : 'badge-warning'">{{item?.status}}</span></td>
+            <td *ngIf="item?.status === 'CANCEL'"><span class="badge badge-secondary">{{item?.status}}</span></td>
+            <td style="cursor: pointer;" (click)="openModalWithComponent(i)">
+              <a class="smallFont">{{'wallet-withdraw-funds.withdraw-list-detail' | translate }}</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <form [formGroup]="addBankForm" class="form-horizontal clearfix">
+        <ngb-pagination class="d-flex justify-content-center mt-2" [collectionSize]="collectionSize" [page]="page"
+          [pageSize]="pageSize" (pageChange)="refreshCountries($event)">
+        </ngb-pagination>
+      </form>
+    </div>
+  </div>
+</div>

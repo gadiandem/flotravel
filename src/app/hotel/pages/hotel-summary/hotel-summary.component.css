@@ -1,0 +1,28 @@
+.hotel-image {
+  max-height: 200px;
+}
+
+/*.loading-space {*/
+/*  padding-top: 150px;*/
+/*  margin-bottom: 80px;*/
+/*}*/
+
+.hotel-img {
+  float: left;
+  width: 100%;
+  height: auto;
+  background-size: cover;
+  background-position: center center;
+}
+
+.hotel-img-item {
+  overflow: hidden;
+  max-height: 180px;
+}
+
+.custom-control-label {
+  margin: 0px 0px 0px 0px;
+  font: 12px Roboto;
+  font-weight: normal !important;
+  padding-top: 5px;
+}

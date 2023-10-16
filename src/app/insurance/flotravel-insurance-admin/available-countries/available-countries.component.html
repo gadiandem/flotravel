@@ -1,0 +1,49 @@
+<main role="main">
+    <div class="container mt-3 pt-5 pb-5">
+      <div class="row">
+        <div class="col-md-8 mb-4 mt-5">
+          <h2 class="heading">Insurance Country Availability</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+            [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+            <ng-template kendoGridToolbarTemplate>
+              <input placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event.target.value)"/>
+              <span *ngIf="isLoading">
+                <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+                </div><span ngPreserveWhiteSpaces>&emsp;{{'flight-history-list.label-loading' | translate }}</span>
+              </span>
+              <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">{{'flight-history-list.label-excel' | translate }}</button>
+              <button kendoGridPDFCommand icon="file-pdf" style="float:right;">{{'flight-history-list.label-pdf' | translate }}</button>
+            </ng-template>
+  
+            <kendo-grid-column-group title="Insurance Country Availability" [columnMenu]="false">
+              <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+                <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                  <div>{{rowIndex + 1}}</div>
+                </ng-template>
+              </kendo-grid-column>
+  
+              <kendo-grid-column field="name" title="Country Name" [width]="180">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div class="customer-name" ngPreserveWhitespaces>
+                    {{ dataItem.name | uppercase }} </div>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column field="code" title="County Code" [width]="180">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div class="customer-name text-container" ngPreserveWhitespaces>
+                    {{ dataItem.code }}  </div>
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid-column-group>
+            <kendo-grid-pdf fileName="CountryList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+            <kendo-grid-excel fileName="CountryList.xlsx"></kendo-grid-excel>
+          </kendo-grid>
+        </div>
+      </div>
+    </div>
+  </main>

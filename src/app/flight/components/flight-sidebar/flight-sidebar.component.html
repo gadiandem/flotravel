@@ -1,0 +1,75 @@
+<div class="mb-4">
+  <h5 class="border-bottom pb-2"><i class="fa fa-list text-default"></i> {{'flight-sidebar.label-sort' | translate }}</h5>
+  <div class="pl-0">
+    <select name="sort" class="form-control custom-select" (change)="onSortChange($event.target.value)">
+      <option value="priceIncrease">{{'flight-sidebar.label-price-low' | translate }}</option>
+      <option value="priceDecrease">{{'flight-sidebar.label-price-high' | translate }}</option>
+      <option value="durationIncreasing">{{'flight-sidebar.label-duration-short' | translate }}</option>
+      <option value="durationDecreasing">{{'flight-sidebar.label-duration-long' | translate }}</option>
+      <option value="departureIncreasing">{{'flight-sidebar.label-departure-early' | translate }}</option>
+      <option value="departureDecreasing">{{'flight-sidebar.label-departure-late' | translate }}</option>
+      <option value="arrivalIncreasing">{{'flight-sidebar.label-arrival-early' | translate }}</option>
+      <option value="arrivalDecreasing">{{'flight-sidebar.label-arrival-late' | translate }}</option>
+    </select>
+  </div>
+</div>
+<div class="star-rating mb-4">
+  <h5 class="border-bottom pb-2"><i class="fa fa-star text-default"></i> {{'flight-sidebar.label-stop' | translate }}</h5>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" (change)="onDirectFilter()" id="direct">
+    <label class="custom-control-label" for="direct">{{'flight-sidebar.label-direct' | translate }}</label>
+  </div>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" (change)="onUpTo1StopFilter()" id="stops">
+    <label class="custom-control-label" for="stops">{{'flight-sidebar.label-one-stop' | translate }}</label>
+  </div>
+</div>
+<div class="arrival mb-4" *ngIf="arilines?.length > 0">
+  <h5 class="pb-2 border-bottom pb-2"><i class="fas fa-star-of-life text-default"></i> {{'flight-sidebar.label-airline' | translate }}</h5>
+  <form [formGroup] = "airlinesForm">
+      <div formArrayName="airlines" *ngFor="let airline of airlinesControls; let i = index" class="custom-control custom-checkbox">
+        <input [formControlName]="i" type="checkbox" class="custom-control-input" id="airline{{i}}">
+        <label class="custom-control-label" for="airline{{i}}">{{arilines[i]}}</label>
+      </div>
+  </form>
+</div>
+<div class="departure mb-4">
+  <h5 class="pb-2 border-bottom pb-2"><i class="fas fa-star-of-life text-default"></i> {{'flight-sidebar.label-departure-time' | translate }}</h5>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="departure-early-moning"
+      (change)="onEarlyMorningDepatureFilter()">
+    <label class="custom-control-label" for="departure-early-moning">{{'flight-sidebar.label-early-morning' | translate }}</label>
+  </div>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="departure-morning" (change)="onMorningDepatureFilter()">
+    <label class="custom-control-label" for="departure-morning">{{'flight-sidebar.label-morning' | translate }}</label>
+  </div>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="departure-afternoon">
+    <label class="custom-control-label" for="departure-afternoon" (change)="onAfternoonDepatureFilter()">{{'flight-sidebar.label-afternoon' | translate }}</label>
+  </div>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="departure-evening" (change)="onEveningDepatureFilter()">
+    <label class="custom-control-label" for="departure-evening">{{'flight-sidebar.label-evening' | translate }}</label>
+  </div>
+</div>
+<div class="arrival mb-4">
+  <h5 class="pb-2 border-bottom pb-2"><i class="fas fa-star-of-life text-default"></i> {{'flight-sidebar.label-arrival' | translate }}</h5>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="arrival-early-morning"
+      (change)="onEarlyMorningArrivalFilter()">
+    <label class="custom-control-label" for="arrival-early-morning">{{'flight-sidebar.label-early-morning' | translate }}</label>
+  </div>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="arrival-morning" (change)="onMorningArrivalFilter()">
+    <label class="custom-control-label" for="arrival-morning">{{'flight-sidebar.label-morning' | translate }}</label>
+  </div>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="arrival-afternoon" (change)="onAfternoonArrivalFilter()">
+    <label class="custom-control-label" for="arrival-afternoon">{{'flight-sidebar.label-afternoon' | translate }}</label>
+  </div>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="arrival-evening" (change)="onEveningArrivalFilter()">
+    <label class="custom-control-label" for="arrival-evening">{{'flight-sidebar.label-evening' | translate }}</label>
+  </div>
+</div>

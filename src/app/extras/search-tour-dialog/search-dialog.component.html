@@ -1,0 +1,48 @@
+<div class="modal-body">
+  <form [formGroup]="searchForm" (ngSubmit)="searchTour()">
+    <div class="form-group">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="icon fa fa-map-marker"></i> &nbsp;{{'tour-search.label-tour' | translate }}</span>
+        </div>
+        <input id="typeahead-http" type="text" class="form-control" autocomplete="off" formControlName="destination"
+          placeholder="{{'tour-search.placeholder-city' | translate }}" />
+      </div>
+    </div>
+    <kendo-daterange class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="m-0">{{'tour-search.label-checkin' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="icon fa fa-calendar-check-o"></i>
+              </span>
+            </div>
+            <kendo-dateinput format="dd-MM-yyyy" style="width: 75%; font-size:20;" kendoDateRangeStartInput
+              [(value)]="startTime" placeholder="{{'tour-search.placeholder-date' | translate }}"></kendo-dateinput>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="m-0">{{'tour-search.label-checkout' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="icon fa fa-calendar-check-o"></i>
+              </span>
+            </div>
+            <kendo-dateinput format="dd-MM-yyyy" style="width: 75%;font-size:20;" kendoDateRangeEndInput
+              [(value)]="endTime" placeholder="{{'tour-search.placeholder-checkout' | translate }}">
+            </kendo-dateinput>
+          </div>
+        </div>
+      </div>
+    </kendo-daterange>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">{{'tour-search.label-close' | translate }}</button>
+  <button type="button" class="btn btn-danger" (click)="submit()" [disabled]="searchForm.invalid">{{'tour-search.label-find-tours' | translate }}</button>
+</div>

@@ -1,0 +1,87 @@
+<div class="container-fluid mt-5">
+  <div class="row mb-3">
+    <div class="col-sm-4">
+      <div class="card">
+        <img class="card-img-top img-thumbnail" src="{{defaultData}}"
+          (error)="onImgError($event)" alt="">
+      </div>
+    </div>
+
+    <div class="col-sm-8">
+      <div class="card">
+        <div class="card-header">
+          {{'admin-user-group-edit.label-title' | translate }}
+        </div>
+        <div class="card-body">
+          <div *ngIf="!userGroupEditable" class="row">
+            <div class="col-12">
+              <alert type="danger">{{'admin-user-group-edit.label-editable' | translate}}
+              </alert>
+            </div>
+          </div>
+          <form [formGroup]="userGroupForm">
+            <div class="col-12">
+              <div class="form-group row">
+                <label for="value"> {{'admin-user-group-edit.label-name' | translate }}</label>
+                <input class="form-control" id="value" formControlName="value" [readOnly]="!userGroupEditable"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userGroupForm.get('value').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userGroupForm.get('value').errors?.required">
+                    {{'admin-user-group-edit.invalid-name' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer" *ngIf="userGroupEditable">
+          <button class="search-hotel btn btn-danger" (click)="saveUserGroup()">
+            {{isNewUserGroup? 'Create' : 'Update'}}  {{'admin-user-group-edit.label-user-group' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3" *ngIf="userList?.length > 0">
+    <div class="col-10 offset-1">
+      <div class="card">
+        <div class="card-header"> {{'admin-user-group-edit.label-list' | translate }}</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="table table-striped col-12">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">{{'admin-user-group-edit.title-email' | translate }}</th>
+                  <th scope="col">{{'admin-user-group-edit.title-name' | translate }}</th>
+                  <th scope="col">{{'admin-user-group-edit.title-mobile' | translate }}</th>
+                  <th scope="col">{{'admin-user-group-edit.title-type' | translate }}</th>
+                  <th scope="col">{{'admin-user-group-edit.title-enabled' | translate }}</th>
+                  <th scope="col">{{'admin-user-group-edit.title-expired' | translate }}</th>
+                  <th scope="col">{{'admin-user-group-edit.title-action' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of userList; let i = index">
+                  <th scope="row">{{i + 1}}</th>
+                  <td>{{user.email}}</td>
+                  <td>{{user.firstName + ' ' + user.lastName}}</td>
+                  <td>{{user.mobile}}</td>
+                  <td>{{userGroupDetail.userGroup.value}}</td>
+                  <td>{{user.enabled}}</td>
+                  <td>{{user.expired}}</td>
+                  <td>
+                    <button class="btn btn-warning btn-sm mr-1" (click)="editUser(user)"><span
+                        class="fa fa-edit"></span></button>
+                    <button class="btn btn-danger btn-sm" (click)="removeUser(user.id)"><span
+                        class="fa fa-trash"></span></button>
+                  </td>
+                </tr>
+              </tbody>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

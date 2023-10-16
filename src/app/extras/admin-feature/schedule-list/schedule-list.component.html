@@ -1,0 +1,27 @@
+<div class="container">
+  <p>{{tourDetail?.name}}</p>
+  <button (click)="addExtraDetail()" class="btn btn-danger">{{'admin-things-to-do.extraDetails' | translate }}</button>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tour-list mt-4">
+        <div class="shadow-box p-3 mb-3" *ngFor="let schedule of schedules; let i = index;">
+          <div class="row">
+            <div class="col-8 room-info">
+              <h6 style=" color: #666;">{{schedule?.fromTime}} - {{schedule?.toTime}}, {{schedule?.title}}</h6>
+              <p><i class="fa fa-clock"></i> {{schedule?.description}}</p>
+              </div>
+            <div class="col-4 text-right">
+              <div>
+                <i class="fa fa-check"></i> {{'admin-things-to-do.free-cancel' | translate }} <small class="text-muted"> {{'admin-things-to-do.label-valentine' | translate }}</small><br>
+                <i class="fa fa-check mb-1"></i> {{'admin-things-to-do.add-no-fees' | translate }}
+              </div>
+              <div class="mt-5">+ {{schedule?.extraPrice  | currency: 'USD':'symbol':'.0-2'}} &nbsp;</div>
+              <button (click)="editSchedule(schedule)" class="btn btn-danger">{{'admin-things-to-do.editExtraDetail' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+</div>

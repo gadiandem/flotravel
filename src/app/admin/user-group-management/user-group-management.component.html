@@ -1,0 +1,68 @@
+<div class="container mt-3 pb-3" style="min-height: 500px;">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h2 class="heading">{{'admin-user-group.label-title' | translate }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [pageSize]="10" [pageable]="true"
+        [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+        <ng-template kendoGridToolbarTemplate>
+          <input placeholder="{{'admin-user-group.label-search-column' | translate }}" kendoTextBox
+            (input)="onFilter($event.target.value)" />
+          <span *ngIf="isLoading">
+            <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+            </div><span ngPreserveWhiteSpaces>&emsp;{{'admin-user-group.label-loading' | translate }}</span>
+          </span>
+          <button kendoGridExcelCommand type="button" icon="file-excel">{{'admin-user-group.label-excel' | translate}}</button>
+          <button kendoGridPDFCommand icon="file-pdf">{{'admin-user-group.label-pdf' | translate }}</button>
+          <button class="btn btn-success btn-sm" style="float:right;" (click)="createNewUserGroup()"><i
+              class="icon fa fa-plus"></i>&emsp; {{'admin-user-group.label-agency-create' | translate }}</button>
+        </ng-template>
+        <kendo-grid-column title="#" [width]="50" [columnMenu]="false">
+          <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+            <div style="text-align: center;">{{rowIndex + 1}}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="value" title="{{'admin-user-group.title-name' | translate }}" [width]="200">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem?.icon" class="customer-photo"
+              [ngStyle]="{'background-image' : 'url(' + dataItem.icon + ')'}"></div>
+            <div *ngIf="!dataItem?.icon" class="customer-photo"
+              [ngStyle]="{'background-image' : 'url(' + defaultData + ')'}"></div>
+            <div class="customer-name">{{ dataItem.value }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="primary" title="{{'admin-user-group.title-editable' | translate }}" [width]="200">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="customer-name">{{ !dataItem.primary }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="createDate" title="{{'admin-user-group.title-date' | translate }}" [width]="200">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="customer-name">{{ dataItem.createDate | date:'medium'}}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column title="{{'admin-user-group.title-action' | translate }}" [width]="80"
+          [class]="{'text-center': true}" [resizable]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="!dataItem.primary">
+              <button class="btn btn-warning btn-sm mr-1" (click)="editUserGroup(dataItem.id)"><i
+                  class="icon fa fa-pencil" style="color: white;" aria-hidden="true"></i></button>
+              <button class="btn btn-danger btn-sm ml-1" (click)="deleteUserGroup(dataItem.id)"><i
+                  class="icon fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <div *ngIf="dataItem.primary">
+              <button class="btn btn-warning btn-sm mr-1" (click)="editUserGroup(dataItem.id)"><i
+                  class="icon fa fa-info-circle" style="color: white;" aria-hidden="true"></i></button>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-excel fileName="UserGroup.xlsx"></kendo-grid-excel>
+        <kendo-grid-pdf fileName="UserGroup.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+      </kendo-grid>
+      <div kendoDialogContainer></div>
+    </div>
+  </div>
+</div>

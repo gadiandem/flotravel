@@ -1,0 +1,86 @@
+<div class="container mt-5">
+  <div class="row mb-3">
+
+    <div class="col-sm-8 offset-2">
+      <div class="card">
+        <div class="card-header">
+          {{'admin-user-management-edit.label-title' | translate }}
+        </div>
+        <div class="card-body">
+          <form [formGroup]="userForm">
+            <div class="col-12">
+              <div class="form-group row mt-1">
+                <label for="agent">{{'admin-user-management-edit.title-agency' | translate }}</label>
+                <select class="form-control" id="agent" formControlName="agent" [value]="userDataForEdit?.agentId"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('agent').errors }">
+                  <option value="">{{'admin-user-management-edit.label-option' | translate }}</option>
+                  <option *ngFor="let agent of userDataForEdit?.agentList" [value]="agent.id">{{agent?.name}}</option>
+                </select>
+              </div>
+              <div class="form-group row">
+                <label for="type">{{'admin-user-management-edit.label-type' | translate }}</label>
+                <select class="form-control" id="agent" formControlName="type" [value]="userDataForEdit?.userGroups[0].id"
+                [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('type').errors }">
+                  <option value="">{{'admin-user-management-edit.label-option' | translate }}</option>
+                  <option *ngFor="let group of userDataForEdit?.userGroups" [value]="group.id">{{group?.value}}</option>
+                </select>
+              </div>
+
+              <div class="form-group row">
+                <label for="firstName">{{'admin-user-management-edit.label-fname' | translate }}</label>
+                <input class="form-control" id="firstName" formControlName="firstName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('firstName').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('firstName').errors?.required">
+                    {{'admin-user-management-edit.invalid-fname' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="lastName">{{'admin-user-management-edit.label-lname' | translate }}</label>
+                <input class="form-control" id="name" formControlName="lastName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('lastName').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('lastName').errors?.required">
+                    {{'admin-user-management-edit.invalid-lname' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="email">{{'admin-user-management-edit.label-email' | translate }}</label>
+                <input class="form-control" id="email" formControlName="email" readonly>
+              </div>
+
+              <div class="form-group row">
+                <label for="mobile"> {{'admin-user-management-edit.label-mobile' | translate }}</label>
+                <input class="form-control" id="mobile" formControlName="mobile"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('mobile').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('mobile').errors?.required">
+                    {{'admin-user-management-edit.invalid-mobile' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="currency"> {{'admin-user-management-edit.label-currency' | translate }}</label>
+                <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code"
+                  [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="Currency" class="form-control"
+                  [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('currency').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('currency').errors?.required">
+                    {{'admin-user-management-edit.invalid-currency' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="search-hotel btn btn-danger" (click)="saveUser()">
+            {{'admin-user-management-edit.button-update' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

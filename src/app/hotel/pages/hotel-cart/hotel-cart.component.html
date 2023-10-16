@@ -1,0 +1,388 @@
+<div *ngIf="!fetching" class="we-body my-5 pt-5 pb-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div *ngIf="fetchFailed" class="mt-1 mb-1">
+          <alert type="danger" ngPreserveWhitespaces>
+            {{'hotel-checkout.error-message' | translate }}:&emsp;<strong>{{errorMes}}</strong>
+          </alert>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h5 class="mt-4 mb-0" style="font-size: 26px;">{{'hotel-checkout.label-title' | translate }}</h5>
+      </div>
+      <div class="col-md-8 order-2 order-md-1 mt-4">
+        <div *ngIf="user == null" class="shadow-box p-3 mb-3" (click)="openModalWithComponent()"
+          style="cursor: pointer;">
+          <span>
+            <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+              <i class="fa fa-lock"></i> &nbsp; {{'hotel-checkout.label-points' | translate }}
+            </h3>
+          </span>
+        </div>
+        <div class="shadow-box p-3 mb-2" *ngIf="isAgent" style="display: none;">
+          <app-agency-booking (userSelected)="useSelected($event)" (agencyBooking)="agencyBooking($event)">
+          </app-agency-booking>
+        </div>
+        <form [formGroup]="customersForm">
+          <div formArrayName="customerInfo">
+            <div [formGroupName]="i" *ngFor="let customer of customerInfo.controls; let i=index">
+              <div class="shadow-box p-3">
+                <h5 class="text-danger border-bottom pb-2 mb-3">{{'hotel-checkout.label-room' | translate }} {{i + 1}}
+                  <span>:
+                    {{selectedRoom?.rooms?.rooms[i]?.roomDescription}}</span>
+                </h5>
+                <div class="px-md-4">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" id="male{{i}}" type="radio" value="MALE" checked
+                            formControlName="gender"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">
+                          <label class="form-check-label" for="male{{i}}"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">
+                            {{'hotel-checkout.label-male' | translate }}
+                          </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" id="female{{i+1}}" type="radio" value="FEMALE"
+                            formControlName="gender"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">
+                          <label class="form-check-label" for="female{{i+1}}"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">
+                            {{'hotel-checkout.label-female' | translate }}
+                          </label>
+                        </div>
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('gender').errors?.required">
+                            {{'hotel-checkout.invalid-gender' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>{{'hotel-checkout.label-fname' | translate }}</label>
+                        <input class="form-control" type="text" formControlName="firstName"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('firstName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('firstName').errors?.required">
+                            {{'hotel-checkout.invalid-fname' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>{{'hotel-checkout.label-middle-name' | translate }}</label>
+                        <input class="form-control" type="text" formControlName="middleName" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>{{'hotel-checkout.label-lname' | translate }}</label>
+                        <input class="form-control" type="text" formControlName="lastName"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('lastName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('lastName').errors?.required">
+                            {{'hotel-checkout.invalid-lname' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-8 mr-auto" *ngIf="i=== 0">
+                      <div class="form-group">
+                        <label> {{'hotel-checkout.label-country' | translate }}</label>
+                        <select class="custom-select" formControlName="country"
+                          (change)="onSelectCountry($event.target.value)"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('country').errors }">
+                          <option value="" selected>---Select Country---</option>
+                          <option *ngFor="let country of countries" value="{{country?.code}}">{{country?.name}}</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('country').errors?.required">
+                            {{'hotel-checkout.invalid-country' | translate }}
+                          </span>
+                          <span *ngIf="errorMessage">
+                            {{errorMessage}}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label>{{'flight-checkout.label-mobile' | translate }}</label>
+                        <ngx-intl-tel-input [cssClass]="'custom'" [selectedCountryISO]="countryCode"
+                          [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                          [enablePlaceholder]="true" [searchCountryFlag]="true"
+                          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                          [selectFirstCountry]="false" maxLength="15" [tooltipField]="TooltipLabel.Name"
+                          [phoneValidation]="false" [separateDialCode]="true" formControlName="mobile">
+                        </ngx-intl-tel-input>
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('mobile').errors?.required">
+                            {{'hotel-checkout.invalid-mobile' | translate }}
+                          </span>
+                          <span *ngIf="customerInfo.controls[i].get('mobile').errors?.validatePhoneNumber">
+                            {{'hotel-checkout.label-country-code-required' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                      <div class="form-check mb-3" style="margin-top:-10px;">
+                        <input class="form-check-input" type="checkbox" id="isNotify" formControlName="isNotify">
+                        <label class="form-check-label" for="isNotify"> {{'hotel-checkout.label-alerts' | translate }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <app-add-on-insurance (axaInsuranceSelected)="insuranceUpdate($event)" [currency]="currency"
+          (axaInsurancePackage)="getInsuranceItem($event)"></app-add-on-insurance>
+        <div class="shadow-box p-3 mt-4" *ngIf="isAgent" style="display: none;">
+          <app-payment-type [isAgent]="isAgent" (vcnPayment)="paymentTypeUpdate($event)" *ngIf="merchantExist">
+          </app-payment-type>
+          <div *ngIf="!merchantExist" class="shadow-box p-3  mb-3" (click)="updateProfile()" style="cursor: pointer;">
+            <span>
+              <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+                <i class="fa fa-lock"></i> &nbsp;{{'hotel-checkout.label-merchant-not-exist' | translate }}
+              </h3>
+            </span>
+          </div>
+        </div>
+        <form [formGroup]="cardPaymentForm" *ngIf="!isVcnPayment">
+          <div class="shadow-box p-3 mt-4">
+            <div class="text-danger" ngPreserveWhitespaces>
+              <i class="fa fa-credit-card"></i>&emsp;
+              <i class="fa fa-check"></i> {{'hotel-checkout.label-secure-transmission' | translate }}
+              &emsp;<i class="fa fa-check"></i> {{'hotel-checkout.label-personal-information' | translate }}
+            </div>
+            <div class="row pt-3">
+              <div class="col-md-6 mb-3">
+                <div class="card-container"></div>
+              </div>
+              <div class="col-md-6">
+                <div card container=".card-container" [messages]="messages" [placeholders]="placeholders"
+                  [masks]="masks">
+                  <div class="card-info">
+                    <div class="form-group">
+                      <label for="card_number">{{'hotel-checkout.label-card-number' | translate }}</label>
+                      <input class="form-control" id="card_number" type="text" formControlName="cardNo"
+                        placeholder="xxxx xxxx xxxx xxxx" card-number
+                        [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardNo').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="cardPaymentForm.get('cardNo').errors?.required">
+                          {{'hotel-checkout.invalid-card-number' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group">
+                      <label for="full_name">{{'hotel-checkout.label-full-name' | translate }}</label>
+                      <input class="form-control" id="full_name" type="text" formControlName="cardName" card-name
+                        [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardName').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="cardPaymentForm.get('cardName').errors?.required">
+                          {{'hotel-checkout.invalid-full-name' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label for="expire_time">{{'hotel-checkout.label-expiry' | translate }}</label>
+                          <input class="form-control" id="expire_time" type="text" formControlName="expiry"
+                            placeholder="mm/yy" card-expiry
+                            [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('expiry').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="cardPaymentForm.get('expiry').errors?.required">
+                              {{'hotel-checkout.invalid-expiry' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label for="cvv"> {{'hotel-checkout.label-cvc' | translate }}</label>
+                          <input class="form-control" id="cvv" type="text" placeholder="xxxx" formControlName="cvv"
+                            card-cvc
+                            [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cvv').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="cardPaymentForm.get('cvv').errors?.required">
+                              {{'hotel-checkout.invalid-cvc' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <form [formGroup]="userForm">
+          <div class="shadow-box p-3 my-4">
+            <div class="text-danger mb-3" style="font-size: 20px;"> {{'hotel-checkout.label-booking-info' | translate }}
+            </div>
+            <p> {{'hotel-checkout.label-email-confirmation' | translate }}</p>
+            <div class="row">
+              <div class="col-12 col-md-8">
+                <div class="form-group">
+                  <label for="email">{{'hotel-checkout.label-email' | translate }}</label>
+                  <input class="form-control" id="email"
+                    placeholder="{{'hotel-checkout.placeholder-email' | translate }}" type="text"
+                    formControlName="email"
+                    [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('email').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf="userForm.get('email').errors?.required">
+                      {{'hotel-checkout.incorrect-email' | translate }}
+                    </span>
+                    <span *ngIf="userForm.get('email').errors?.email">
+                      {{'hotel-checkout.invalid-email' | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!user" class="row">
+              <div class="col-12 col-md-8">
+                <div class="p-4 mb-4" style="background: #eee;">
+                  <p> {{'hotel-checkout.label-enter-password' | translate }}</p>
+                  <div formGroupName="passwordGroup">
+                    <div class="row">
+                      <div class="col-10">
+                        <div class="form-group">
+                          <label> {{'hotel-checkout.label-password' | translate }}</label>
+                          <input class="form-control" type="password" formControlName="password" autocomplete="false"
+                            [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('passwordGroup.password').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="userForm.get('passwordGroup.password').errors?.required">
+                              {{'hotel-checkout.invalid-password' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-10">
+                        <div class="form-group">
+                          <label>{{'hotel-checkout.label-confirm-password' | translate }}</label>
+                          <input class="form-control" type="password" formControlName="confirmPassword"
+                            [ngClass]="{ 'is-invalid': formSubmitError && (userForm.get('passwordGroup.confirmPassword').errors || userForm.get('passwordGroup').errors) }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="userForm.get('passwordGroup.confirmPassword').errors?.required">
+                              {{'hotel-checkout.invalid-confirm-password' | translate }}
+                            </span>
+                            <span *ngIf="userForm.get('passwordGroup').errors?.match">
+                              {{'hotel-checkout.incorrect-confirm-password' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <span class="invalid-feedback">
+                      <span *ngIf="userForm.get('passwordGroup').errors?.match">
+                        The confirmPassword does not match the password.
+                      </span>
+                    </span> -->
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-check mb-3" style="margin-top:-10px;">
+                        <input class="form-check-input" type="checkbox" id="createAccount"
+                          formControlName="createAccount">
+                        <label class="form-check-label" for="createAccount"> {{'hotel-checkout.label-account' |
+                          translate }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-muted"> {{'hotel-checkout.label-disclaimer' | translate }}</div>
+            <br>
+            <div class="row">
+              <div class="col-12">
+                <div *ngIf="isBooking">
+                  <button *ngIf="isEnoughBalance" class="btn btn-danger mr-5" type="submit"
+                    (click)="goToBankDeposit()">{{'hotel-checkout.label-buy-now' | translate }} &emsp;<i
+                      class="fa fa-arrow-right"></i></button>
+
+                  <button class="btn btn-danger" type="submit"
+                    (click)="buyNow()">{{'hotel-checkout.label-wallet-payment' |
+                    translate }} &emsp;<i class="fa fa-arrow-right"></i></button>
+                </div>
+
+                <button *ngIf="isReserveBooking && !isEnoughBalance" class="btn btn-danger" type="submit"
+                  (click)="reserve()" [disabled]="fetchFailed">{{'hotel-checkout.label-reserve' | translate }} &emsp;<i
+                    class="fa fa-arrow-right"></i></button>
+              </div>
+            </div>
+            <div><br><i class="fa fa-lock"></i>{{'hotel-checkout.label-encryption' | translate }}</div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-4 order-1 order-md-2 mt-4 pl-md-0">
+        <div class="card shadow-box hotel-details mb-3 rounded-0">
+          <img class="img-fluid" [lazyLoad]="hotelSelected?.image?.baseUrl + '/800x640/' + hotelSelected?.image?.name"
+            [errorImage]="defaultData" [defaultImage]="defaultData" [title]="hotelSelected?.name" style="width:100%" />
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="title">{{hotelSelected?.name}}</h2>
+                <span style="color:#ffda23" ngPreserveWhitespaces>
+                  <i *ngFor="let item of starRating" class="fa fa-star"></i>
+                </span>&nbsp;{{starRating[starRating.length - 1] + 1}} {{'hotel-checkout.label-of-5' | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5>{{'hotel-checkout.label-booking' | translate }}</h5>
+            <p ngPreserveWhitespaces>{{searchHotelListForm?.checkinDate | date}} &emsp;
+              <i class="fa fa-arrow-right"></i>
+              &emsp;{{searchHotelListForm?.checkoutDate | date}}
+            </p>
+            <div *ngFor="let room of selectedRoom?.rooms?.rooms; let i=index">
+              <h6>{{'hotel-checkout.label-room' | translate }} {{i + 1}}
+                <span class="text-danger">
+                  {{room?.roomRate?.price | currency:currency:'symbol':'.0-2'}} x {{numberOfNight}}
+                  {{'hotel-checkout.label-days-due' | translate }}
+                </span>
+                <del class="room-price-cancel">
+                  {{+room?.roomRate?.initialPricePerNight[0] | currency:currency:'symbol':'.0-2'}}
+                </del>
+              </h6>
+              <span>{{room?.roomDescription}}</span>
+              <span>{{room?.roomRemarks}}</span>
+              <hr *ngIf="i < (selectedRoom?.rooms?.rooms.length - 1)">
+            </div>
+          </div>
+          <hr *ngIf="isAxaInsurance" />
+          <div class="p-4" *ngIf="isAxaInsurance">
+            <h6>{{insuranceItemItem?.name || 'Axa Insurance:'}} <small
+                class="float-right text-danger">{{(+insuranceItemItem?.packagePrice|| 0) |
+                currency:currency:'symbol':'.0-2'}}</small>
+            </h6>
+          </div>
+          <div class="card-footer text-muted">
+            {{'hotel-checkout.label-taxes' | translate }} <span class="text-danger">{{0 |
+              currency:currency:'symbol':'.0-2'}}</span>
+          </div>
+          <div class="card-footer text-muted">
+            {{'hotel-checkout.label-amount' | translate }} <span class="text-danger">
+              {{totalTripPriceCache | currency:currency:'symbol':'.0-2'}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-hotel-cart-skeleton *ngIf="fetching"></app-hotel-cart-skeleton>

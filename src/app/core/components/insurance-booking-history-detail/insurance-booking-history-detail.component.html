@@ -1,0 +1,192 @@
+<div style="background: #f0f2f6;">
+  <main-header></main-header>
+  <main role="main">
+    <div class="container mt-3 pt-3 pb-5">
+      <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;Loading...</span>
+      </div>
+      <div class="row" *ngIf="!isLoading">
+        <div class="card shadow-sm col-md-8">
+          <alert
+            *ngIf="(insuranceDetail?.subscriptionStatus?.value ==='CANCEL') || (insuranceDetail?.subscriptionStatus === undefined)"
+            type="danger" ngPreserveWhitespaces>
+            This booking is cancelled
+          </alert>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>Insurance Details</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>Booking ID:</label>&emsp;
+                {{insuranceId}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>Reservation:</label>&emsp;{{insuranceDetail?.subscriptionStatus?.value}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>Policy ID:</label>&emsp;
+                {{insuranceDetail?.policyId}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>Policy Number:</label>&emsp;
+                {{insuranceDetail?.policyNumber}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>Guarantees Detail</h5>
+            </div>
+            <div class="col-12">
+              <div *ngFor="let item of insuranceDetail.guarantees; let i = index" class="row">
+                <hr *ngIf="i !== 0" />
+                <div class="col-12 col-md-6">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <label>Code: </label>&emsp; {{item?.code}}
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <label>Excess: </label>&emsp;{{item?.excess}}
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <label>Label: </label>&emsp; {{item?.label}}
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <label>Limit: </label>&emsp;{{item?.limit}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>Contact Details</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>Email:</label>&emsp;{{insuranceDetail.payer.email}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>First Name:</label>&emsp;{{insuranceDetail.payer.firstName}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>Last Name:</label>&emsp;{{insuranceDetail.payer.lastName}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>Transaction Details</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>Order No:</label>&emsp;{{insuranceDetail.policyId}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>TraceNumber: </label>&emsp;{{insuranceDetail.traceNumber}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>Package Remarks</h5>
+            </div>
+            <div class="col-12">
+              <div *ngFor="let attachment of insuranceDetail.attachments; let i= index" class="row">
+                <div class="col-126">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <!-- <label>Name: </label>&emsp;<a [url]="">{{attachment.name}}</a> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col-12" ngPreserveWhitespaces>
+                <span [innerHTML]="insuranceDetail.hotelRemarks"></span>
+              </div> -->
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card mb-3  shadow-sm" style="border-radius: 0px;">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-4">
+                  <!-- <img [src]="insuranceDetail.hotelInfo.imageUrl.replace('_t','')" title="" style="width:100%" /> -->
+                  <img
+                    src="/assets/no-image.png"
+                    class="img-fluid" style="width:100%" />
+                </div>
+                <div class="col-md-8">
+                  <h6 class="mt-2">{{insuranceDetail.item_name}}</h6>
+                  <ul class="icon-group">
+                    <i *ngFor="let item of [1, 2, 3, 4] index as i" class="fa fa-star"></i>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Booking for</h5>
+              <!-- <p ngPreserveWhitespaces>{{insuranceDetail.fromTime}} &emsp;<i class="fa fa-arrow-right"></i>&emsp;
+                  {{insuranceDetail.toTime}}</p> -->
+              <!-- <div *ngFor="let room of insuranceDetail.roomDetails.roomDetails; let i= index"> -->
+              <h6>Package 1<small class="float-right text-danger">
+                  {{insuranceDetail?.amount | currency:currency:'symbol':'.0-2'}}</small></h6>
+              <span escapse="false" [innerHTML]="insuranceDetail.item_name"></span>
+              <!-- </div> -->
+            </div>
+            <!-- <div class="card-body">
+                <h5 class="text-danger mb-3" ngPreserveWhitespaces>Travel: <small class="float-right"
+                    style="color:#000;">{{searchQuoteForm?.residenceCountry}}&emsp;->&emsp;{{searchQuoteForm?.countryOfTravel}}</small>
+                </h5>
+                <h5 class="card-title">Booking for</h5>
+                <p ngPreserveWhitespaces>{{startDate | date}} &emsp; <i class="fa fa-arrow-right"></i>
+                  &emsp;{{endDate | date}}</p>
+                <div *ngIf="searchQuoteForm?.adults > 0">
+                  <h6>Adult(s) <span class="float-right text-danger"> {{(selectedQuoteProduct?.prices?.premiumAfterDiscountExclTax || 0) | currency:currency:'symbol':'.2'}} x {{searchQuoteForm.adults || 0}} </span>
+                  </h6>
+                  <span>{{selectedQuoteProduct?.productCode}}</span>
+                </div>
+                <div *ngIf="searchQuoteForm?.children > 0">
+                  <hr>
+                  <h6>Children <span class="float-right text-danger"> {{((selectedQuoteProduct?.prices?.priceAfterDiscountInclTax)/2 || 0) | currency:currency:'symbol':'.2'}} x {{searchQuoteForm.children || 0}}
+                    </span></h6>
+                  <span>{{selectedQuoteProduct?.productCode}}</span>
+                </div>
+              </div> -->
+            <div class="card-footer text-muted">
+              <span>Total Price: {{insuranceDetail?.amount | currency:currency:'symbol':'.0-2'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="" *ngIf="!isLoading && (insuranceDetail?.subscriptionStatus?.value ==='ACTIVE')">
+          <button type="button" class="btn btn-danger" (click)="openModalWithComponent()"
+            [disabled]="insuranceDetail.refundedAmount > 0">Cancel Booking</button>
+        </div>
+      <!--- <div class="ml-3" *ngIf="!isLoading && (insuranceDetail?.subscriptionStatus?.value ==='ACTIVE')">
+          <button type="button" class="btn btn-danger" (click)="updateInsurance()">Update Booking</button>
+        </div> -->
+      </div>
+    </div>
+  </main>
+</div>
+<main-footer></main-footer>

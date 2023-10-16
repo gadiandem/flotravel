@@ -1,0 +1,23 @@
+.nav-tabs {
+  border-bottom: none !important;
+}
+.nav-tabs .nav-link {
+  border: 0 ;
+}
+.nav-tabs .nav-link.active {
+    border: 0;
+}
+/* :host(ul) {
+  border-bottom: none;
+} */
+@media screen and (min-width: 992px) {
+  .tab-content {
+    margin-right: 100px !important;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .tab-content {
+    margin-right: 0px !important;
+  }
+}

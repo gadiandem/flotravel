@@ -1,0 +1,100 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-contact-details.label-title' | translate }}</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" (click)="getProfile()">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <div *ngIf="editMode">
+        <app-edit-contract (editMode) = "closeEditMode()"></app-edit-contract>
+      </div>
+      <div *ngIf="!editMode">
+        <div *ngIf="fetchFailed" class="mb-5 mt-3">
+          <alert type="danger" ngPreserveWhitespaces>
+            {{'wallet-contact-details.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+          </alert>
+          <button type="button" class="btn btn-danger" (click)="getProfile()">{{'wallet-contact-details.label-try-again' | translate }}</button>
+        </div>
+        <div *ngIf="fetching" class="text-center mt-3 loading-space">
+          <div class="spinner-border text-primary"></div>
+          <span ngPreserveWhitespaces>&emsp;{{'wallet-contact-details.label-loading' | translate }}</span>
+        </div>
+        <div *ngIf="!fetching && !fetchFailed" class="form-horizontal clearfix">
+          <div class="form-group row">
+            <div class="pull-left col-sm-12">
+              <a style="cursor: pointer;" class="green" (click)="gotoEdit()">{{'wallet-contact-details.title-edit' | translate }}</a>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-contact-details.title-address' | translate }}</label>
+            <div class="col-7">
+              <p class="form-control-static">
+                {{userInfo?.address}}<br>
+                {{userInfo?.city}}<br>
+                {{userInfo?.countryName || userInfo?.country}}<br>
+              </p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-contact-details.title-currency' | translate }}</label>
+            <div class="col-7">
+              <p class="form-control-static">{{userInfo?.currency}}</p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-contact-details.title-email' | translate }}</label>
+            <div class="col-7">
+              <p class="form-control-static">{{userInfo?.email}}</p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-contact-details.title-dob' | translate }}</label>
+            <div class="col-7">
+              <p class="form-control-static">{{userInfo?.dateOfBirth}}</p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-contact-details.title-type' | translate }}</label>
+            <div class="col-7">
+              <p class="form-control-static">{{accountType}} ({{userInfo?.type}} )</p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-contact-details.title-number' | translate }}</label>
+            <div class="col-7">
+              <p class="form-control-static">{{userInfo?.mobile}}</p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-contact-details.title-card' | translate }}</label>
+            <div class="col-7">
+              <p class="form-control-static">
+                <a routerLink="/wallet/creditCard">{{'wallet-contact-details.title-manage' | translate }}</a>
+              </p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-4 col-form-label text-sm-right">{{'wallet-contact-details.title-bank' | translate }}</label>
+            <div class="col-7">
+              <p class="form-control-static"><a routerLink="/wallet/bankAccount">{{'wallet-contact-details.title-manage' | translate }}</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

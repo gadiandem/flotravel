@@ -1,0 +1,357 @@
+<div class="we-body">
+  <div class="container">
+    <div class="row">
+      <!-- <div class="col-12">
+            <h5 class="mt-4 mb-0" style="font-size: 26px;">dhbchufnv vufn uehvnh euygbeihuv</h5>
+            <h3 class="" style="font-size:18px;">cuwb gbgbufhn en ieuhb nuhne uinefu hnbigehn eiu</h3>
+          </div> -->
+      <div class="col-md-8 order-2 order-md-1 mt-4">
+        <div *ngIf="!user" class="shadow-box p-3  mb-3" (click)="openModalWithComponent()" style="cursor: pointer;">
+          <span>
+            <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+              <i class="fa fa-lock"></i> &nbsp; {{'tour-cart.label-points' | translate }}
+            </h3>
+          </span>
+        </div>
+        <div class="shadow-box p-3 mb-2" *ngIf="isAgent" style="display: none;">
+          <app-agency-booking (userSelected)="useSelected($event)" (agencyBooking)="agencyBooking($event)">
+          </app-agency-booking>
+        </div>
+        <form [formGroup]="customersForm">
+          <div formArrayName="customerInfo">
+            <div [formGroupName]="i" *ngFor="let customer of customerInfo.controls; let i=index">
+              <div class="shadow-box p-3">
+                <h5 class="text-danger border-bottom pb-2 mb-3">{{'tour-cart.label-customer' | translate }} {{i+1}} {{'tour-cart.label-info' | translate }}</h5>
+                <div class="px-4">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" id="male{{i}}" type="radio" value="MALE"
+                            formControlName="gender"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">
+                          <label class="form-check-label" for="male{{i}}"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">{{'tour-cart.label-male' | translate }}</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" id="female{{i+1}}" type="radio" value="FEMALE"
+                            formControlName="gender"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">
+                          <label class="form-check-label" for="female{{i+1}}"
+                            [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('gender').errors }">{{'tour-cart.label-female' | translate }}</label>
+                        </div>
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('gender').errors?.required">
+                            {{'tour-cart.invalid-gender' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 col-8">
+                      <div class="form-group">
+                        <label> {{'tour-cart.label-fname' | translate }}</label>
+                        <input class="form-control" type="text" formControlName="firstName"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('firstName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('firstName').errors?.required">
+                            {{'tour-cart.invalid-fname' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-4">
+                      <div class="form-group">
+                        <label> {{'tour-cart.label-middle-name' | translate }}</label>
+                        <input class="form-control" type="text" formControlName="middleName" />
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-8">
+                      <div class="form-group">
+                        <label> {{'tour-cart.label-lname' | translate }}</label>
+                        <input class="form-control" type="text" formControlName="lastName"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('lastName').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('lastName').errors?.required">
+                            {{'tour-cart.invalid-lname' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-8 mr-auto" *ngIf="i === 0">
+                      <div class="form-group">
+                        <label>{{'tour-cart.label-country' | translate }}</label>
+                        <select class="custom-select" formControlName="country" (change)="onSelectCountry($event.target.value)"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('country').errors }">
+                            <option value="" selected>---Select Country---</option>
+                            <option *ngFor="let country of countries" value="{{country?.code}}">{{country?.name}}</option>
+                          </select>
+                          <span class="invalid-feedback">
+                            <span *ngIf="customerInfo.controls[i].get('country').errors?.required">
+                              {{'hotel-checkout.invalid-country' | translate }}
+                            </span>
+                          </span>
+                        <!-- <input formControlName="country" [typeahead]="countries"
+                          [typeaheadItemTemplate]="customItemTemplate" typeaheadOptionField="name"
+                          [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" type="text" class="form-control"
+                          placeholder="" (typeaheadOnSelect)="getCountryCode($event.item)"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('country').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('country').errors?.required">
+                            {{'tour-cart.invalid-country' | translate }}
+                          </span>
+                        </span>
+                        <ng-template #customItemTemplate let-model="item" let-index="index">
+                          {{model.name}}, {{model.code}}
+                        </ng-template> -->
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-8" *ngIf="i === 0">
+                      <div class="form-group">
+                        <label>{{'tour-cart.label-mobile' | translate }}</label>
+                        <input class="form-control" placeholder="{{'tour-cart.placeholder-mobile' | translate }}" type="text"
+                          formControlName="mobile"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('mobile').errors }" />
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('mobile').errors?.required">
+                            {{'tour-cart.incorrect-mobile' | translate }}
+                          </span>
+                          <span *ngIf="customerInfo.controls[i].get('mobile').errors?.pattern">{{'tour-cart.wrong-pattern-mobile' | translate }}s</span>
+                          <span *ngIf="customerInfo.controls[i].get('mobile').errors?.minlength">
+                            {{'tour-cart.invalid-mobile' | translate }}
+                          </span>
+                          <span *ngIf="customerInfo.controls[i].get('mobile').errors?.maxlength">
+                            {{'tour-cart.invalid-mobile' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                      <div class="form-check mb-3" style="margin-top:-10px;">
+                        <input class="form-check-input" type="checkbox" id="isNotify" formControlName="isNotify">
+                        <label class="form-check-label" for="isNotify">  {{'tour-cart.label-alerts' | translate }}
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-8 mr-auto" *ngIf="i === 0">
+                      <div class="form-group">
+                        <label>{{'tour-cart.label-passport' | translate }}</label>
+                        <select class="form-control" formControlName="passport"
+                          [ngClass]="{ 'is-invalid': formSubmitError && customerInfo.controls[i].get('passport').errors }">
+                          <option value="UK">{{'tour-cart.label-uk' | translate }}</option>
+                          <option value="ET">{{'tour-cart.label-Ethopia' | translate }}</option>
+                          <option value="NI">{{'tour-cart.label-Nigeria' | translate }}</option>
+                          <option>{{'tour-cart.label-Egypt' | translate }}</option>
+                          <option>{{'tour-cart.label-Kenya' | translate }}</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <span *ngIf="customerInfo.controls[i].get('passport').errors?.required">
+                            {{'tour-cart.invalid-passport' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="shadow-box p-3 mt-4" *ngIf="isAgent" style="display: none;">
+          <app-payment-type (vcnPayment)="paymentTypeUpdate($event)"></app-payment-type>
+        </div>
+        <form [formGroup]="cardPaymentForm" *ngIf="!isVcnPayment">
+          <div class="shadow-box p-3 mt-4">
+            <div class="text-danger" ngPreserveWhitespaces>
+              <i class="fa fa-credit-card"></i>&emsp;
+              <i class="fa fa-check"></i> {{'tour-cart.label-secure-transmission' | translate }}
+              &emsp;<i class="fa fa-check"></i>    {{'tour-cart.label-personal-information' | translate }}
+            </div>
+            <div class="row pt-3">
+              <div class="col-md-6 mb-3">
+                <div class="card-container"></div>
+              </div>
+              <div class="col-md-6">
+                <div card container=".card-container" card-width="350" [messages]="messages"
+                  [placeholders]="placeholders" [masks]="masks">
+                  <div class="card-info">
+                    <div class="form-group">
+                      <label for="card_number">{{'tour-cart.label-card-number' | translate }}</label>
+                      <input class="form-control" id="card_number" type="text" formControlName="cardNo"
+                        placeholder="xxxx xxxx xxxx xxxx" card-number
+                        [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardNo').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="cardPaymentForm.get('cardNo').errors?.required">
+                          {{'tour-cart.invalid-card-number' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-group">
+                      <label for="full_name">{{'tour-cart.label-full-name' | translate }}</label>
+                      <input class="form-control" id="full_name" type="text" formControlName="cardName" card-name
+                        [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardName').errors }" />
+                      <span class="invalid-feedback">
+                        <span *ngIf="cardPaymentForm.get('cardName').errors?.required">
+                          {{'tour-cart.invalid-full-name' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label for="expire_time">{{'tour-cart.label-expiry' | translate }}</label>
+                          <input class="form-control" id="expire_time" type="text" formControlName="expiry"
+                            placeholder="mm/yy" card-expiry
+                            [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('expiry').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="cardPaymentForm.get('expiry').errors?.required">
+                              {{'tour-cart.invalid-expiry' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label for="cvv"> {{'tour-cart.label-cvc' | translate }}</label>
+                          <input class="form-control" id="cvv" type="text" placeholder="xxxx" formControlName="cvv"
+                            card-cvc
+                            [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cvv').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="cardPaymentForm.get('cvv').errors?.required">
+                              {{'tour-cart.invalid-cvc' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <form [formGroup]="userForm">
+          <div class="shadow-box p-3 my-4">
+            <div class="text-danger mb-3" style="font-size: 20px;">{{'tour-cart.label-booking-info' | translate }}</div>
+            <p>{{'tour-cart.label-email-confirmation' | translate }}</p>
+            <div class="row">
+              <div class="col-12 col-md-8">
+                <div class="form-group">
+                  <label for="email">{{'tour-cart.label-email' | translate }}</label>
+                  <input class="form-control" id="email" placeholder="{{'tour-cart.placeholder-email' | translate }}" type="text"
+                    formControlName="email"
+                    [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('email').errors }" />
+                  <span class="invalid-feedback">
+                    <span *ngIf="userForm.get('email').errors?.required">
+                      {{'tour-cart.incorrect-email' | translate }}
+                    </span>
+                    <span *ngIf="userForm.get('email').errors?.email">
+                      {{'tour-cart.invalid-email' | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ul class="text-muted">
+              <li>{{'tour-cart.label-rule1' | translate }}</li>
+              <li>{{'tour-cart.label-rule2' | translate }}</li>
+              <li>{{'tour-cart.label-rule3' | translate }}
+                <br>{{'tour-cart.label-rule4' | translate }}
+              </li>
+            </ul>
+            <div *ngIf="user == null" class="row">
+              <div class="col-12 col-md-8">
+                <div class="p-4 mb-4" style="background: #eee;">
+                  <p>{{'tour-cart.label-enter-password' | translate }}</p>
+                  <div formGroupName="passwordGroup">
+                    <div class="row">
+                      <div class="col-10">
+                        <div class="form-group">
+                          <label>{{'tour-cart.label-password' | translate }}</label>
+                          <input class="form-control" type="password" formControlName="password" autocomplete="false"
+                            [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('passwordGroup.password').errors }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="userForm.get('passwordGroup.password').errors?.required">
+                              {{'tour-cart.invalid-password' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-10">
+                        <div class="form-group">
+                          <label>  {{'tour-cart.label-confirm-password' | translate }}</label>
+                          <input class="form-control" type="password" formControlName="confirmPassword"
+                            [ngClass]="{ 'is-invalid': formSubmitError && (userForm.get('passwordGroup.confirmPassword').errors || userForm.get('passwordGroup').errors) }" />
+                          <span class="invalid-feedback">
+                            <span *ngIf="userForm.get('passwordGroup.confirmPassword').errors?.required">
+                              {{'tour-cart.invalid-confirm-password' | translate }}
+                            </span>
+                            <span *ngIf="userForm.get('passwordGroup').errors?.match">
+                              {{'tour-cart.incorrect-confirm-password' | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-check mb-3" style="margin-top:-10px;">
+                        <input class="form-check-input" type="checkbox" id="createAccount"
+                          formControlName="createAccount">
+                        <label class="form-check-label" for="createAccount"> {{'tour-cart.label-account' | translate }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-muted">{{'tour-cart.label-disclaimer' | translate }}</div><br>
+            <div class="row">
+              <div class="col-12">
+                <button class="btn btn-danger" type="submit" (click)="buyNow()">{{'tour-cart.label-buy-now' | translate }} &emsp;<i
+                    class="fa fa-arrow-right"></i></button>
+              </div>
+            </div>
+            <div><br><i class="fa fa-lock"></i> {{'tour-cart.label-encryption' | translate }}</div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-4 order-1 order-md-2 mt-4 pl-md-0">
+        <div class="card shadow-box hotel-details mb-3 rounded-0">
+          <img class="img-fluid" [src]="selectedTour.imgUrl" [title]="selectedTour.name" style="width:100%" />
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="title">{{selectedTour.name}}</h2>
+                <div style="color:#ffda23" ngPreserveWhitespaces>
+                  <span *ngFor="let item of starRating"><i class="fa fa-star"></i>
+                  </span><span>&emsp;{{starRating[starRating.length -1] + 1}} of 5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title"> {{'tour-cart.label-booking' | translate }} {{selectedTour.name}}</h5>
+            <p>{{'tour-cart.label-duration' | translate }} <span ngPreserveWhitespaces>{{duration }} ({{selectedSchedule?.fromTime}} &emsp; <i
+                  class="fa fa-arrow-right"></i>
+                &emsp;{{selectedSchedule?.toTime}})</span></p>
+            <p ngPreserveWhitespaces>{{'tour-cart.label-date-booking' | translate }}  &emsp;{{selectedSchedule?.date}}</p>
+            <h6>{{selectedSchedule.adultCount}} {{'tour-cart.label-days-due' | translate }}, {{selectedSchedule?.childCount}} {{'tour-cart.label-nights' | translate }}
+              <small class="float-right text-danger">
+                {{itemPrice | currency:currency:'symbol':'.0-2'}} </small>
+            </h6>
+            <span [innerHTML]="selectedTour?.description | truncatetext:200"></span>
+            <hr>
+          </div>
+          <div class="card-footer text-muted">
+            {{'tour-cart.label-taxes' | translate }} <span class="float-right text-danger">{{itemPrice/10 | currency:currency:'symbol':'.0-2'}}</span>
+          </div>
+          <div class="card-footer text-muted">
+            {{'tour-cart.label-total' | translate }} <span class="float-right text-danger">{{itemPrice | currency:currency:'symbol':'.0-2'}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

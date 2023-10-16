@@ -1,0 +1,128 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header">
+      Hotel Room
+    </div>
+    <div class="card-body">
+      <form [formGroup]="hotelRoomForm" (ngSubmit)="createRoom()">
+        <div class="form-group mt-2">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Hotel
+              </span>
+            </div>
+            <input class="form-control" value="{{hotelName}}" readonly="true" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Room Type
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="roomType">
+              <option value="SINGLE STANDARD">SINGLE STANDARD</option>
+              <option value="DOUBLE STANDARD">DOUBLE STANDARD</option>
+              <option value="Studio Classic">Studio Classic</option>
+              <option value="Apartment One Bedroom">Apartment One Bedroom</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Board description
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="boardDescription">
+              <option value="ROOM ONLY">ROOM ONLY</option>
+              <option value="BED AND BREAKFAST">BED AND BREAKFAST</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Number of adults allowed
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="adultCount">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Number of child allowed
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="childCount">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Price Per Night
+              </span>
+            </div>
+            <input formControlName="pricePerNight" class="form-control"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelRoomForm.get('pricePerNight').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelRoomForm.get('pricePerNight').errors?.required">
+                Please enter hotel room price
+              </span>
+              <span *ngIf="hotelRoomForm.get('pricePerNight').errors?.min">
+                Hotel room price must be greater than or equal to the price of the hotel
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Discount(%)
+              </span>
+            </div>
+            <input formControlName="discount" class="form-control"
+                   [ngClass]="{ 'is-invalid': formSubmitError && hotelRoomForm.get('discount').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="hotelRoomForm.get('discount').errors?.required">
+                Please enter hotel room discount
+              </span>
+              <span *ngIf="hotelRoomForm.get('discount').errors?.pattern">
+                Discount only contains number.
+              </span>
+               <span *ngIf="hotelRoomForm.get('discount').errors?.min">
+                Discount must be greater than or equal 0
+              </span>
+              <span *ngIf="hotelRoomForm.get('discount').errors?.max">
+                Discount must be less than or equal to 100
+              </span>
+            </span>
+          </div>
+        </div>
+        <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Create Room" />
+      </form>
+    </div>
+  </div>
+</div>

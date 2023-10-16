@@ -1,0 +1,108 @@
+<div style="background: #f0f2f6;">
+  <main-header></main-header>
+  <div class="container mt-3 pt-3 pb-5" style="min-height: 800px;">
+    <div class="card card-default shadow-sm">
+      <div class="card-header">Refund Update</div>
+      <div class="card-body">
+        <div *ngIf="isLoading" class="text-center my-3">
+          <div class="spinner-border text-primary"></div>
+        </div>
+        <alert *ngIf="errorMessage" type="danger" ngPreserveWhitespaces>
+          {{errorMessage}}
+        </alert>
+        <form *ngIf="!isLoading && !errorMessage" class="form-horizontal" [formGroup]="packageOrderForm">
+          <div class="form-group row"><label for="amount" class="col-md-2 col-form-label">Amount</label>
+            <div class="col-md-10">
+              <input id="amount" class="form-control form-control-rounded" formControlName="amount" type="text">
+            </div>
+          </div>
+          <div class="form-group row"><label for="capturedAmount" class="col-md-2 col-form-label">CapturedAmount</label>
+            <div class="col-md-10"><input id="lastName" class="form-control form-control-rounded"
+                formControlName="capturedAmount" type="text">
+            </div>
+          </div>
+          <div class="form-group row"><label for="refundedAmount" class="col-md-2 col-form-label">RefundedAmount</label>
+            <div class="col-md-10"><input id="refundedAmount" class="form-control form-control-rounded"
+                formControlName="refundedAmount" type="text">
+            </div>
+          </div>
+          <div class="form-group row"><label for="orderDate" class="col-md-2 col-form-label">OrderDate</label>
+            <div class="col-md-10"><input id="orderDate" class="form-control form-control-rounded"
+                formControlName="orderDate">
+            </div>
+          </div>
+          <div class="form-group row"><label for="currency" class="col-md-2 col-form-label">Currency</label>
+            <div class="col-md-10"><input id="currency" class="form-control form-control-rounded"
+                formControlName="currency">
+            </div>
+          </div>
+          <div class="form-group row"><label for="currencyName" class="col-md-2 col-form-label">CurrencyName</label>
+            <div class="col-md-10"><input id="currencyName" class="form-control form-control-rounded"
+                formControlName="currencyName">
+            </div>
+          </div>
+          <div class="form-group row"><label for="custom" class="col-md-2 col-form-label">Custom</label>
+            <div class="col-md-10"><input id="custom" class="form-control form-control-rounded"
+                formControlName="custom">
+            </div>
+          </div>
+          <div class="form-group row"><label for="itemName" class="col-md-2 col-form-label">ItemName</label>
+            <div class="col-md-10"><input id="itemName" class="form-control form-control-rounded"
+                formControlName="itemName">
+            </div>
+          </div>
+          <div class="form-group row"><label for="itemPrice" class="col-md-2 col-form-label">ItemPrice</label>
+            <div class="col-md-10"><input id="itemPrice" class="form-control form-control-rounded"
+                formControlName="itemPrice">
+            </div>
+          </div>
+          <div class="form-group row"><label for="quantity" class="col-md-2 col-form-label">Quantity</label>
+            <div class="col-md-10"><input id="quantity" class="form-control form-control-rounded"
+                formControlName="quantity">
+            </div>
+          </div>
+          <div class="form-group row"><label for="orderId" class="col-md-2 col-form-label">OrderId</label>
+            <div class="col-md-10"><input id="orderId" class="form-control form-control-rounded"
+                formControlName="orderId">
+            </div>
+          </div>
+          <div class="form-group row"><label for="tracking" class="col-md-2 col-form-label">Tracking</label>
+            <div class="col-md-10"><input id="tracking" class="form-control form-control-rounded"
+                formControlName="tracking">
+            </div>
+          </div>
+          <div class="form-group row"><label for="traceNumber" class="col-md-2 col-form-label">TraceNumber</label>
+            <div class="col-md-10"><input id="traceNumber" class="form-control form-control-rounded"
+                formControlName="traceNumber">
+            </div>
+          </div>
+          <div class="form-group row"><label for="partnerMessage" class="col-md-2 col-form-label">PartnerMessage</label>
+            <div class="col-md-10"><input id="partnerMessage" class="form-control form-control-rounded"
+                formControlName="partnerMessage">
+            </div>
+          </div>
+          <div class="form-group row"><label for="status" class="col-md-2 col-form-label">Status</label>
+            <div class="col-md-10"><input id="status" class="form-control form-control-rounded"
+                formControlName="status">
+            </div>
+          </div>
+          <div class="form-group row"><label for="statusDesc" class="col-md-2 col-form-label">StatusDesc</label>
+            <div class="col-md-10"><input id="statusDesc" class="form-control form-control-rounded"
+                formControlName="statusDesc">
+            </div>
+          </div>
+          <div class="form-group row"><label for="paymentChannel" class="col-md-2 col-form-label">PaymentChannel</label>
+            <div class="col-md-10"><input id="paymentChannel" class="form-control form-control-rounded"
+                formControlName="paymentChannel">
+            </div>
+          </div>
+          <button class="btn btn-sm btn-primary" type="button" (click)="updaterRefundTransaction()" [disabled] = "isUpdating || isLoading || errorMessage">Update</button>
+          <div *ngIf="isUpdating" class="text-center my-3">
+            <div class="spinner-border text-primary"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<main-footer></main-footer>

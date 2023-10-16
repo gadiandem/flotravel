@@ -1,0 +1,140 @@
+<div class="container">
+  <div class="col-sm-8 offset-sm-2">
+    <div class="card">
+      <div class="card-header">
+        {{'flight-rule-create.lable-header' | translate }}
+      </div>
+      <div class="card-body mx-3">
+        <form [formGroup]="agentForm">
+          <div class="form-group row">
+            <label for="type"> {{'flight-rule-create.lable-type' | translate }}</label>
+            <select class="form-control" id="type" formControlName="type"
+              [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('type').errors }">
+              <option value="ONE_WAY"> {{'flight-rule-create.type-one-way' | translate }}</option>
+              <option value="ROUND_TRIP"> {{'flight-rule-create.type-round-trip' | translate }}</option>
+            </select>
+            <span class="invalid-feedback">
+              <span *ngIf="agentForm.get('type').errors?.required">
+                {{'flight-rule-create.invalid-type' | translate }}
+              </span>
+            </span>
+          </div>
+          <div class="form-group row">
+            <label class="m-0">{{'flight-rule-create.depature' | translate }}</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+              </div>
+              <input [(ngModel)]="searchFlyFrom[0]" [typeaheadItemTemplate]="customItemTemplate"
+                typeaheadOptionField="displayName" [typeahead]="sugFlyFrom$" formControlName="departure"
+                [typeaheadAsync]="true" [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectFlyFrom($event.item)"
+                class="form-control" placeholder="{{'flight-rule-create.placeholder-departure' | translate }}"
+                [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('departure').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="agentForm.get('departure').errors?.required">
+                  {{'flight-rule-create.invalid-flying-from' | translate }}
+                </span>
+                <span *ngIf="agentForm.get('departure').errors?.minlength">
+                  {{'flight-rule-create.incorrect-flying-from' | translate }}
+                </span>
+              </span>
+              <ng-template #customItemTemplate let-model="item" let-index="index">
+                {{model.displayName | truncatetext:100:0}}
+              </ng-template>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="m-0"> {{'flight-rule-create.arrival' | translate }}</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+              </div>
+              <!-- <input type="text" class="form-control" formControlName="destination" placeholder="Arrival"> -->
+              <input [(ngModel)]="searchFlyTo[0]" typeaheadOptionField="displayName"
+                [typeaheadItemTemplate]="customItemTemplate" [typeahead]="sugFlyTo$" formControlName="arrival"
+                [typeaheadAsync]="true" [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectDestination($event.item)"
+                class="form-control" placeholder="  {{'flight-rule-create.placeholder-arrival' | translate }}"
+                [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('arrival').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="agentForm.get('arrival').errors?.required">
+                  {{'flight-rule-create.invalid-destination' | translate }}
+                </span>
+                <span *ngIf="agentForm.get('arrival').errors?.minlength">
+                  {{'flight-rule-create.incorrect-destination' | translate }}
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="providers"> {{'flight-rule-create.lable-providers' | translate }}</label>
+            <select class="form-control" id="providers" formControlName="providers"
+              [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('providers').errors }">
+              <option value="0"> {{'flight-rule-create.providers-all' | translate }}</option>
+              <option value="1"> {{'flight-rule-create.providers-hahn-air' | translate }}</option>
+              <option value="2"> {{'flight-rule-create.providers-et' | translate }}</option>
+              <option value="3"> {{'flight-rule-create.providers-aero' | translate }}</option>
+            </select>
+            <span class="invalid-feedback">
+              <span *ngIf="agentForm.get('providers').errors?.required">
+                {{'flight-rule-create.invalid-provider' | translate }}
+              </span>
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="m-0">{{'flight-rule-create.lable-airlinePreferenceIncludes' | translate }}</label>
+            <tag-input formControlName="airlinePreferenceIncludes" [onlyFromAutocomplete]="true" theme='bootstrap'
+              [placeholder]="'Hotel PreferenceIncludes'" displayBy="name" identifyBy="iata">
+              <tag-input-dropdown [showDropdownIfEmpty]="true" displayBy="name" identifyBy="iata"
+                [autocompleteObservable]="airlineAutoComplete">
+              </tag-input-dropdown>
+            </tag-input>
+          </div>
+          <div class="form-group">
+            <label class="m-0">{{'flight-rule-create.lable-airlinePreferenceExcludes' | translate }}</label>
+            <tag-input formControlName="airlinePreferenceExcludes" [onlyFromAutocomplete]="true" theme='bootstrap'
+              [placeholder]="'Hotel PreferenceExcludes'" displayBy="name" identifyBy="iata">
+              <tag-input-dropdown [showDropdownIfEmpty]="true" displayBy="name" identifyBy="iata"
+                [autocompleteObservable]="airlineAutoComplete">
+              </tag-input-dropdown>
+            </tag-input>
+          </div>
+          <div class="form-group row">
+            <label for="businessCabinPreferences"> {{'flight-rule-create.lable-business-cabin-preferences' | translate }}</label>
+            <select class="form-control" id="businessCabinPreferences" formControlName="businessCabinPreferences"
+              [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('businessCabinPreferences').errors }">
+              <option value="1"> {{'flight-rule-create.business-cabin.label-first' | translate }}</option>
+              <option value="2"> {{'flight-rule-create.business-cabin.label-business' | translate }}</option>
+              <option value="3"> {{'flight-rule-create.business-cabin.label-economy' | translate }}</option>
+              <option value="4"> {{'flight-rule-create.business-cabin.label-premium-economy' | translate }}</option>
+              <option value="5"> {{'flight-rule-create.business-cabin.label-economy-2' | translate }}</option>
+              <option value="6"> {{'flight-rule-create.business-cabin.label-economy-3' | translate }}</option>
+              <option value="7"> {{'flight-rule-create.business-cabin.label-any-cabin' | translate }}</option>
+            </select>
+            <span class="invalid-feedback">
+              <span *ngIf="agentForm.get('businessCabinPreferences').errors?.required">
+                {{'flight-rule-create.invalid-businessCabinPreferences' | translate }}
+              </span>
+            </span>
+          </div>
+          <div class="form-group row">
+            <label for="type"> {{'flight-rule-create.baggage-preferences' | translate }}</label>
+            <select class="form-control" id="baggagePreferences" formControlName="baggagePreferences"
+              [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('baggagePreferences').errors }">
+              <option value="3"> {{'flight-rule-create.label-baggage-preferences' | translate }}</option>
+            </select>
+            <span class="invalid-feedback">
+              <span *ngIf="agentForm.get('type').errors?.required">
+                {{'flight-rule-create.invalid-baggage-preferences' | translate }}
+              </span>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <button class="search-hotel btn btn-danger" (click)="createRule()">
+          {{'flight-rule-create.button-edit-flight-rule' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

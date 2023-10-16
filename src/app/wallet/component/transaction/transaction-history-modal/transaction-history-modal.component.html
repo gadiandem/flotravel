@@ -1,0 +1,28 @@
+<div class="modal-content">
+  <div class="modal-header bg-blue">
+    <h4 class="modal-title" id="modal-basic-title">{{'wallet-transaction-history-detail.label-title' | translate }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i></span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <tabset>
+        <tab heading="{{'wallet-transaction-history-detail.label-transaction' | translate }}">
+        <app-transaction-detail [transactionDetail] = "transactionDetailSeleted">
+        </app-transaction-detail>
+        </tab>
+        <tab heading="{{'wallet-transaction-history-detail.label-notifications' | translate }}">
+          <app-notifications ></app-notifications>
+        </tab>
+       
+        <tab heading="{{'wallet-transaction-history-detail.label-refund' | translate }}">
+          <app-refund-requests></app-refund-requests>
+        </tab>
+      </tabset>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="closeModal()">
+        <i class="fa fa-times" aria-hidden="true"></i> {{'wallet-transaction-history-detail.label-close' | translate }}
+    </button>
+  </div>
+</div>

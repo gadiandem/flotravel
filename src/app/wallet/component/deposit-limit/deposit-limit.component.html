@@ -1,0 +1,27 @@
+<div class="card card-outline card-danger">
+    <div class="card-header">
+      <h3 class="card-title">{{'wallet-account-info.label-deposit-limit' | translate }}</h3>
+  
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+          <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+          <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div [collapse]="isCollapsed" [isAnimated]="true">
+      <div class="card-body">
+        <div class="clearfix">
+          <span class="float-left">{{'wallet-account-info.label-usd' | translate }}</span>
+          <span class="float-right badge bg-red">{{'wallet-account-info.label-limit' | translate }}</span>
+        </div>
+        <!-- <hr/> -->
+      </div>
+    </div>
+  </div>
+  

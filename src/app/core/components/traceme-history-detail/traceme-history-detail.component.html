@@ -1,0 +1,140 @@
+<div style="background: #f0f2f6;">
+    <main-header></main-header>
+    <main role="main  mt-5">
+      <div class="container mt-3 pt-3 pb-5">
+        <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+          <div class="spinner-border text-primary"></div>
+          <span ngPreserveWhitespaces>&emsp;Loading...</span>
+        </div>
+        <div class="row" *ngIf="!isLoading">
+          <div class="card shadow-sm col-md-8">
+            <!-- <alert
+              *ngIf="(insuranceDetail?.subscriptionStatus?.value ==='CANCEL') || (insuranceDetail?.subscriptionStatus === undefined)"
+              type="danger" ngPreserveWhitespaces>
+              This booking is cancellation
+            </alert> -->
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>Trace Me Details</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Quote Id:</label>&emsp;
+                  {{tracemeDetail?.quoteId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Reservation:</label>&emsp;{{tracemeDetail?.policyNumber}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>Benefi Detail</h5>
+              </div>
+              <div class="col-12">
+                <div *ngFor="let item of tracemeDetail?.quote?.benefits; let i = index" class="row">
+                  <hr *ngIf="i !== 0" />
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>Amount: </label>&emsp; {{item?.amount}}
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group" ngPreserveWhitespaces>
+                      <label>Cover: </label>&emsp;{{item?.cover}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>Contact Details</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Email:</label>&emsp;{{tracemeDetail?.payer?.email}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>First Name:</label>&emsp;{{tracemeDetail?.payer?.firstName}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Last Name:</label>&emsp;{{tracemeDetail?.payer?.lastName}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>Transaction Details</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Order No:</label>&emsp;{{tracemeDetail?.orderId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>TraceNumber: </label>&emsp;{{tracemeDetail?.traceNumber}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>TraceMe Remarks</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3  shadow-sm" style="border-radius: 0px;">
+              <div class="card-header">
+                <div class="row">
+                  <!-- <div class="col-md-4">
+                    <img
+                      src="https://cdn.businesstraveller.com/wp-content/uploads/fly-images/899267/ethiopia1-916x507.jpg"
+                      class="img-fluid" style="width:100%" />
+                  </div> -->
+                  <div class="col-md-12">
+                    <h6 class="mt-2">{{tracemeDetail.item_name}}</h6>
+                    <!-- <ul class="icon-group">
+                      <i *ngFor="let item of [1, 2, 3, 4] index as i" class="fa fa-star"></i>
+                    </ul> -->
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <h5>Travel Trip</h5>
+                <!-- <p ngPreserveWhitespaces>{{searchTracemeReq?.startDate | date}} &emsp; <i class="fa fa-arrow-right"></i>
+                    &emsp;{{searchTracemeReq?.endDate | date}}</p> -->
+                    <h6>Benefit: <span class="float-right text-danger">
+                        {{tracemeDetail?.quote?.benefits[0]?.amount}}
+                        </span>
+                    </h6>
+                    <h6>Cover: {{(tracemeDetail?.quote?.benefits[0]?.cover || 'Limit')}}</h6>
+                    <!-- <span>{{tracemeDetail?.productCode}}</span> -->
+              </div>
+              <div class="card-footer text-muted">
+                <span>Total Price: {{(tracemeDetail?.amount || 0) | currency:currency:'symbol':'.0-2'}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <!-- <div class="" *ngIf="!isLoading && (insuranceDetail?.subscriptionStatus?.value ==='ACTIVE')">
+            <button type="button" class="btn btn-danger"
+              [disabled]="insuranceDetail?.refundedAmount > 0">Cancel Booking</button>
+          </div> -->
+          <!-- <div class="ml-3" *ngIf="!isLoading && (insuranceDetail?.subscriptionStatus?.value ==='ACTIVE')">
+            <button type="button" class="btn btn-danger" (click)="updateInsurance()">Update Booking</button>
+          </div> -->
+        </div>
+      </div>
+    </main>
+  </div>
+  <main-footer></main-footer>
+  

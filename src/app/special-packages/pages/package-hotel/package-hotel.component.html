@@ -1,0 +1,193 @@
+<div class="container-fluid my-5 pt-5 pb-3 shadow-box d-md-block p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0"
+             placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <app-special-package-list-search-box [packageShoppingReq]="packageShoppingReq" [roomGuests]="roomGuests"
+                                         [travellerCount]="travellerCount" [roomCount]="roomCount"
+                                         (searchRequest)="shoppingPackage($event)"></app-special-package-list-search-box>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div *ngIf="fetchFailed" class="mb-5" style="height: 500px; width: 100%;">
+    <alert type="danger" ngPreserveWhitespaces>
+      There is some erros:&emsp;<strong>{{errorMes}}</strong>
+    </alert>
+    <button type="button" class="btn btn-danger" (click)="fetchHotelDetail()">Try Again</button>
+  </div>
+  <div *ngIf="!fetchFailed" class="row hotel-details">
+    <div class="col-12 d-block d-md-none mb-3">
+      <div class="font-weight-bold mt-3">{{packageShoppingReq?.cityCode}}</div>
+      <!-- <div class="my-2">{{searchhotelListRequest?.checkinDate | date: 'MMM d'}} -
+          {{searchhotelListRequest?.checkoutDate | date: 'MMM d'}},
+          {{searchhotelListRequest?.checkinDate | date: 'y'}}, {{roomCount}} room, {{travellerCount}} travellers</div> -->
+      <div class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal"
+           style="cursor: pointer;border: 1px solid;" (click)="openModalWithComponent()">
+        CHANGE
+      </div>
+    </div>
+    <div class="col-md-12 mt-md-4">
+      <div class="shadow-box p-3">
+        <div class="row">
+          <div class="col-md-9">
+            <img class="img-fluid d-block d-md-none mb-4" [src]="selectedPackage?.hotelImage">
+            <h2 class="title">{{selectedPackage?.name}}</h2>
+            <div class="address">
+              <span><i class="fa fa-map-marker"></i> &nbsp;{{selectedPackage?.cityName}}</span><br>
+              <span style="color:#ffda23">
+                    <i *ngFor="let s of  [1, 2, 3, 4]" class="fa fa-star"></i>
+                  </span> &nbsp;{{starRating}} of 5 guest rating
+            </div>
+          </div>
+          <div class="col-md-3 mt-3 mt-md-0">
+            <p class="price"><small>price from</small> <span
+              style="font-size:22px;">{{selectedPackage?.price | currency:currency:'symbol':'.0-2'}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-8 d-none d-md-block">
+            <div class="col-12">
+              <ngx-gallery *ngIf="galleryOptions && galleryImages?.length" [options]="galleryOptions"
+                           [images]="galleryImages"></ngx-gallery>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3 col-12 center" style="justify-content: center">
+              <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mappType' [zoom]='12'
+                       mapTypeControl="true">
+                <agm-marker [latitude]="marker.lat" [longitude]="marker.lng" [title]="marker.label"
+                            [markerDraggable]="marker.draggable">
+                  <agm-info-window>
+                    <strong>{{marker.label}}</strong>
+                  </agm-info-window>
+                </agm-marker>
+              </agm-map>
+              <div style="font-size:16px;margin-top:5px; color: #666;"><i class="fa fa-map-marker"></i>
+                {{selectedPackage.name}}</div>
+            </div>
+            <div class="col-12 mb-4">
+              <h4 class="heading">Hotel Facilities</h4>
+              <ul>
+                <li *ngFor="let facility of selectedPackage?.fullFacilityDescriptions">{{facility?.name}}</li>
+              </ul>
+              <a pageScroll href="#amenities"><strong>+ More Amenities</strong></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-4">
+      <h4 class="title">Choose your room</h4>
+      <form [formGroup]="searchForm">
+        <div class="row room-search mb-4" (click)="openModalWithComponent()">
+          <div class="col-lg-6 col-6">
+            <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+              <i class="icon fa fa-map-marker text-default"
+                 style="font-size: 20px;position: absolute;top: 17px;"></i>
+              <label class="ml-4 mb-0 font-weight-light">Where to</label><br>
+              <div class="ml-4 font-weight-bold">{{packageShoppingReq?.destination}}</div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-6">
+            <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+              <i class="icon fa fa-calendar-check-o text-default"
+                 style="font-size: 20px;position: absolute;top: 17px;"></i>
+              <label class="ml-4 mb-0 font-weight-light">When</label><br>
+              <div class="ml-4 font-weight-bold">{{packageShoppingReq?.date | date}}</div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-12">
+            <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+              <i class="icon fa fa-room text-default" style="font-size: 20px;position: absolute;top: 17px;"></i>
+              <label class="ml-4 mb-0 font-weight-light">Days</label><br>
+              <div class="ml-4 font-weight-bold">{{selectedPackage?.dayCount || 1}} day(s)</div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-12">
+            <button class="btn btn-danger btn-block p-3 h-100" type="submit" name="submit">Search</button>
+          </div>
+        </div>
+      </form>
+      <div class="rooms-list">
+        <div *ngFor="let room of packageHotelDetailRes; let i = index;">
+          <div class="room-item d-block mb-3">
+            <div class="row">
+              <div class="col-md-4 d-none d-md-block">
+                <div class="room-img h-100"
+                     [ngStyle]="{'background-image': 'url(' + selectedPackage?.hotelImage + ')'}">
+                </div>
+              </div>
+              <div class="col-md-4 d-block d-md-none">
+                <img [src]="selectedPackage?.hotelImage" class="img-fluid">
+              </div>
+              <div class="col-md-8 room-info py-3">
+                <div class="row px-md-0 px-3">
+                  <div class="col-12">
+                    <h5 class="room-title">
+                          <span>
+                            {{room?.roomType}}, {{room?.roomDescription}}
+                          </span></h5>
+                  </div>
+                  <div class="col-4">
+                    <small class="hidden-xs"><i class="fa fa-users"></i> Sleeps {{travellerCount}}<br>
+                      <i class="fa fa-bed"></i>{{roomCount}} room<span *ngIf="roomCount > 1">s</span><br>
+                      <span>Adults Policy: {{packageHotelDetailRes[i]?.adultCount || 1}}</span><br/>
+                      <span>Childs Policy: {{packageHotelDetailRes[i]?.childCount || 0}}</span>
+                    </small><br><br>
+                  </div>
+                  <div class="col-8 text-right pr-4">
+                    <div>
+                      <del
+                        class="room-price-cancel">{{((+room?.pricePerNight) * (1 + defaultDiscount / 100)) | currency:currency:'symbol':'.0-2'}}</del>
+                      &nbsp;
+                    </div>
+                    <span class="room-price">{{(room?.pricePerNight) | currency:currency:'symbol':'.0-2'}}</span>
+                    <div>for 1 night</div>
+                  </div>
+                  <div class="col-12 text-right pr-4">
+                    <button class="btn btn-danger mt-2" (click)="goToSupplement(room)">Reserve</button>
+                    <div style="font-size:10px;">It only takes 2 minutes</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title">Hotel Overview </h4>
+        <p>{{selectedPackage?.overview}}</p>
+      </div>
+      <div class="mt-3 p-3 shadow-box" id="amenities">
+        <h4 class="title">Full Facilities Description </h4>
+        <ul>
+          <li *ngFor="let facility of selectedPackage?.fullFacilityDescriptions">{{facility?.name}}</li>
+        </ul>
+      </div>
+      <div class="mt-4 p-3 shadow-box">
+        <h4 class="title">Breakfast </h4>
+        <p>{{selectedPackage?.breakfast ? 'Yes' : 'No'}}</p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">Hotel Rating </h4>
+        <p>{{selectedPackage?.starRate || 5}}</p>
+      </div>
+      <div class="mt-3 mb-5 p-3 shadow-box">
+        <h4 class="title">Hotel Remarks</h4>
+        <p>{{selectedPackage?.remark || 'There is no hote remark'}}</p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">Additional Info </h4>
+        <p><span [innerHTML]="selectedPackage?.additionalInfo"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
+<app-special-package-hotel-skeleton *ngIf="fetching"></app-special-package-hotel-skeleton>

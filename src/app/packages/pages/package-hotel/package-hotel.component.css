@@ -1,0 +1,19 @@
+agm-map {
+    height:300px; /* height is required */ }
+
+.room-img{
+    background-repeat:no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    min-height: 200px;
+    height: 100%;
+}
+
+label {
+  margin-left: 0px;
+}
+
+.dropdown-menu {
+  z-index: 1080 !important;
+}

@@ -1,0 +1,114 @@
+<div style="background: #f0f2f6;">
+    <main-header></main-header>
+    <main role="main">
+      <div class="container mt-3 pt-3 pb-5">
+        <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+          <div class="spinner-border text-primary"></div>
+          <span ngPreserveWhitespaces>&emsp;Loading...</span>
+        </div>
+        <div class="row" *ngIf="!isLoading">
+          <div class="col-md-8">
+            <alert *ngIf="gcaBookingDetail?.gcaStatus.code !== 200" type="danger" ngPreserveWhitespaces>
+              This booking is cancelled
+            </alert>
+            <!-- <alert *ngIf="gcaBookingDetail?.gcaStatus.code !== 200" type="warning" ngPreserveWhitespaces>
+              This booking is pending wait response from admin
+            </alert> -->
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>Booking Details</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Booking Id:</label>&emsp;
+                  {{gcaBookingDetail?.bookingId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Reservation:</label>&emsp;{{gcaBookingDetail?.gcaStatus?.message}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>Contact Details</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Email:</label>&emsp;{{gcaBookingDetail?.payer?.email}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>First Name:</label>&emsp;{{gcaBookingDetail?.payer?.firstName}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Last Name:</label>&emsp;{{gcaBookingDetail?.payer?.lastName}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>Transaction Details</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Order No:</label>&emsp;{{gcaBookingDetail?.orderId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>TraceNumber: </label>&emsp;{{gcaBookingDetail?.traceNumber}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3" style="border-radius: 0px;">
+              <img class="img-fluid" [src]="'/assets/no-image.png'" [title]="gcaBookingDetail?.item_name" style="width:100%" />
+              <div class="card-body">
+                <h5 class="card-title">Flotravel booking Global Airport Concierge</h5>
+                <!-- <h5 class="card-title">Booking for: {{gcaBookingDetail?.name}}</h5> -->
+                <!-- <span escapse="false" [innerHTML]="gcaBookingDetail?.hotelPackage?.overview"></span>
+                <hr>
+                <h6>{{gcaBookingDetail?.rooms[0]?.roomType}} <small class="float-right text-danger">Hotel Room</small></h6>
+                <span [innerHTML]="gcaBookingDetail?.rooms[0]?.roomDescription | truncatetext:200"></span>
+                 -->
+              </div>
+              <div class="card-footer text-muted">
+                <p>Total trip: <span class="float-right text-danger">{{gcaBookingDetail?.amount | currency:currency:'symbol':'.0-2'}}</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!isLoading && (gcaBookingDetail?.gcaStatus?.code === 200)">
+          <button type="button" class="btn btn-danger" (click)="openModalWithComponent()"  [disabled]="gcaBookingDetail.refundedAmount > 0">Cancel Booking</button>
+        </div>
+
+        <!-- <div class="card card-default shadow-sm" *ngIf="!isLoading && (gcaBookingDetail?.bookingStatus ==='PENDING')">
+          <div class="card-header">Update Refund</div>
+          <div class="card-body">
+            <form class="form-horizontal" [formGroup]="gcaCancelForm">
+              <div class="form-group row"><label for="traceNumber" class="col-md-2 col-form-label">TraceNumber</label>
+                <div class="col-md-10"><input id="traceNumber" class="form-control form-control-rounded"
+                                              formControlName="traceNumber" type="text"
+                                              [ngClass]="{ 'is-invalid': formSubmitError && gcaCancelForm.get('traceNumber').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="gcaCancelForm.get('traceNumber').errors?.required">
+                      Please enter your tracenumber to update.
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-primary" type="button" (click)="getOrderUpdate()">Get Refund</button>
+            </form>
+          </div>
+        </div> -->
+      </div>
+    </main>
+  </div>
+  <main-footer></main-footer>
+  

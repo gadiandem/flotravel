@@ -1,0 +1,34 @@
+.btext{font-size: 14px;color: #737373;margin-bottom: 15px;}
+
+.lapseat{line-height: 27px;}
+
+.airltxt a{color: #0a3049;font-size: 14px;}
+
+button.btn.btn-decrement.btn-outline-secondary.btn-minus, button.btn.btn-increment.btn-outline-secondary.btn-plus {
+  padding: 0;
+  min-width: 32px !important;
+}
+
+ul.dropdown-menu.p-2.rounded.shadow.show {
+  display: inline-block;
+  min-width: 120px;
+  padding-left: 31px !important;
+}
+
+ul.dropdown-menu.p-2.travellerd.rounded.shadow.show {
+  padding: 10px !important;
+}
+
+#tInfants {
+  width: 42px !important;
+  text-align: center;
+}
+#tChildren {
+  width: 42px !important;
+  text-align: center;
+}
+
+#tAdults {
+  width: 42px !important;
+  text-align: center;
+}

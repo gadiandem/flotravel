@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="col-sm-8 offset-sm-2">
+    <div class="card">
+      <div class="card-header">
+        {{'hotel-rule-edit.lable-header' | translate }}
+      </div>
+      <div class="card-body">
+        <form [formGroup]="agentForm">
+          <div class="form-group row">
+            <label for="address">{{'hotel-rule-create.label-address' | translate }}</label>
+            <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+              formControlName="cityName" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+              (typeaheadOnSelect)="select($event.item)" class="form-control"
+              [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('cityName').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="agentForm.get('cityName').errors?.required">
+                {{'dashboard-hotel.invalid-location' | translate }}
+              </span>
+              <span *ngIf="agentForm.get('cityName').errors?.minlength">
+                {{'dashboard-hotel.incorrect-location' | translate }}
+              </span>
+            </span>
+          </div>
+          <div class="form-group row">
+            <label for="airport">{{'hotel-rule-create.label-airport' | translate }}</label>
+            <select class="form-control" id="airport" formControlName="airport"
+              [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('airport').errors }">
+              <option value=""> {{'hotel-rule-create.label-airport-select-placeholder' | translate }}</option>
+              <option *ngFor="let airport of airports" [value]="airport.airportCode"> {{airport.displayName }}</option>
+            </select>
+            <span class="invalid-feedback">
+              <span *ngIf="agentForm.get('airport').errors?.required">
+                {{'flight-checkout.invalid-country' | translate }}
+              </span>
+              <ng-template #customItemTemplate let-model="item" let-index="index">
+                {{model.name}}, {{model.code}}
+              </ng-template>
+            </span>
+          </div>
+          <div class="form-group row">
+            <label for="providers"> {{'hotel-rule-create.lable-providers' | translate }}</label>
+            <input class="form-control" id="providers" formControlName="providers" readonly
+              [ngClass]="{ 'is-invalid': formSubmitError && agentForm.get('providers').errors }">
+            <span class="invalid-feedback">
+              <span *ngIf="agentForm.get('providers').errors?.required">
+                {{'hotel-rule-create.invalid-website' | translate }}
+              </span>
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="m-0">HotelPreferenceIncludes</label>
+            <tag-input formControlName="hotelPreferenceIncludes" [onlyFromAutocomplete]="true" theme='bootstrap'
+              [placeholder]="'Hotel PreferenceIncludes'" displayBy="hotelName" identifyBy="hotelCode">
+              <tag-input-dropdown [showDropdownIfEmpty]="true" displayBy="hotelName" identifyBy="hotelCode"
+                [autocompleteObservable]="hotelListAutoComplete">
+              </tag-input-dropdown>
+            </tag-input>
+          </div>
+          <div class="form-group">
+            <label class="m-0">HotelPreferenceExcludes</label>
+            <tag-input formControlName="hotelPreferenceExcludes" [onlyFromAutocomplete]="true" theme='bootstrap'
+              [placeholder]="'Hotel PreferenceExcludes'" displayBy="hotelName" identifyBy="hotelCode">
+              <tag-input-dropdown [showDropdownIfEmpty]="true" displayBy="hotelName" identifyBy="hotelCode"
+                [autocompleteObservable]="hotelListAutoComplete">
+              </tag-input-dropdown>
+            </tag-input>
+          </div>
+          <!-- <div class="form-group">
+            <label class="m-0">StarPreferences</label>
+            <tag-input formControlName="starPreferences" [onlyFromAutocomplete]="true" theme='bootstrap'
+              [placeholder]="'StarPreferences'" displayBy="code" identifyBy="id">
+              <tag-input-dropdown [showDropdownIfEmpty]="true" displayBy="code" identifyBy="id"
+                [autocompleteObservable]="starListAutoComplete">
+              </tag-input-dropdown>
+            </tag-input>
+          </div> -->
+        </form>
+      </div>
+      <div class="card-footer">
+        <button class="search-hotel btn btn-danger" (click)="editRule()">
+          {{'hotel-rule-edit.button-create-hotel-rule' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

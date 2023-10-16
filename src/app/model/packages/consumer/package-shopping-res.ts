@@ -1,0 +1,41 @@
+import { HotelFacility } from "../provider/hotel-facility";
+
+export class PackageShoppingRes {
+    id: string;
+    sessionId: string;
+    packageName: string;
+    regionId: number;
+    regionName: string;
+    basicDescription: string;
+    dayCount: number;
+    nightCount: number;
+    startDate: string;
+    endDate: string;
+    cityId: number;
+    cityName: string;
+    itineraries: string[][];
+    starRate: number;
+    latitude: number;
+    longitude: number;
+    additionalInfo: string;
+    hotelId: string;
+    name: string;
+    overview: string;
+    hotelImage: string;
+    tax: any;
+    roomImages: string[];
+    highlightFacilities: string[];
+    price: number;
+    fullFacilityDescriptions: HotelFacility[];
+    // minPrice: number;
+    currency: string;
+    // inclusions: string[];
+    // exclusions: string[];
+    breakfast: boolean;
+    remark: string;
+    discount: number;
+    rooms: Map<string, number>;
+    // rooms: Map<string, number>;
+  countryOrStation: string;
+  traceId: string;
+}

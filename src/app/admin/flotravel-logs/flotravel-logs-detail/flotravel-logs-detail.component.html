@@ -1,0 +1,85 @@
+<main class="container-fluid my-m2-5 mt-5 pt-2 pb-3 col-lg-8 offset-lg-2 bg-light">
+  <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+    <div class="spinner-border text-primary"></div>
+    <span ngPreserveWhitespaces>&emsp;{{'flotravel-logs-detail.label-loading' | translate }} </span>
+  </div>
+  <div class="row" *ngIf="!isLoading">
+    <div class="col-md-12">
+      <div class="row mt-5 mt-sm-3 mb-4">
+        <div class="col-12">
+          <h5 style="font-size: 24px;" class=' my-4 text-danger border-bottom mb-4 font-weight-bold'>
+            {{'flotravel-logs-detail.label-log-details' | translate }}</h5>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="col-12 col-md-12 text-container">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-logger' | translate }}</label>&emsp;
+            {{logDetail.logger}}
+          </div>
+        </div>
+        <div class="col-12 col-md-12 text-container">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-dated' | translate }}</label>&emsp;{{logDetail.dated }}
+          </div>
+        </div>
+        <div class="col-12 col-md-12 text-container">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-service' | translate }}</label>&emsp;
+            {{logDetail.service}}
+          </div>
+        </div>
+        <div class="col-12 col-md-12 text-container">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-trace-id' | translate }}</label>&emsp;
+            {{logDetail.traceId}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6"> 
+        <div class="col-12 col-md-12 text-container">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-user' | translate }}</label>&emsp;{{logDetail.user }}
+          </div>
+        </div>
+        <div class="col-12 col-md-12 text-container">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-level' | translate }}</label>&emsp;{{logDetail.level}}
+          </div>
+        </div>
+        <div class="col-12 col-md-12 text-container">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-ID' | translate }}</label>&emsp;
+            {{logDetail.id}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row mt-5 mt-sm-3 mb-4">
+        <div class="col-12 col-md-12 text-container ">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-message' | translate }}</label>&emsp;{{logDetail.message}}
+          </div>
+        </div>
+        <div class="col-12 col-md-12 text-container" *ngIf="logDetail.errorMessage">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-error' | translate }}</label>&emsp;{{logDetail.errorMessage}}
+          </div>
+        </div>
+        <div class="col-12 col-md-12 text-container" *ngIf="logDetail.logging_error">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.logging_error' | translate }}</label>&emsp;{{logDetail.logging_error}}
+          </div>
+        </div>
+        <div class="col-12 col-md-12 text-container" *ngIf="logDetail.stacktrace">
+          <div class="form-group" ngPreserveWhitespaces>
+            <label class="form-group text-uppercase">{{'flotravel-logs-detail.title-stacktrace' | translate }}</label>&emsp;{{logDetail.stacktrace}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

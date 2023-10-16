@@ -1,0 +1,34 @@
+<form [formGroup]="invoicingSettingForm" class="form-horizontal clearfix">
+    <div class="form-group row">
+      <label class="col-2 col-form-label text-sm-right" for="taxId">{{'wallet-invoice-info.title-tax-id' | translate }}</label>
+      <div class="col-8">
+        <input class="form-control" id="taxId" type="text" formControlName="taxId"
+          [ngClass]="{ 'is-invalid': formSubmitError && invoicingSettingForm.get('taxId').errors }" />
+        <span class="invalid-feedback">
+          <span *ngIf="invoicingSettingForm.get('taxId').errors?.required">
+            {{'wallet-invoice-info.invalid-id' | translate }}
+          </span>
+        </span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-2 col-form-label text-sm-right" for="term">{{'wallet-invoice-info.title-terms' | translate }}</label>
+      <div class="col-8">
+        <input class="form-control" id="term" type="text" formControlName="term"
+          [ngClass]="{ 'is-invalid': formSubmitError && invoicingSettingForm.get('term').errors }" />
+        <span class="invalid-feedback">
+          <span *ngIf="invoicingSettingForm.get('term').errors?.required">
+            {{'wallet-invoice-info.invalid-terms' | translate }}
+          </span>
+        </span>
+      </div>
+    </div>
+    <hr />
+    <div class="clearfix">
+      <div class="pull-right">
+        <button type="button" class="btn btn-primary btn-sm mr-2" (click)="updateSetting()"> {{'wallet-invoice-info.button-submit' | translate }}</button>
+        <button type="button" class="btn btn-warning btn-sm" (click)="closeEditMode()"> {{'wallet-invoice-info.button-cancel' | translate }}</button>
+      </div>
+    </div>
+  </form>
+  

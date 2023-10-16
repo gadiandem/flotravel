@@ -1,0 +1,110 @@
+<div class="form-horizontal clearfix">
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-id' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{transactionDetail?.transNumber}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-custom' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{transactionDetail?.custom}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-detail' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.dateOfBirth'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-type' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{transactionDetail?.fullTransType}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-date' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{transactionDetail?.postDateTime}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-amount' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{transactionDetail?.amount | currency: (transactionDetail?.currency || 'USD'): 'symbol':'.0-2'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-name' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{transactionDetail?.userEmail}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-reference' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.ref'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-status' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{transactionDetail?.status}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-payment' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{transactionDetail?.paymentOption}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-order' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.merchantOrder'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-card' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.cardNumber'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-bin' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.bin'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-card-type' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.cardType'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-code' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.authCode'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-ip-address' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.ipAddress'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-ticket' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.ticketed'}}</p>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label text-sm-right">{{'wallet-transaction-history-detail.label-ticket-no' | translate }}</label>
+    <div class="col-8">
+      <p class="form-control-static">{{'transactionDetail?.ticketNumber'}}</p>
+    </div>
+  </div>
+</div>

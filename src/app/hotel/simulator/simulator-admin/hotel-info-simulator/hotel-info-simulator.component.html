@@ -1,0 +1,91 @@
+<div class="container mt-3 pb-5">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h2 class="heading">Hotel Simulator List</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <kendo-grid [data]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="pageSize" (pageChange)="pageChange($event)"
+                  [skip]="skip" [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+        <ng-template kendoGridToolbarTemplate>
+          <input placeholder="Search in all columns..." kendoTextBox (input)="searchPackage($event.target.value)" />
+          <span *ngIf="fetching">
+            <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+            </div><span ngPreserveWhiteSpaces>&emsp;Loading...</span>
+          </span>
+          <button kendoGridExcelCommand type="button" icon="file-excel">Export to
+            Excel</button>
+          <button kendoGridPDFCommand icon="file-pdf">Export to PDF</button>
+          <button class="btn btn-success btn-sm" style="float:right;" (click)="createHotelInfo()"><i
+            class="icon fa fa-plus"></i>&emsp; Create Hotel Simulator</button>
+        </ng-template>
+
+        <kendo-grid-column-group title="Hotel Info Simulator List" [columnMenu]="false">
+          <kendo-grid-column title="#" [width]="40" [columnMenu]="false">
+            <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+              <div>{{rowIndex + 1}}</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column field="name" title="Name" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>
+                {{ dataItem.name | uppercase }}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="overview" title="Overview" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>
+                {{ dataItem.overview  | truncatetext:200}}</div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="address" title="Address" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.address}}</div>
+              <div>{{dataItem.cityName}}</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column field="starRate" title="Star Rating" [width]="100" [class]="{'text-center': true}"
+                             [resizable]="true">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.starRate}}</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column field="minPrice" title="Min Price" [width]="100" [class]="{'text-center': true}"
+                             [resizable]="true">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.minPrice | currency:dataItem.currency:'symbol':'.0-2'}}</div>
+              <p>per night</p>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="discount" title="Discount" [width]="100" [class]="{'text-center': true}"
+                             [resizable]="true">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div>{{dataItem.discount}} (%)</div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column title="Action" [width]="120" [class]="{'text-center': true}" [columnMenu]="false"
+                             filter="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="text-center">
+                <button class="btn btn-warning btn-sm" (click)="viewDetail(dataItem)">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-danger btn-sm ml-1" (click)="removeHotelInfoSimulator(dataItem.id)">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+        </kendo-grid-column-group>
+
+        <kendo-grid-pdf fileName="HotelInfoSimulatorList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+        <kendo-grid-excel fileName="HotelInfoSimulatorList.xlsx"></kendo-grid-excel>
+      </kendo-grid>
+    </div>
+  </div>
+</div>

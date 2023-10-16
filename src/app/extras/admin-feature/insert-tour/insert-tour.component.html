@@ -1,0 +1,133 @@
+<div class="container mt-5">
+  <div class="row" *ngIf="extrasPackage">
+    <a [routerLink]='["../../scheduleList",extrasPackage?.id]' class="btn btn-info">{{'admin-things-to-do.label-editList' | translate }}</a>
+    <button class="btn btn-info ml-3" (click)="extraPackageAvailabilityList(extrasPackage?.id)">{{'admin-things-to-do.label-Availability' | translate }}</button>
+    <!-- <a [routerLink]='["../../scheduleList",tourDetail.id]' class="btn btn-info">ExtraDetail List</a> -->
+  </div>
+  <div class="card card-default my-3">
+    <div class="card-header">
+      {{'admin-things-to-do.label-edit-tour' | translate }}
+    </div>
+    <div class="card-body">
+      <form [formGroup]="insertForm" (ngSubmit)="insertTour()">
+          <div class="col-12">
+            <div class="form-group row" style="display: none;">
+              <input class="form-control" formControlName="id">
+            </div>
+            <div class="form-group row">
+              <label for="name">{{'admin-things-to-do.label-extraName' | translate }}</label>
+              <input class="form-control" id="name" formControlName="name">
+            </div>
+            <div class="form-group row">
+              <label for="city">{{'admin-things-to-do.label-city' | translate }}</label>
+              <!-- <input class="form-control" id="city" formControlName="city"> -->
+              <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$" formControlName="city"
+              [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="select($event.item)"
+                class="form-control" placeholder="{{'admin-things-to-do.label-city' | translate }}"/>
+                <span class="invalid-feedback">
+                  <span *ngIf="insertForm.get('city').errors?.required">
+                    {{'admin-things-to-do.incorrect-city' | translate }}
+                  </span>
+                  <span *ngIf="insertForm.get('city').errors?.minlength">
+                    {{'admin-things-to-do.invalid-city' | translate }}
+                  </span>
+                </span>
+            </div>
+            <!-- <div class="form-group row">
+              <label for="destination">Destination</label>
+              <input class="form-control" id="destination" formControlName="destination">
+            </div> -->
+            <div class="form-group row">
+              <label for="title">  {{'admin-things-to-do.label-title-field' | translate }}</label>
+              <input class="form-control" id="title" formControlName="title">
+            </div>
+            <div class="form-group row">
+              <label for="description">{{'admin-things-to-do.label-description' | translate }}</label>
+              <!-- <input class="form-control" id="description" formControlName="description"> -->
+              <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
+            </div>
+            <div class="form-group row">
+              <label for="description">{{'admin-things-to-do.label-short' | translate }}</label>
+              <!-- <input class="form-control" id="description" formControlName="description"> -->
+              <textarea class="form-control" id="shortDescription" formControlName="shortDescription">
+              </textarea>
+            </div>
+            <div class="form-group row">
+              <label for="duration">{{'admin-things-to-do.label-duration' | translate }}</label>
+              <input class="form-control" id="duration" formControlName="duration">
+            </div>
+            <div class="form-group row">
+              <label for="star">{{'admin-things-to-do.label-star' | translate }}</label>
+              <input class="form-control" id="star" formControlName="star">
+            </div>
+            <div class="form-group row">
+              <label for="reviews">{{'admin-things-to-do.label-review' | translate }}</label>
+              <input class="form-control" id="reviews" formControlName="reviews">
+            </div>
+            <div class="form-group row">
+              <label for="acceptMethods">{{'admin-things-to-do.label-method' | translate }} Method</label>
+              <input class="form-control" id="acceptMethods" formControlName="acceptMethods">
+            </div>
+            <div class="form-group row">
+              <label for="cancellation">{{'admin-things-to-do.label-cancel' | translate }}</label>
+              <select class="form-control custom-select" formControlName="cancellation">
+                <option value="">-- {{'admin-things-to-do.label-select' | translate }} --</option>
+                <option value="FREE">{{'admin-things-to-do.label-free' | translate }}</option>
+                <option value="FEE">{{'admin-things-to-do.label-fee' | translate }}</option>
+                <option value="NOT_ALLOW">{{'admin-things-to-do.label-not-allow' | translate }}</option>
+              </select>
+            </div>
+            <div class="form-group row">
+              <label for="highlights">{{'admin-things-to-do.label-hlighlight' | translate }}</label>
+              <angular-editor formControlName="highlights" [config]="editorConfig"></angular-editor>
+            </div>
+            <div class="form-group row">
+              <label for="includes">{{'admin-things-to-do.label-include' | translate }}</label>
+              <angular-editor formControlName="includes" [config]="editorConfig"></angular-editor>
+            </div>
+            <div class="form-group row">
+              <label for="note">{{'admin-things-to-do.label-note' | translate }}</label>
+              <angular-editor formControlName="note" [config]="editorConfig"></angular-editor>
+            </div>
+            <div class="form-group row">
+              <label for="language">{{'admin-things-to-do.label-language' | translate }}</label>
+              <input class="form-control" id="language" formControlName="languages">
+            </div>
+            <div class="form-group row">
+              <label for="itinerary">{{'admin-things-to-do.label-itinerary' | translate }}</label>
+              <angular-editor formControlName="itinerary" [config]="editorConfig"></angular-editor>
+            </div>
+            <div class="form-group row">
+              <label for="imgUrl">{{'admin-things-to-do.label-image' | translate }}</label>
+              <input class="form-control" id="imgUrl" formControlName="imgUrl" #imagePath>
+              <img [src]="imagePath.value" class="col-12 mt-2" style="text-align: center; max-width: 350px;"/>
+            </div>
+            <div class="form-group row">
+              <label for="latitude">{{'admin-things-to-do.label-latitude' | translate }}</label>
+              <input class="form-control" id="latitude" formControlName="latitude">
+            </div>
+            <div class="form-group row">
+              <label for="longitude">{{'admin-things-to-do.label-longtitude' | translate }}</label>
+              <input class="form-control" id="longitude" formControlName="longitude">
+            </div>
+            <div class="form-group row">
+              <label for="price">{{'admin-things-to-do.label-prices' | translate }}</label>
+              <input class="form-control" id="price" formControlName="price">
+            </div>
+            <div class="form-group row">
+              <label for="price_for_child">{{'admin-things-to-do.label-price-child' | translate }}</label>
+              <input class="form-control" id="price_for_child" formControlName="priceForChild">
+            </div>
+            <div class="form-group row">
+              <label for="currency">{{'admin-things-to-do.label-currency' | translate }}</label>
+              <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code"
+                [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="{{'admin-things-to-do.label-currency' | translate }}" class="form-control">
+            </div>
+            <button type="submit" name="submit" class="search-hotel btn btn-danger">
+              {{insertMode ? 'Insert Extra Package' : 'Update Extra Package'}}
+            </button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,218 @@
+<div class="container">
+  <div class="row hotel-details">
+    <div class="col-md-10 mt-md-4">
+      <div class="shadow-box p-3">
+        <div class="row">
+          <div class="col-md-9">
+            <div class="img-fluid d-block d-md-none mb-4">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width.px': 264 , 'height.px' : 175}">
+              </ngx-skeleton-loader>
+            </div>
+            <h2 class="title">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+            </h2>
+            <div class="address">
+              <span>
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}">
+                </ngx-skeleton-loader>
+              </span><br>
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '20%'}"></ngx-skeleton-loader>
+            </div>
+          </div>
+          <div class="col-md-3 mt-3 mt-md-0">
+            <p class="price"><small>
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '40%'}"></ngx-skeleton-loader>
+              </small>
+              <span style="font-size:22px;">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 25}"></ngx-skeleton-loader>
+              </span>
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-8 d-none d-md-block">
+            <div class="col-12">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 375}"></ngx-skeleton-loader>
+              <div class="row" style="padding-left: 15px">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 115, 'width.px': 102.391}">
+                </ngx-skeleton-loader>
+                <div style="padding-left: 10px" *ngFor="let i of [1, 2, 3, 4]">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 115, 'width.px': 102.391}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3 col-12 center" style="justify-content: center">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 300, 'width.px': 245.98}">
+              </ngx-skeleton-loader>
+              <div style="font-size:16px;margin-top:5px; color: #666;">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+              </div>
+            </div>
+            <div class="col-12 mb-4">
+              <h4 class="heading">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '60%'}"></ngx-skeleton-loader>
+              </h4>
+              <ul class="hotel-facilities mb-0">
+                <div *ngFor="let item of ([1, 2, 3, 4, 5] | slice:0:5)">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+                </div>
+              </ul>
+              <a pageScroll href="#"><strong>
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '50%'}"></ngx-skeleton-loader>
+                </strong></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section class="mt-3">
+        <h4 class="title">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '20%'}"></ngx-skeleton-loader>
+        </h4>
+        <div class="d-none d-md-block">
+          <div class="row room-search mb-4">
+            <div class="col-lg-3 col-6">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <div class="ml-2 font-weight-bold mt-2">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '90%', 'height.px': 39}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-6">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <div class="ml-2 font-weight-bold mt-2">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '90%', 'height.px': 39}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-12">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <div class="ml-2 font-weight-bold mt-2">
+                  <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '90%', 'height.px': 39}">
+                  </ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-12">
+              <button class="btn btn-danger btn-block p-3 h-100" type="button" name="">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width': '80%', 'height': '50%'}">
+                </ngx-skeleton-loader>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="rooms-list">
+        <div *ngFor="let room of [1, 2, 3, 4, 5]">
+          <a class="room-item d-block mb-3">
+            <div class="row">
+              <div class="col-md-4 d-none d-md-block">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width.px': 286.66, 'height': '100%'}">
+                </ngx-skeleton-loader>
+              </div>
+              <div class="col-md-4 d-block d-md-none">
+                <ngx-skeleton-loader [theme]="{'background-color': '#ccc','width.px': 286.66, 'height': '100%'}">
+                </ngx-skeleton-loader>
+              </div>
+              <div class="col-md-8 room-info py-3">
+                <div class="row px-md-0 px-3">
+                  <div class="col-7">
+                    <h5 style="margin-bottom: 0">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30}">
+                      </ngx-skeleton-loader>
+                    </h5>
+                    <small class="hidden-xs">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '40%', 'height.px': 40}">
+                      </ngx-skeleton-loader>
+                    </small><br><br>
+                    <div style="color:#007864;">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '40%'}"></ngx-skeleton-loader>
+                      <br>
+                      <small class="text-muted">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'width': '40%'}">
+                        </ngx-skeleton-loader>
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-5 pr-3">
+                    <div class="text-right pr-1 px-md-3">
+                      <span style="margin-top: 12px; margin-bottom: 12px">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width.px': 100}">
+                        </ngx-skeleton-loader>
+                      </span>
+                      <div>
+                        <ngx-skeleton-loader
+                          [theme]="{'background-color': '#ccc', 'height.px': 20, 'width.px': 60, 'margin-top.px': 0}">
+                        </ngx-skeleton-loader>
+                      </div>
+                      <div class="">
+                        <ngx-skeleton-loader
+                          [theme]="{'background-color': 'rgb(10, 48, 73)', 'height.px': 40, 'width.px': 80}">
+                        </ngx-skeleton-loader>
+                      </div>
+                      <div style="font-size:10px;">
+                        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 10, 'width.px': 95}">
+                        </ngx-skeleton-loader>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}">
+          </ngx-skeleton-loader>
+        </h4>
+        <p>
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 40}"></ngx-skeleton-loader>
+        </p>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}">
+          </ngx-skeleton-loader>
+        </h4>
+        <p>
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 40}"></ngx-skeleton-loader>
+        </p>
+      </div>
+      <div class="mt-4 p-3 shadow-box">
+        <h4 class="title">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}">
+          </ngx-skeleton-loader>
+        </h4>
+        <p>
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 40}"></ngx-skeleton-loader>
+        </p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}">
+          </ngx-skeleton-loader>
+        </h4>
+        <p>
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 150}"></ngx-skeleton-loader>
+        </p>
+      </div>
+      <div class="mt-3 mb-5 p-3 shadow-box">
+        <h4 class="title">
+          <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%'}">
+          </ngx-skeleton-loader>
+        </h4>
+        <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 300}"></ngx-skeleton-loader>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <ngx-skeleton-loader [theme]="{'height.px': 600, 'width.px': 160, 'background-color': '#ccc'}">
+      </ngx-skeleton-loader>
+    </div>
+  </div>
+</div>

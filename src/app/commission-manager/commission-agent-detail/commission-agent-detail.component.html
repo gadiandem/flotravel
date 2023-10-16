@@ -1,0 +1,74 @@
+<div class="container my-5 pt-5">
+    <div class="col-sm-8 offset-sm-2">
+      <div class="card">
+        <div class="card-header">
+          {{'commission-flotravel.commission-detail-header' | translate }}
+        </div>
+        <div class="card-body mx-3">
+          <form [formGroup]="commissionForm">
+            <div class="form-group row">
+              <label for="type"> {{'commission-flotravel.lable-type' | translate }}</label>
+              <select class="form-control" id="type" formControlName="type" disabled
+                [ngClass]="{ 'is-invalid': formSubmitError && commissionForm.get('type').errors }">
+                <option value=""> {{'commission-flotravel.type-placeholder' | translate }}</option>
+                <option value="HOTEL"> {{'commission-flotravel.type-hotel' | translate }}</option>
+                <option value="FLIGHT"> {{'commission-flotravel.type-flight' | translate }}</option>
+                <option value="INSURANCE"> {{'commission-flotravel.type-insurance' | translate }}</option>
+                <option value="TRACE_ME"> {{'commission-flotravel.type-traceme' | translate }}</option>
+                <option value="PACKAGE"> {{'commission-flotravel.type-package' | translate }}</option>
+                <option value="HOTEL_COLLECTION"> {{'commission-flotravel.type-hotel-collection' | translate }}</option>
+                <option value="HELPSTAR"> {{'commission-flotravel.type-helpstar' | translate }}</option>
+              </select>
+              <span class="invalid-feedback">
+                <span *ngIf="commissionForm.get('type').errors?.required">
+                  {{'commission-flotravel.error-require-type' | translate }}
+                </span>
+              </span>
+            </div>
+            <div class="form-group row">
+              <label for="name">{{'commission-flotravel.label-name' | translate }}</label>
+              <input class="form-control" id="name" formControlName="name" disabled
+                [ngClass]="{ 'is-invalid': formSubmitError && commissionForm.get('name').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="commissionForm.get('name').errors?.required">
+                  {{'commission-flotravel.error-require-name' | translate }}
+                </span>
+              </span>
+            </div>
+            <div class="form-group row">
+              <label for="provider"> {{'commission-flotravel.lable-provider' | translate }}</label>
+              <select class="form-control" id="provider" formControlName="provider" disabled
+                [ngClass]="{ 'is-invalid': formSubmitError && commissionForm.get('provider').errors }">
+                <option [value]="commissionDetail?.provider"> {{ commissionDetail?.provider }}</option>
+              </select>
+              <span class="invalid-feedback">
+                <span *ngIf="commissionForm.get('provider').errors?.required">
+                  {{'commission-flotravel.invalid-provider' | translate }}
+                </span>
+              </span>
+            </div>
+            <div class="form-group row">
+              <label for="margin">{{'commission-flotravel.label-margin' | translate }}</label>
+              <input class="form-control" id="margin" formControlName="margin" disabled
+                [ngClass]="{ 'is-invalid': formSubmitError && commissionForm.get('margin').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="commissionForm.get('margin').errors?.required">
+                  {{'commission-flotravel.error-require-margin' | translate }}
+                </span>
+              </span>
+            </div>
+            <div class="form-group row">
+              <label for="unit">{{'commission-flotravel.label-unit' | translate }}</label>
+              <input class="form-control" id="unit" formControlName="unit" disabled
+                [ngClass]="{ 'is-invalid': formSubmitError && commissionForm.get('unit').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="commissionForm.get('unit').errors?.required">
+                  {{'commission-flotravel.error-require-unit' | translate }}
+                </span>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

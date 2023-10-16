@@ -1,0 +1,84 @@
+<form [formGroup]="searchForm" *ngIf="!fetching" class="hotel-search flight-search" (ngSubmit)="searchHotel()">
+  <div id="select-box-close" (click)="closeFormSearch()" class="text-right my-2"><i class="fa fa-times"></i></div>
+  <div class="row" style="cursor: pointer;">
+    <div class="col-lg-3 col-12">
+      <label class="m-0 font-weight-light">{{'hotel-list.label-where' | translate }}</label>
+      <div class="form-group mb-md-0">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+          </div>
+          <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+                 formControlName="destination" [value]="searchHotelListRequest?.destination" [typeaheadAsync]="true"
+                 [typeaheadOptionsLimit]="limit" (typeaheadOnSelect)="select($event.item)" class="form-control"
+                 placeholder="{{'hotel-list.placeholder-where' | translate }}" type="search"
+                 [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+        </div>
+      </div>
+    </div>
+    <kendo-daterange class="col-lg-4" calendarType="classic">
+      <div class="row">
+        <div class="col-6 pr-3">
+          <div class="form-group">
+            <label class="m-0 font-weight-light">{{'hotel-list.label-start-date' | translate }}</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="icon fa fa-calendar-check-o"></i>
+                </span>
+              </div>
+              <kendo-dateinput format="dd-MM-yyyy" kendoDateRangeStartInput [min] = "minDateStart" formControlName="checkIn"
+                               placeholder="Check-in Date"></kendo-dateinput>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 pr-3">
+          <div class="form-group">
+            <label class="m-0 font-weight-light">{{'hotel-list.label-end-date' | translate }}</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="icon fa fa-calendar-check-o"></i>
+                </span>
+              </div>
+              <kendo-dateinput format="dd-MM-yyyy" kendoDateRangeEndInput formControlName="checkOut"
+                               placeholder="Check-out Date">
+              </kendo-dateinput>
+            </div>
+          </div>
+        </div>
+      </div>
+      <kendo-daterange-popup #popup [animate]="{ type: 'fade', duration: 100, direction: 'down' }">
+        <ng-template kendoDateRangePopupTemplate>
+          <kendo-multiviewcalendar calendarType="classic" kendoDateRangeSelection>
+          </kendo-multiviewcalendar>
+          <div class="row">
+            <div class="col-12 py-1">
+              <button class="float-right btn btn-info mr-3" (click)="onChangeCheckOutDate($event, popup)">Done</button>
+            </div>
+          </div>
+        </ng-template>
+      </kendo-daterange-popup>
+    </kendo-daterange>
+    <div class="col-lg-3 col-12">
+      <label class="mb-0 m-0 font-weight-light">{{'hotel-list.label-guests' | translate }}</label>
+      <div class="form-group mb-md-0">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+          </div>
+          <input #menuDrop type="text" class="guests-input form-control" (click)="toggleDrop()"
+                 [value]="travellerCount +' travellers, ' + roomCount + ' rooms'" style="background:#fff;">
+          <app-room-guests *ngIf="showDropDown" [roomGuests] = "roomGuests" (roomGuestsNew)="updateRoomGuests($event)"
+                           (showDropDown)="changeShowDropDown($event)" class="guests-dropdown shadow-box p-3"></app-room-guests>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-12">
+      <label class="mb-0 font-weight-light invisible ">.</label><br>
+      <input type="submit" name="submit" class="btn btn-danger" value="{{'hotel-list.label-search' | translate }}" />
+    </div>
+  </div>
+</form>
+
+<app-hotel-search-box-skeleton *ngIf="fetching"></app-hotel-search-box-skeleton>

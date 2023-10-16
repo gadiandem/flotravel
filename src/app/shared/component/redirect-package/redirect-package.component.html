@@ -1,0 +1,226 @@
+<div style="background: #ffffff;">
+    <div *ngIf="fetching" class="container pt-5 pb-5" style="height: 400px; text-align: center;">
+      <div class="spinner-border text-primary"></div>
+      <span class="text-center mt-3" ngPreserveWhitespaces>&emsp; Payment...</span>
+    </div>
+    <div *ngIf="!fetchFailed && !fetching" class="container pt-5 pb-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-12 py-5 text-center">
+          <img class="mb-4" src="assets/ic_success.png" />
+          <h2 class="text-center mb-3">{{packagePaymentRes?.payer?.lastName}} , your payment was successful!</h2>
+          <h5 class="text-center mb-4">Booking details has been send to {{packagePaymentRes?.payer?.email}} </h5>
+  
+          <div class="card mt-5 mb-5 text-left1">
+            <div class="card-body text-left1">
+              <h4 class="heading">{{packagePaymentRes?.item_name}}</h4>
+              <div class="hotel-address" ngPreserveWhitespaces>
+                <span><i class="fa fa-map-marker"></i>{{selectedPackage?.cityName}} Area: {{selectedPackage?.regionName}} </span>&emsp;<i
+                  class="fa fa-phone"></i> +1&emsp;{{packagePaymentRes?.payer?.mobile}}
+              </div>
+              <div class="mt-2">
+                <h6>Booking From &emsp;<span>{{selectedPackage?.startDate}}</span></h6>
+                <p ngPreserveWhitespaces>Duration: &emsp; {{selectedPackage?.dayCount}} day(s)</p>
+              </div>
+              <ul class="order-payment-list list mt-3 text-left">
+                <li>
+                  <div class="row mt-2">
+                    <div class="col-9">
+                      <h6><i class="fa fa-ticket"></i> {{selectedPackage?.packageName}}</h6>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-right"><span
+                          class="text-lg">{{(packagePaymentRes?.amount || selectedPackage?.price ) | currency:'USD':'symbol':'.0-2'}}</span>
+                          <span *ngIf="summaryReq?.packageInfo?.count > 1"> x {{summaryReq?.packageInfo?.count}}
+                          </span>  </p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="row mt-2">
+                    <div class="col-9">
+                      <h6><i class="fa fa-ticket"></i>&nbsp;Hotel: {{selectedPackage?.name}}</h6>
+                    </div>
+                  </div>
+                </li>
+                <div *ngIf="selectedSupplements.length > 0">
+                  <li *ngFor="let selectedSupplement of selectedSupplements; let i = index;">
+                    <div class="row mt-2">
+                      <div class="col-9">
+                        <h6><i class="fa fa-ticket"></i>&nbsp;Supplement: {{selectedSupplement?.name}}</h6>
+                      </div>
+                      <div class="col-3">
+                        <p class="text-right"><span class="text-lg">
+                          {{(selectedSupplement?.price | currency:(selectedSupplement?.currency || 'USD'):'symbol':'.0-2')}}
+                        </span>
+                        <span *ngIf="summaryReq?.supplements[i]?.count > 1"> x {{summaryReq?.supplements[i]?.count}}
+                        </span></p>
+                      </div>
+                    </div>
+                  </li>
+                </div>
+                <div *ngIf="selectedTours.length > 0">
+                  <li *ngFor="let selectedTour of selectedTours; let i = index;">
+                    <div class="row mt-2">
+                      <div class="col-9">
+                        <h6><i class="fa fa-ticket"></i>&nbsp;Tour: {{selectedTour?.name}}</h6>
+                      </div>
+                      <div class="col-3">
+                        <p class="text-right"><span
+                            class="text-lg">{{(selectedTour?.price | currency:'USD':'symbol':'.0-2')}}</span>
+                            <span *ngIf="summaryReq?.tours[i]?.count > 1"> x {{summaryReq?.tours[i]?.count}}
+                            </span> </p>
+                      </div>
+                    </div>
+                  </li>
+                </div>
+                <div *ngIf="selectedTransfers.length > 0">
+                  <li *ngFor="let selectedTransfer of selectedTransfers; let i = index;">
+                    <div class="row mt-2">
+                      <div class="col-9">
+                        <h6><i class="fa fa-ticket"></i>&nbsp;Transfer:  {{selectedTransfer?.transferType}}</h6>
+                      </div>
+                      <div class="col-3">
+                        <p class="text-right"><span
+                            class="text-lg">{{(selectedTransfer?.amount | currency:'USD':'symbol':'.0-2')}}</span>
+                            <span *ngIf="summaryReq?.transfers[i]?.count > 1"> x {{summaryReq?.transfers[i]?.count}}
+                            </span>  </p>
+                      </div>
+                    </div>
+                  </li>
+                </div>
+                <li>
+                  <div class="row mt-3">
+                    <div class="col-9">
+                      <h5>Total : </h5>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-right"><span
+                          class="text-lg">{{(packageSummaryRes?.totalPrice | currency:'USD':'symbol':'.0-2')}}</span> </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="mb-5">
+            <a class="btn btn-danger mr-2" routerLink=""><i class="fa fa-download"></i> Download</a>
+            <a class="btn btn-danger" routerLink=""><i class="fa fa-envelope"></i> Email</a>
+          </div>
+        </div>
+      </div>
+      <div class="gap"></div>
+    </div>
+  
+    <div *ngIf="fetchFailed  && !fetching" class="container pt-5 pb-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-12 py-5 text-center">
+          <img class="mb-4" src="assets/ic_fail.png" style="width:70px;" />
+          <h2 class="text-center mb-3">{{packagePaymentRes?.payer?.lastName}}, your payment was Failed!</h2>
+          <alert type="danger" ngPreserveWhitespaces *ngIf="errorMes !== ''">
+            <strong>{{errorMes}}</strong>
+        </alert>
+          <div class="card mt-5 mb-5 text-left1">
+            <div class="card-body text-left1">
+              <h4 class="heading">{{selectedPackage?.packageName}}</h4>
+              <div class="hotel-address">
+                <span><i class="fa fa-map-marker"></i> {{selectedPackage?.cityName}} Area: {{selectedPackage?.regionName}} </span>&emsp;<i
+                  class="fa fa-phone"></i> +1
+                &emsp;{{packagePaymentRes?.payer?.mobile}}
+              </div>
+              <div class="mt-2">
+                <h6>Booking From &emsp;<span>{{selectedPackage?.startDate}}</span></h6>
+                <p ngPreserveWhitespaces>Duration: &emsp; {{selectedPackage?.dayCount}} day(s)</p>
+              </div>
+              <ul class="order-payment-list list mt-3 text-left">
+                <li>
+                  <div class="row mt-2">
+                    <div class="col-9">
+                      <h6><i class="fa fa-ticket"></i> {{selectedPackage?.packageName}}</h6>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-right"><span
+                          class="text-lg">{{(selectedPackage?.price || selectedPackage?.price ) | currency:'USD':'symbol':'.0-2'}}</span>
+                          <span *ngIf="summaryReq?.packageInfo?.count > 1"> x {{summaryReq?.packageInfo?.count}}
+                          </span> </p>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="row mt-2">
+                    <div class="col-9">
+                      <h6><i class="fa fa-ticket"></i>&nbsp;Hotel: {{selectedPackage?.name}}</h6>
+                    </div>
+                  </div>
+                </li>
+                <div *ngIf="selectedSupplements.length > 0">
+                  <li *ngFor="let selectedSupplement of selectedSupplements; let i = index;">
+                    <div class="row mt-2">
+                      <div class="col-9">
+                        <h6><i class="fa fa-ticket"></i>&nbsp;Supplement: {{selectedSupplement?.name}}</h6>
+                      </div>
+                      <div class="col-3">
+                        <p class="text-right"><span
+                            class="text-lg">{{(selectedSupplement?.price | currency:'USD':'symbol':'.0-2')}}</span>
+                            <span *ngIf="summaryReq?.supplements[i]?.count > 1"> x {{summaryReq?.supplements[i]?.count}}
+                            </span> 
+                          </p>
+                      </div>
+                    </div>
+                  </li>
+                </div>
+                <div *ngIf="selectedTours.length > 0">
+                  <li *ngFor="let selectedTour of selectedTours; let i = index;">
+                    <div class="row mt-2">
+                      <div class="col-9">
+                        <h6><i class="fa fa-ticket"></i>&nbsp;Tour: {{selectedTour?.name}}</h6>
+                      </div>
+                      <div class="col-3">
+                        <p class="text-right"><span
+                            class="text-lg">{{(selectedTour?.price | currency:'USD':'symbol':'.0-2')}}</span>
+                            <span *ngIf="summaryReq?.tours[i]?.count > 1"> x {{summaryReq?.tours[i]?.count}}
+                            </span> 
+                          </p>
+                      </div>
+                    </div>
+                  </li>
+                </div>
+                <div *ngIf="selectedTransfers.length > 0">
+                  <li *ngFor="let selectedTransfer of selectedTransfers; let i = index;">
+                    <div class="row mt-2">
+                      <div class="col-9">
+                        <h6><i class="fa fa-ticket"></i>&nbsp;Transfer: {{selectedTransfer?.transferType}}</h6>
+                      </div>
+                      <div class="col-3">
+                        <p class="text-right"><span
+                            class="text-lg">{{(selectedTransfer?.amount | currency:'USD':'symbol':'.0-2')}}</span>
+                            <span *ngIf="summaryReq?.transfers[i]?.count > 1"> x {{summaryReq?.transfers[i]?.count}}
+                            </span> 
+                          </p>
+                      </div>
+                    </div>
+                  </li>
+                </div>
+                <li>
+                  <div class="row mt-3">
+                    <div class="col-9">
+                      <h5>Total : </h5>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-right"><span
+                          class="text-lg">{{(packageSummaryRes?.totalPrice | currency:'USD':'symbol':'.0-2')}}</span> </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <a routerLink="../cart">
+            <h4 class="text-center" ngPreserveWhitespaces><i class="fa fa-arrow-left"></i>&emsp;Go Back to Payment Page
+            </h4>
+          </a>
+        </div>
+      </div>
+      <div class="gap"></div>
+    </div>
+  </div>
+  

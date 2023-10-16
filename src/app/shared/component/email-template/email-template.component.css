@@ -1,0 +1,7 @@
+table, td, div, h1, p {font-family: Arial, sans-serif;}
+
+@media screen and (max-width: 575px) {
+  .stbanner {
+    background-position: left !important;
+  }
+}

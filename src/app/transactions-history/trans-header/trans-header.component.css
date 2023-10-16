@@ -1,0 +1,13 @@
+
+.navbar-light {
+    background-color: #efefef;
+  }
+  
+  a:link, a:visited, a:active, a:hover {
+    color: gray;
+  }
+
+  .navbar{
+    position: fixed;
+    
+  }

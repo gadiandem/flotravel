@@ -1,0 +1,256 @@
+<main-header></main-header>
+<div *ngIf="!isLoading" class="container my-md-5 mt-5 pt-5 pb-3 col-lg-8 offset-lg-2">
+  <h3>{{'package-bookings.label-title' | translate }}</h3>
+  <div class="row mt-3 shadow-box">
+    <div class="col-md-12">
+      <form [formGroup]="searchForm" (ngSubmit)="searchHistory()">
+        <div class="row my-3">
+          <div class="col-lg-3 col-6">
+            <label class="m-0 font-weight-light">{{'package-bookings.label-from' | translate }}</label>
+            <div class="form-group mb-0">
+              <div class="input-group checkinDate">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                </div>
+                <input type="text" ngbDatepicker #checkin="ngbDatepicker" class="form-control" formControlName="fromDate"
+                       (click)="checkin.toggle()" (dateSelect)="getFromDate($event)" placement="bottom" placeholder="MM/DD/YYYY">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <label class="m-0 font-weight-light">{{'package-bookings.label-to' | translate }}</label>
+            <div class="form-group mb-0">
+              <div class="input-group checkoutDate">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                </div>
+                <input type="text" ngbDatepicker #checkout="ngbDatepicker" class="form-control" formControlName="toDate" [startDate]="fromDate" [minDate]="fromDate"
+                       (click)="checkout.toggle()" placeholder="DD/MM/YYYY" (dateSelect)="getToDate($event)" placement="bottom"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-12 pt-1">
+            <input type="submit" class="btn btn-danger mt-3" value="Refresh">
+          </div>
+        </div>
+      </form>
+      <p>{{'package-bookings.label-rule' | translate }}</p>
+      <!-- Hotel booking -->
+      <div *ngIf="!userBooking || userBooking?.length === 0">
+        <div *ngIf="!agentBooking || agentBooking?.length === 0">
+          <alert type="danger" ngPreserveWhitespaces>
+            {{'package-bookings.label-no-record' | translate }}
+          </alert>
+        </div>
+      </div>
+      <div class="hotel-item shadow-box1 bg-white mb-3" *ngFor="let booking of userBooking; let i = index">
+        <div class="row d-flex p-3">
+          <div class="col-md-4">
+            <div class="hotel-img-item">
+              <img [lazyLoad]="booking?.selectedPackage?.hotelImage" [useSrcset]="true"
+                   class="img-fluid rounded hotel-img">
+            </div>
+          </div>
+          <div class="col-md-8 pt-3 pt-md-0">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="hotel-title">{{booking?.selectedPackage?.packageName}}</h5>
+                <div class="mt-2">{{'package-bookings.label-ref' | translate }} {{booking.id}}</div>
+                <div class="my-2">
+                  <span>{{booking?.startDate | date : 'mediumDate'}}</span> -
+                  <span>{{addDays(booking?.startDate, booking?.selectedPackage?.dayCount) | date : 'mediumDate'}}</span>
+                 <!-- <span class="ml-md-4">Malmö</span> -->
+                </div>
+                <div>{{booking.bookingStatus}}</div>
+                <div id="collapse{{i}}" class="collapse text-dark mt-3" [collapse]="isCollapsedUser[i]" [isAnimated]="true">
+                  <div class="font-weight-bold">{{'package-bookings.label-for' | translate }}</div>
+                  <div class="mb-2">{{booking?.selectedPackage?.startDate | date : 'mediumDate'}}<i class="fas fa-arrow-right mx-2"></i>
+                    {{addDays(booking?.startDate, booking?.selectedPackage?.dayCount) | date : 'mediumDate'}}</div>
+                    <div class="mb-2">
+                      <p class="m-0"><span class="font-weight-bold">{{'package-bookings.label-createdDate' | translate }}  </span> {{booking?.createDate  | date : 'mediumDate'}}</p>
+                      <p class="m-0"><span class="font-weight-bold">{{'package-bookings.label-address' | translate }}  </span> {{booking?.selectedPackage?.cityName}}</p>
+                    </div>
+                    <div *ngFor="let room of booking?.rooms; let i = index">
+                    <div>{{'package-bookings.label-room' | translate }}  {{i + 1}} <span class="text-danger">{{booking?.selectedPackage?.price | currency:booking?.currencyName:'symbol':'.0-2'}}
+                      {{'package-bookings.label-for-days' | translate }}  {{booking?.selectedPackage?.dayCount}} {{'package-bookings.label-days' | translate }} </span></div>
+                 <!--  <div escapse="false" [innerHTML]="room.roomDescription"></div> -->
+                 <div class="dropdown-divider"></div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="font-weight-bold"> {{'package-bookings.label-taxes' | translate }} </div>
+                    <div>{{0 | currency:booking?.currencyName:'symbol':'.0-2'}}</div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="font-weight-bold"> {{'package-bookings.label-total' | translate }} </div>
+                    <div>{{booking?.totalPrice | currency:booking?.currencyName:'symbol':'.0-2'}}</div>
+                  </div>
+                </div>
+                <div id="collapseCancelUser{{i}}" class="collapse text-dark mt-3" [collapse]="isCollapsedCancelUser[i]" [isAnimated]="true">
+                  <hr>
+                  <p class="small">{{'package-bookings.label-hi' | translate }} {{booking.payer?.firstName + ' ' + booking.payer?.lastName}},</p>
+                  <div *ngIf="(booking?.bookingStatus === 'CONFIRMED') && (booking?.refundedAmount === 0)">
+                    <p class="small">{{'package-bookings.label-cancellation-option' | translate }}</p>
+                    <p class="small">{{'package-bookings.label-confirmation' | translate }}</p>
+                    <p class="small">{{'package-bookings.label-booking-us' | translate }}</p>
+                  </div>
+                  <div *ngIf="booking?.bookingStatus === 'PENDING'">
+                    <p class="small">{{'package-bookings.label-pending' | translate }}</p>
+                  </div>
+                  <div *ngIf="booking?.bookingStatus === 'CANCEL'">
+                    <p class="small">{{'package-bookings.label-cancelled' | translate }}</p>
+                  </div>
+                  <button class="btn btn-danger mt-3 mx-auto d-block"  (click)="goToCancelBookingPage(booking)"
+                          *ngIf="(booking?.bookingStatus === 'CONFIRMED') && (booking?.refundedAmount === 0)">{{'package-bookings.label-cancel' | translate }}</button>
+                  <button class="btn btn-danger mt-3 mx-auto d-block"  (click)="updateBooking(booking)"
+                          *ngIf="(booking?.bookingStatus === 'PENDING') && isSAdmin">{{'package-bookings.label-pending' | translate }}</button>
+                </div>
+                <div class="d-flex justify-content-between pr-lg-5 mt-5">
+                  <div (click)="deleteRecord(booking)" style="cursor: pointer">{{'package-bookings.button-delete' | translate }}</div>
+                  <div class="mx-3" style="cursor: pointer" (click)="viewCancelPopup(booking, i, 'user')"
+                       [attr.aria-expanded]="!isCollapsedCancelUser[i]">{{'package-bookings.button-cancel' | translate }}</div>
+                  <div>{{'package-bookings.button-print' | translate }}</div>
+                </div>
+              </div>
+              <div class="col-4 text-right d-flex flex-column justify-content-between">
+                <span class="hotel-price font-weight-bold mt-md-2">
+                  {{booking?.totalPrice | currency:booking?.currencyName:'symbol':'.0-2'}}
+                </span>
+                <div style="color:#007864; cursor: pointer" (click)="viewDetail(booking, i, 'user')"
+                     [attr.aria-expanded]="!isCollapsedUser[i]">
+                     {{'package-bookings.label-details' | translate }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--list packages booking, agent for this user -->
+      <div class="hotel-item shadow-box1 bg-white mb-3" *ngFor="let booking of agentBooking; let i = index">
+        <div class="row d-flex p-3">
+          <div class="col-md-4">
+            <img [lazyLoad]="booking.selectedPackage?.hotelImage" [useSrcset]="true"
+                 class="img-fluid rounded">
+          </div>
+          <div class="col-md-8 pt-3 pt-md-0">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="hotel-title">{{booking?.selectedPackage?.packageName}}</h5>
+                <div class="mt-2"> {{'package-bookings.label-ref' | translate }} {{booking.id}}</div>
+                <div class="my-2">
+                  <span>{{booking?.startDate | date : 'mediumDate'}}</span> -
+                  <span>{{addDays(booking?.startDate, booking?.selectedPackage?.dayCount) | date : 'mediumDate'}}</span>
+                 <!-- <span class="ml-md-4">Malmö</span> -->
+                </div>
+                <div>{{booking.bookingStatus}}</div>
+                <div id="collapseAgent{{i}}" class="collapse text-dark mt-3" [collapse]="isCollapsedAgent[i]" [isAnimated]="true">
+                  <div class="font-weight-bold">{{'package-bookings.label-for' | translate }} </div>
+                  <div class="mb-2">{{booking?.startDate | date : 'mediumDate'}}<i class="fas fa-arrow-right mx-2"></i>
+                    {{addDays(booking?.startDate, booking?.selectedPackage?.dayCount) | date : 'mediumDate'}}</div>
+                    <div class="mb-2">
+                      <p class="m-0">{{'package-bookings.label-createdDate' | translate }} {{booking.createDate}}</p>
+                      <p class="m-0">{{'package-bookings.label-address' | translate }} {{booking.selectedPackage?.cityName}}</p>
+                    </div>
+                    <div *ngFor="let room of booking?.rooms; let i = index">
+                    <div>{{'package-bookings.label-room' | translate }} {{i + 1}} <span class="text-danger">{{booking.selectedPackage?.price | currency:booking.currencyName:'symbol':'.0-2'}}
+                      {{'package-bookings.label-for-days' | translate }} {{booking.selectedPackage?.dayCount}}  {{'package-bookings.label-days' | translate }}</span></div>
+                 <!--  <div escapse="false" [innerHTML]="room.roomDescription"></div> -->
+                    <div class="dropdown-divider"></div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="font-weight-bold">{{'package-bookings.label-taxes' | translate }}</div>
+                    <div>{{0 | currency:booking?.currencyName:'symbol':'.0-2'}}</div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="font-weight-bold">{{'package-bookings.label-total' | translate }}</div>
+                    <div>{{booking?.totalPrice | currency:booking?.currencyName:'symbol':'.0-2'}}</div>
+                  </div>
+                </div>
+                <div id="collapseCancelAgent{{i}}" class="collapse text-dark mt-3" [collapse]="isCollapsedCancelAgent[i]" [isAnimated]="true">
+                  <hr>
+                  <p class="small">{{'package-bookings.label-hi' | translate }} {{booking.payer?.firstName + ' ' + booking.payer?.lastName}},</p>
+                  <p class="small">{{'package-bookings.label-cancellation-option' | translate }}</p>
+                  <p class="small">{{'package-bookings.label-confirmation' | translate }}</p>
+                  <p class="small">{{'package-bookings.label-booking-us' | translate }}</p>
+                  <button class="btn btn-danger mt-3 mx-auto d-block"  (click)="goToCancelBookingPage(booking)"
+                          [disabled]="booking?.bookingStatus !== 'CONFIRMED'">{{'package-bookings.label-cancel' | translate }}</button>
+                </div>
+                <div class="d-flex justify-content-between pr-lg-5 mt-5">
+                  <div (click)="deleteRecord(booking)" style="cursor: pointer">{{'package-bookings.button-delete' | translate }}</div>
+                  <div class="mx-3" style="cursor: pointer" (click)="viewCancelPopup(booking, i, 'agent')"
+                       [attr.aria-expanded]="!isCollapsedCancelAgent[i]">>{{'package-bookings.button-cancel' | translate }}</div>
+                  <div>{{'package-bookings.button-print' | translate }}</div>
+                </div>
+              </div>
+              <div class="col-4 text-right d-flex flex-column justify-content-between">
+                <span class="hotel-price font-weight-bold mt-md-2">
+                  {{booking?.totalPrice | currency:booking?.currencyName:'symbol':'.0-2'}}
+                </span>
+                <div style="color:#007864;cursor: pointer" (click)="viewDetail(booking, i, 'agent')"
+                     [attr.aria-expanded]="!isCollapsedAgent[i]">
+                     {{'package-bookings.label-details' | translate }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pagination-controls (pageChange)="p = $event" directionLinks="true"
+                           autoHide="true">
+      </pagination-controls>
+    </div>
+  </div>
+</div>
+<!-- skeleton loading-->
+<div *ngIf="isLoading" class="container my-md-5 mt-5 pt-5 pb-3 col-lg-8 offset-lg-2">
+  <h3>{{'package-bookings.label-title' | translate }}</h3>
+  <div class="row mt-3 shadow-box">
+    <div class="col-md-12">
+      <div class="row my-3">
+        <div class="col-lg-3 col-6 mt-3">
+          <ngx-skeleton-loader [theme]="{'height.px': 38, 'width.px': 255, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-lg-3 col-6 mt-3">
+          <ngx-skeleton-loader [theme]="{'height.px': 38, 'width.px': 255, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+        </div>
+        <div class="col-lg-3 col-12 mt-3">
+          <ngx-skeleton-loader [theme]="{'height.px': 38, 'width.px': 80.73, 'background-color': 'rgb(10, 48, 73)', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+        </div>
+      </div>
+      <p><ngx-skeleton-loader [theme]="{'height.px': 21, 'width': '50%', 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader></p>
+      <div class="hotel-item shadow-box bg-white mb-3" *ngFor="let booking of [1, 2, 3, 4]; let i = index">
+        <div class="row d-flex p-3">
+          <div class="col-md-4">
+            <ngx-skeleton-loader [theme]="{'height.px': 195, 'width.px': 339, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+          </div>
+          <div class="col-md-8 pt-3 pt-md-0">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="hotel-title">
+                  <ngx-skeleton-loader [theme]="{'height.px': 21.59, 'width': '50%', 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </h5>
+                <div class="my-2">
+                  <ngx-skeleton-loader [theme]="{'height.px': 21, 'width': '52%', 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+                <div>
+                  <ngx-skeleton-loader [theme]="{'height.px': 21, 'width': '18%', 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+                <div class="d-flex justify-content-between pr-lg-5 mt-5">
+                  <ngx-skeleton-loader [theme]="{'height.px': 21, 'width.px': 43, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  <ngx-skeleton-loader [theme]="{'height.px': 21, 'width.px': 43, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  <ngx-skeleton-loader [theme]="{'height.px': 21, 'width.px': 77, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-4 text-right d-flex flex-column justify-content-between">
+                <span class="hotel-price font-weight-bold mt-md-2">
+                   <ngx-skeleton-loader [theme]="{'height.px': 26, 'width.px': 100, 'background-color': 'rgb(0, 25, 89)', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </span>
+                <div style="color:#007864;">
+                  <ngx-skeleton-loader [theme]="{'height.px': 21, 'width.px': 77, 'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<main-footer></main-footer>

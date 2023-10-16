@@ -1,0 +1,44 @@
+<div class="modal-body">
+  <div *ngIf="isLoading">
+    <div class="spinner-border text-primary"></div>
+    <span ngPreserveWhitespaces>&emsp;Loading...</span>
+  </div>
+  <form *ngIf="!isLoading" [formGroup]="loginForm" class="form-signin" autocomplete="off">
+    <h5 class="font-weight-bold">LOGIN</h5>
+    <hr>
+    <div *ngIf="failure && !isLoading">
+      <alert type="danger">
+        {{errorMessage}}
+      </alert>
+    </div>
+    <label class="sr-only">Email Address</label>
+    <div class="form-group">
+      <input type="email" formControlName="email" name="email" class="form-control input-sm mb-2"
+        placeholder="Email / Signin" autofocus style="padding: 8px 10px;"
+        [ngClass]="{ 'is-invalid': formSubmitError && loginForm.get('email').errors }">
+      <span class="invalid-feedback">
+        <span *ngIf="loginForm.get('email').errors?.required">
+          Please enter your email.
+        </span>
+        <span *ngIf="loginForm.get('email').errors?.email">
+          Please enter correct email.
+        </span>
+      </span>
+    </div>
+    <label class="sr-only">Password</label>
+    <div class="form-group">
+      <input type="password" formControlName="password" class="form-control" placeholder="Password"
+        style="padding: 8px 10px;" [ngClass]="{ 'is-invalid': formSubmitError && loginForm.get('password').errors }">
+      <span class="invalid-feedback">
+        <span *ngIf="loginForm.get('password').errors?.required">
+          Please enter your password.
+        </span>
+      </span>
+    </div>
+    <!-- <button class="btn btn-danger mb-3 mt-2" type="button" (click)="onsubmit()">LOGIN</button> -->
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Close</button>
+  <button type="button" class="btn btn-danger" (click)="submit()">Login</button>
+</div>

@@ -1,0 +1,83 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header">
+      Package Transfer
+    </div>
+    <div class="card-body">
+      <form [formGroup]="transferForm" (ngSubmit)="createTransfer()">
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Transfer Type
+              </span>
+            </div>
+            <input formControlName="transferType" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Arrival
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="arrival">
+              <option value="">-- Select Option --</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Departure
+              </span>
+            </div>
+            <select class="form-control custom-select" formControlName="departure">
+              <option value="">-- Select Option --</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Price Per Person
+              </span>
+            </div>
+            <input formControlName="amount" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Currency
+              </span>
+            </div>
+<!--            <input formControlName="currency" class="form-control" />-->
+            <input formControlName="currency" [typeahead]="currencies" typeaheadOptionField="code"
+                   [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder="" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                Note
+              </span>
+            </div>
+            <textarea formControlName="note" class="form-control">
+               </textarea>
+          </div>
+        </div>
+        <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Create Transfer" />
+      </form>
+    </div>
+  </div>
+</div>

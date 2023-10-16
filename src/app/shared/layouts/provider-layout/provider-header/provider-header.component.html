@@ -1,0 +1,87 @@
+<nav class="main-header navbar navbar-expand navbar-light">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" (click)="toggleMenuSidebar.emit()" role="button"><i class="fas fa-bars"></i></a>
+    </li>
+    <!-- <li class="nav-item d-none d-sm-inline-block">
+            <a [routerLink]="['/']" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a [routerLink]="['/blank']" class="nav-link">Contact</a>
+        </li> -->
+    <!-- <li class="nav-item d-none d-sm-inline-block">
+      <a routerLink="/">
+        <img class="img-responsive  mr-2" src="assets/logo.png" alt="" height="30" style="cursor: pointer;">
+      </a>
+    </li> -->
+  </ul>
+  <div class="collapse navbar-collapse" [ngClass]="{ 'show': true }">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/dashboard/hotel">HOME<span class="sr-only">(current)</span></a>
+      </li>
+      <!-- <li class="nav-item active">
+        <a class="nav-link" routerLink="/dashboard">SEARCH<span class="sr-only">(current)</span></a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/hotel/history">HOTELS</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/flight/history">FLIGHTS</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" routerLink="/tour/history">EXTRAS</a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/insurance/history">INSURANCE</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/traceme/history">TRACEME</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/gca/history">GCA</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/packages/history">PACKAGES</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/specialPackages/history">SPECIAL PACKAGES</a>
+      </li>
+      <!-- <li class="nav-item dropdown d-flex align-items-center" *ngIf="user != null">
+        <div dropdown>
+          <a id="button-basic" dropdownToggle type="button" aria-controls="dropdown-basic">
+            {{user?.firstName + '_' + user?.lastName | uppercase}}
+          </a>
+          <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+            <li role="menuitem"><a class="dropdown-item" routerLink="#">Reports</a></li>
+            <li  *ngIf="user"><a class="dropdown-item" routerLink="/wallet"  style="cursor: pointer;">Wallet</a></li>
+            <li role="menuitem" *ngIf="enableAgent" (click)="userNav()" style="cursor: pointer;"><a class="dropdown-item">Users</a></li>
+            <li *ngIf="enableAgent" role="menuitem" (click)="agentNav()" style="cursor: pointer;"><a
+                class="dropdown-item">Agency</a></li>
+            <li role="menuitem" (click)="profileNav()" style="cursor: pointer;"><a
+                class="dropdown-item">Profile</a></li>
+            <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/userGroup">User Group</a>
+            </li>
+            <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/packages/provider">Packages Insert</a></li>
+            <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/merchants">Merchants</a></li>
+          </ul>
+        </div>
+      </li> -->
+    </ul>
+    <!-- <ul class="navbar-nav ml-auto">
+      <li class="nav-item" *ngIf="!isDemo" style="cursor: pointer;">
+        <a class="nav-link" (click)="toggleDemo()">DEMO</a>
+      </li>
+      <li class="nav-item ml-1" *ngIf="isDemo">
+        <button class="btn btn-danger btn-sm" (click)="toggleDemo()" style="cursor: pointer;">DEMO</button>
+      </li>
+      <li class="nav-item" *ngIf="user == null">
+        <a class="nav-link" routerLink="/auth/login">LOGIN</a>
+      </li>
+      <li class="nav-item" style="cursor: pointer;" *ngIf="user != null">
+        <button class="btn btn-danger btn-sm" (click)="logout()">LOGOUT</button>
+      </li>
+    </ul> -->
+  </div>
+</nav>
+

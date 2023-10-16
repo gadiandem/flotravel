@@ -1,0 +1,134 @@
+<div class="tab-pane fade py-3 m-3 m-md-0 pt-lg-4 active show">
+    <form [formGroup]="searchForm" (ngSubmit)="searchInsurance()">
+      <div class="form-group">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" ngPreserveWhitespaces>
+              <i class="icon fa fa-map-marker"></i><span class="d-none d-md-block">&nbsp;Departure Country</span>
+            </span>
+          </div>
+          <input [(ngModel)]="searchFlyFrom[0]" [typeaheadItemTemplate]="customItemTemplate" typeaheadOptionField="name"
+          [typeahead]="sugFlyFrom$" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectResidenceCountry($event.item)"
+           type="text" class="form-control" formControlName="residenceCountry"
+            placeholder="Country"
+            [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('residenceCountry').errors }" />
+          <span class="invalid-feedback">
+            <span *ngIf="searchForm.get('residenceCountry').errors?.required">
+              Please enter Residence Country.
+            </span>
+          </span>
+          <ng-template #customItemTemplate let-model="item" let-index="index">
+            {{model.name}} - ( {{model.code}})
+          </ng-template>
+        </div>
+      </div>
+      <!-- <div class="form-group">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" ngPreserveWhitespaces>
+              <i class="icon fa fa-map-marker"></i><span class="d-none d-md-block">&nbsp;Country of Travel</span>
+            </span>
+          </div>
+          <input type="text" class="form-control" formControlName="countryOfTravel"
+            [(ngModel)]="searchFlyTo[0]" typeaheadOptionField="name" [typeaheadItemTemplate]="customItemTemplate"
+            [typeahead]="sugFlyTo$" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectCountryOfTravel($event.item)"
+            placeholder="Country of Travel" [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('countryOfTravel').errors }" />
+          <span class="invalid-feedback">
+            <span *ngIf="searchForm.get('countryOfTravel').errors?.required">
+              Please enter Country of Travel.
+            </span>
+          </span>
+        </div>
+      </div> -->
+      <kendo-daterange class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label class="m-0">Start Date</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="icon fa fa-calendar-check-o"></i>
+                </span>
+              </div>
+              <kendo-dateinput format="dd-MM-yyyy" style="width: 75%; font-size:20;" kendoDateRangeStartInput
+                [(value)]="checkin_date" placeholder="Check-in Date"></kendo-dateinput>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label class="m-0">End Date</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="icon fa fa-calendar-check-o"></i>
+                </span>
+              </div>
+              <kendo-dateinput format="dd-MM-yyyy" style="width: 75%;font-size:20;" kendoDateRangeEndInput
+                [(value)]="checkout_date" placeholder="Check-out Date">
+              </kendo-dateinput>
+            </div>
+          </div>
+        </div>
+      </kendo-daterange>
+      <div class="row">
+        <div class="col-md-4 col-sm-6">
+          <div class="form-group">
+            <label class="m-0">Adults</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+              </div>
+              <select formControlName="adults" class="form-control custom-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="form-group">
+            <label class="m-0">Children <small class="text-danger"><b>(2-12 yrs)</b></small></label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-child"></i></span>
+              </div>
+              <select formControlName="children" class="form-control custom-select">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="form-group">
+            <label class="m-0">Infants</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-child"></i></span>
+              </div>
+              <select formControlName="infants" class="form-control custom-select">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Find Product" />
+    </form>
+    </div>

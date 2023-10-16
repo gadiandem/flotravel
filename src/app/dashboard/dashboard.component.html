@@ -1,0 +1,39 @@
+<app-dashboard-header></app-dashboard-header>
+<!-- <main role="main"> -->
+<div class="search py-3 py-md-5">
+  <div class="container formbox">
+    <div class="row">
+      <div class="col-lg-9 col-8 mr-auto">
+        <div class="search-box p-md-4">
+          <ul class="nav nav-tabs border-0">
+            <li><a data-toggle="tab" routerLink="/dashboard/hotel" routerLinkActive="active"><fa-icon
+                  [icon]="faHotel"></fa-icon><br>{{'dashboard-search.link-hotel' | translate }}</a></li>
+            <li><a data-toggle="tab" routerLink="/dashboard/flight" routerLinkActive="active"><fa-icon
+                  [icon]="faFlight"></fa-icon><br>{{'dashboard-search.link-flight' | translate }}</a></li>
+            <li><a data-toggle="tab" routerLink="/dashboard/one-step-return" routerLinkActive="active"><fa-icon
+                  [icon]="faFlight"></fa-icon><br>{{'dashboard-search.link-one-step-return' | translate }}</a></li>
+<!--             <li><a data-toggle="tab" routerLink="/dashboard/combine" routerLinkActive="active"><fa-icon-->
+<!--                  [icon]="faHotel"></fa-icon>&nbsp;+&nbsp;<fa-icon-->
+<!--                  [icon]="faFlight"></fa-icon><br>{{'dashboard-search.link-combine' | translate }}</a></li>-->
+            <!--                <li><a data-toggle="tab" routerLink="/dashboard/extras" routerLinkActive="active"><fa-icon [icon]="faExtras"></fa-icon><br>{{'dashboard-search.link-extras' | translate }}</a></li>
+                <li><a data-toggle="tab" routerLink="/dashboard/insurance" routerLinkActive="active"><fa-icon [icon]="faInsurance"></fa-icon><br>{{'dashboard-search.link-insurance' | translate }}</a></li>
+                <li><a data-toggle="tab" routerLink="/dashboard/traceme" routerLinkActive="active"><fa-icon [icon]="faTracemeCard"></fa-icon><br>Trace Me</a></li>-->
+            <!--                <li><a data-toggle="tab" routerLink="/dashboard/gca" routerLinkActive="active"><fa-icon [icon]="faTracemeCard"></fa-icon><br>Global Airport Concierge </a></li>-->
+            <li><a data-toggle="tab" routerLink="/dashboard/packages" routerLinkActive="active"><fa-icon
+                  [icon]="faTracemeCard"></fa-icon><br>{{'dashboard-search.link-packages' | translate }}</a></li>
+            <li><a data-toggle="tab" routerLink="/dashboard/specialPackages" routerLinkActive="active"
+                style="padding-top:0.5em;padding-bottom:0.5em;"><fa-icon
+                  [icon]="faTracemeCard"></fa-icon><br>{{'dashboard-search.link-deals' | translate }}<em
+                  style="font-size:10px;"><br>{{'dashboard-search.label-flotravel-exclusive' | translate }}</em></a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </main> -->
+<app-dashboard-footer></app-dashboard-footer>

@@ -1,0 +1,500 @@
+<!-- <div class="we-body"> -->
+<div class="container my-5 pt-5">
+  <div class="row">
+    <div class="col-md-8 col-md-auto order-2 order-md-1 mt-4">
+      <div *ngIf="user == null" class="shadow-box p-3 mb-3" (click)="openModalWithComponent()" style="cursor: pointer;">
+        <span>
+          <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+            <i class="fa fa-lock"></i> &nbsp; {{'combine-payment.label-points' | translate }}
+          </h3>
+        </span>
+      </div>
+      <div class="shadow-box p-3 mb-2" *ngIf="isAgent" style="display: none;">
+        <app-agency-booking (userSelected)="useSelected($event)" (agencyBooking)="agencyBooking($event)">
+        </app-agency-booking>
+      </div>
+      <div class="shadow-box p-3">
+        <form [formGroup]="customersForm">
+          <div formArrayName="passengerList">
+            <div *ngFor="let schedule of passegerListControls; let i = index" [formGroupName]="i">
+              <h5
+                class="text-danger border-bottom pb-2 mb-3">{{'combine-payment.label-customer' | translate }} {{i + 1}}
+                <span *ngIf="i >= adultCount"> ( {{'combine-payment.label-child' | translate }}
+                  )</span></h5>
+              <div class="px-4">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" [id]="'male'+ i" type="radio" value="MALE"
+                               formControlName="gender"
+                               [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('gender').errors }">
+                        <label class="form-check-label" [for]="'male'+ i"
+                               [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('gender').errors }">{{'combine-payment.label-male' | translate }}</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" [id]="'female'+ i" type="radio" value="FEMALE"
+                               formControlName="gender"
+                               [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('gender').errors }">
+                        <label class="form-check-label" [for]="'female'+ i"
+                               [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('gender').errors }">{{'combine-payment.label-female' | translate }}</label>
+                      </div>
+                      <span class="invalid-feedback">
+                        <span *ngIf="formSubmitError && schedule?.get('gender').errors?.required">
+                          {{'combine-payment.invalid-gender' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4 col-12">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-fname' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="firstName"
+                             [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('firstName').errors }"/>
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('firstName').errors?.required">
+                          {{'combine-payment.invalid-fname' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-middle-name' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="middleName"/>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-lname' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="lastName"
+                             [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('lastName').errors }"/>
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('lastName').errors?.required">
+                          {{'combine-payment.invalid-lname' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12" *ngIf="i===0 || i >= adultCount">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-dob' | translate }}</label>
+                      <!-- <input class="form-control" type="text" formControlName="birthDate"
+                              [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('birthDate').errors }" /> -->
+                      <input type="text" class="form-control fromdate" formControlName="birthDate" bsDatepicker
+                             [maxDate]="maxDate">
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('birthDate').errors?.required">
+                          {{'combine-payment.invalid-dob' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12" *ngIf="i===0">
+                    <div class="form-group">
+                      <label>  {{'combine-payment.label-expire-date' | translate }}</label>
+                      <!-- <input class="form-control" type="text" formControlName="expiryDate"
+                              [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('expiryDate').errors }" /> -->
+                      <input type="text" class="form-control fromdate" formControlName="expiryDate" bsDatepicker
+                             [minDate]="maxDate">
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('expiryDate').errors?.required">
+                          {{'combine-payment.invalid-expire-date' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12" *ngIf="i===0">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-issue-date' | translate }}</label>
+                      <!-- <input class="form-control" type="text" formControlName="issueDate"
+                              [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('issueDate').errors }" /> -->
+                      <input type="text" class="form-control fromdate" formControlName="issueDate" bsDatepicker
+                             [maxDate]="maxDate" [minDate]="minDate">
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('issueDate').errors?.required">
+                          {{'combine-payment.invalid-issue-date' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-12" *ngIf="i===0">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-address' | translate }}</label>
+                      <input class="form-control" type="text" formControlName="address"
+                             [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('address').errors }"/>
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('address').errors?.required">
+                          {{'combine-payment.invalid-address' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-8 mr-auto">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-country' | translate }}</label>
+                      <input [(ngModel)]="country" [typeaheadItemTemplate]="customItemTemplate"
+                             typeaheadOptionField="code" [typeahead]="sugFlyFrom$" [typeaheadAsync]="true"
+                             [typeaheadOptionsLimit]="7" type="text" class="form-control" formControlName="country"
+                             placeholder=""
+                             [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('country').errors }"/>
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('country').errors?.required">
+                          {{'combine-payment.invalid-country' | translate }}
+                        </span>
+                      </span>
+                      <ng-template #customItemTemplate let-model="item" let-index="index">
+                        {{model.name}}, {{model.code}}
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-8" *ngIf="i === 0">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-email' | translate }}</label>
+                      <input class="form-control" placeholder="{{'combine-payment.placeholder-email' | translate }}"
+                             type="text"
+                             formControlName="email"
+                             [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('email').errors }"/>
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('email').errors?.required">
+                          {{'combine-payment.incorrect-email' | translate }}
+                        </span>
+                        <span *ngIf="schedule.get('email').errors?.email">
+                          {{'combine-payment.invalid-email' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-8">
+                    <div class="form-group" *ngIf="i < adultCount">
+                      <label> {{'combine-payment.label-mobile' | translate }}</label>
+                      <input class="form-control" placeholder="In case we have to reach you." type="text"
+                             formControlName="phoneNo" mask="000000000000"
+                             [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('phoneNo').errors }"/>
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('phoneNo').errors?.required">
+                          {{'combine-payment.invalid-mobile' | translate }}
+                        </span>
+                        <span
+                          *ngIf="schedule.get('phoneNo').errors?.pattern">{{'combine-payment.wrong-pattern-mobile' | translate }}</span>
+                        <span *ngIf="schedule.get('phoneNo').errors?.minlength">
+                          {{'combine-payment.incorrect-mobile' | translate }}
+                        </span>
+                        <span *ngIf="schedule.get('phoneNo').errors?.maxlength">
+                          {{'combine-payment.incorrect-mobile' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="form-check mb-3" style="margin-top:-10px;" *ngIf="i === 0">
+                      <input class="form-check-input" type="checkbox" id="isNotify" formControlName="isNotify">
+                      <label class="form-check-label" for="isNotify"> {{'combine-payment.label-alerts' | translate }}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-8 mr-auto">
+                    <div class="form-group">
+                      <label>{{'combine-payment.label-passport' | translate }}</label>
+                      <input class="form-control" placeholder="" type="text" formControlName="passPort"
+                             [ngClass]="{ 'is-invalid': formSubmitError && schedule.get('passPort').errors }"/>
+                      <span class="invalid-feedback">
+                        <span *ngIf="schedule.get('passPort').errors?.required">
+                          {{'combine-payment.invalid-passport' | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="shadow-box p-3 mt-4" *ngIf="isAgent" style="display: none;">
+        <app-payment-type [isAgent]="isAgent" (vcnPayment)="paymentTypeUpdate($event)" *ngIf="merchantExist">
+        </app-payment-type>
+        <div *ngIf="!merchantExist" class="shadow-box p-3  mb-3" (click)="updateProfile()" style="cursor: pointer;">
+          <span>
+            <h3 style="color: #0065b8; margin-bottom: 0px;font-size: 14px;font-weight: 100;">
+              <i class="fa fa-lock"></i> &nbsp; {{'combine-payment.invalid-merchant' | translate }}
+            </h3>
+          </span>
+        </div>
+      </div>
+      <form [formGroup]="cardPaymentForm" *ngIf="!isVcnPayment">
+        <div class="shadow-box p-3 mt-4">
+          <div class="text-danger" ngPreserveWhitespaces>
+            <i class="fa fa-credit-card"></i>&emsp;
+            <i class="fa fa-check"></i> {{'combine-payment.label-secure-transmission' | translate }}
+            &emsp;<i class="fa fa-check"></i> {{'combine-payment.label-personal-information' | translate }}
+          </div>
+          <div class="row pt-3">
+            <div class="col-md-6 mb-3">
+              <div class="card-container"></div>
+            </div>
+            <div class="col-md-6">
+              <div card container=".card-container" card-width="350" [messages]="messages" [placeholders]="placeholders"
+                   [masks]="masks">
+                <div class="card-info">
+                  <div class="form-group">
+                    <label for="card_number">{{'combine-payment.label-card-number' | translate }}</label>
+                    <input class="form-control" id="card_number" type="text" formControlName="cardNo"
+                           placeholder="xxxx xxxx xxxx xxxx" card-number
+                           [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardNo').errors }"/>
+                    <span class="invalid-feedback">
+                      <span *ngIf="cardPaymentForm.get('cardNo').errors?.required">
+                        {{'combine-payment.invalid-card-number' | translate }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="form-group">
+                    <label for="full_name">{{'combine-payment.label-full-name' | translate }}</label>
+                    <input class="form-control" id="full_name" type="text" formControlName="cardName" card-name
+                           [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cardName').errors }"/>
+                    <span class="invalid-feedback">
+                      <span *ngIf="cardPaymentForm.get('cardName').errors?.required">
+                        {{'combine-payment.invalid-full-name' | translate }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label for="expire_time"> {{'combine-payment.label-expiry' | translate }}</label>
+                        <input class="form-control" id="expire_time" type="text" formControlName="expiry"
+                               placeholder="mm/yy" card-expiry
+                               [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('expiry').errors }"/>
+                        <span class="invalid-feedback">
+                          <span *ngIf="cardPaymentForm.get('expiry').errors?.required">
+                            {{'combine-payment.invalid-expiry' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label for="cvv"> {{'combine-payment.label-cvc' | translate }}</label>
+                        <input class="form-control" id="cvv" type="text" placeholder="xxx" formControlName="cvv"
+                               card-cvc
+                               [ngClass]="{ 'is-invalid': formSubmitError && cardPaymentForm.get('cvv').errors }"/>
+                        <span class="invalid-feedback">
+                          <span *ngIf="cardPaymentForm.get('cvv').errors?.required">
+                            {{'combine-payment.invalid-cvc' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form [formGroup]="userForm">
+        <div class="shadow-box p-3 my-4">
+          <div class="text-danger mb-3"
+               style="font-size: 20px;"> {{'combine-payment.label-booking-info' | translate }}</div>
+          <p> {{'combine-payment.label-email-confirmation' | translate }}</p>
+          <div class="row">
+            <div class="col-12 col-md-8">
+              <div class="form-group">
+                <label for="email">{{'combine-payment.label-email' | translate }}</label>
+                <input class="form-control" id="email"
+                       placeholder="{{'combine-payment.placeholder-email' | translate }}" type="text"
+                       formControlName="email"
+                       [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('email').errors }"/>
+                <span class="invalid-feedback">
+                  <span *ngIf="userForm.get('email').errors?.required">
+                    {{'combine-payment.incorrect-email' | translate }}
+                  </span>
+                  <span *ngIf="userForm.get('email').errors?.email">
+                    {{'combine-payment.invalid-email' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="user == null" class="row">
+            <div class="col-12 col-md-8">
+              <div class="p-4 mb-4" style="background: #eee;">
+                <p>{{'combine-payment.label-enter-password' | translate }}</p>
+                <div formGroupName="passwordGroup">
+                  <div class="row">
+                    <div class="col-10">
+                      <div class="form-group">
+                        <label>{{'combine-payment.label-password' | translate }}</label>
+                        <input class="form-control" type="password" formControlName="password" autocomplete="false"
+                               [ngClass]="{ 'is-invalid': formSubmitError && userForm.get('passwordGroup.password').errors }"/>
+                        <span class="invalid-feedback">
+                          <span *ngIf="userForm.get('passwordGroup.password').errors?.required">
+                            {{'combine-payment.invalid-password' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-10">
+                      <div class="form-group">
+                        <label>{{'combine-payment.label-confirm-password' | translate }}</label>
+                        <input class="form-control" type="password" formControlName="confirmPassword"
+                               [ngClass]="{ 'is-invalid': formSubmitError && (userForm.get('passwordGroup.confirmPassword').errors || userForm.get('passwordGroup').errors) }"/>
+                        <span class="invalid-feedback">
+                          <span *ngIf="userForm.get('passwordGroup.confirmPassword').errors?.required">
+                            {{'combine-payment.invalid-confirm-password' | translate }}
+                          </span>
+                          <span *ngIf="userForm.get('passwordGroup').errors?.match">
+                            {{'combine-payment.incorrect-confirm-password' | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-check mb-3" style="margin-top:-10px;">
+                      <input class="form-check-input" type="checkbox" id="createAccount"
+                             formControlName="createAccount">
+                      <label class="form-check-label"
+                             for="createAccount"> {{'combine-payment.label-account' | translate }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-muted"> {{'combine-payment.label-disclaimer' | translate }}</div>
+          <br>
+          <a (click)="openTerminal()"
+             style="cursor: pointer; color: #0065b8;">{{'combine-payment.label-terms' | translate }}</a>
+          <div class="row mt-1">
+            <div class="col-12">
+              <button *ngIf="isEnoughBalance" class="btn btn-danger mr-5" type="submit"
+                      (click)="goToBankDeposit()">{{'hotel-checkout.label-wallet-payment' | translate }} &emsp;<i
+                class="fa fa-arrow-right"></i></button>
+
+              <button class="btn btn-danger" type="submit" (click)="buyNow()">{{'hotel-checkout.label-buy-now' |
+                translate }} &emsp;<i class="fa fa-arrow-right"></i></button>
+<!--              <button class="btn btn-danger" type="submit"-->
+<!--                      (click)="buyNow()">{{'combine-payment.label-buy-now' | translate }} &emsp;<i-->
+<!--                class="fa fa-arrow-right"></i></button>-->
+            </div>
+          </div>
+          <div><br><i class="fa fa-lock"></i> {{'combine-payment.label-encryption' | translate }}</div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-4 col-md-auto order-1 order-md-2 mt-4 pl-md-0">
+      <div class="card shadow-box mb-3 rounded-0">
+        <div class="hotel-img-item">
+          <img *ngIf="selectedHotelProvider == hotelProvider.NUITEE" class="img-fluid"
+               [src]="hotelSelected?.image?.baseUrl + '/800x640/' + hotelSelected?.image?.name"
+               [title]="hotelSelected?.name" style="width:100%"/>
+          <img *ngIf="selectedHotelProvider != hotelProvider.NUITEE" class="img-fluid"
+               [src]="hotelSelected?.hotelPictureUrl"
+               [title]="hotelSelected?.name" style="width:100%"/>
+        </div>
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-12">
+              <h2 class="title">{{hotelSelected?.name}}</h2>
+              <div style="color:#ffda23" ngPreserveWhitespaces>
+                <span *ngFor="let item of starRating"><i class="fa fa-star"></i>
+                </span><span>&emsp;{{starRating[starRating.length - 1] + 1}} of 5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div *ngIf="hotelSelected.provider === hotelProvider.NUITEE" class="hotel">
+            <h5>{{'combine-payment.label-booking' | translate }}</h5>
+            <p ngPreserveWhitespaces>{{searchHotelListForm?.checkinDate | date}} &emsp;
+              <i class="fa fa-arrow-right"></i>
+              &emsp;{{searchHotelListForm?.checkoutDate | date}}</p>
+            <div *ngFor="let room of selectedRoom?.rooms?.rooms; let i=index">
+              <h6>{{'combine-payment.label-room' | translate }} {{i + 1}} <span class="float-right text-danger">
+                  {{room?.roomRate?.pricePerNight[0] | currency:currency:'symbol':'.0-2'}} x {{numberOfNight}}
+                </span></h6>
+              <span>{{room?.roomDescription}}</span><small
+              class="float-right text-danger">{{+hotelSelected?.minPrice | currency:currency:'symbol':'.0-2'}}</small>
+              <hr *ngIf="i < (selectedRoom?.rooms?.rooms.length - 1)">
+            </div>
+          </div>
+          <div *ngIf="hotelSelected.provider !== hotelProvider.NUITEE" class="hotel">
+            <h5>{{'combine-payment.label-booking' | translate }}</h5>
+            <p ngPreserveWhitespaces>{{searchHotelListForm?.checkinDate | date}} &emsp;
+              <i class="fa fa-arrow-right"></i>
+              &emsp;{{searchHotelListForm?.checkoutDate | date}}</p>
+            <h6>{{'combine-payment.label-room' | translate }} {{1}} <span class="float-right text-danger">
+                  {{hotelSelected?.minPrice | currency:currency:'symbol':'.0-2'}} x {{numberOfNight}}
+                </span></h6>
+            <span>{{selectedRoomNCT?.roomDescription}}</span><small
+            class="float-right text-danger">{{+hotelSelected?.minPrice | currency:currency:'symbol':'.0-2'}}</small>
+          </div>
+          <hr *ngIf="departureFlight">
+          <div class="flight" *ngIf="departureFlight">
+            <h5 class="text-danger"> {{'combine-payment.label-departure' | translate }}
+            </h5>
+            <div *ngFor="let segment of departureFlight?.flight?.flightSegments" class="row mb-3">
+              <div class="col-3">
+                {{segment.depDateTime.split(' ')[1]}}<br>
+                <b>{{segment.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                {{segment?.arrDateTime.split(' ')[1]}}<br>
+                <b>{{segment?.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+              </div>
+              <div class="col-9" style="border-left: 1px solid #eee072;">
+                <div class="flight-cart-start">
+                  {{segment?.depAirportName}}
+                  <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;">
+                    <i class="fa fa-clock-o"></i> {{segment?.duration}}
+                  </span>
+                  <br>
+                  <small>{{segment?.depAirportName}}<br>
+                    <b>{{departureFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                </div>
+                <div class="flight-cart-end">
+                  {{segment?.arrAirportName}}<br>
+                  <small>{{segment?.arrAirportName}}<br>
+                    <b>{{departureFlight?.flight?.offerItemList[0].serviceNames}}</b></small>
+                </div>
+              </div>
+              <br/>
+              <!-- <p class="airline-tile col-12">Airline: {{segment?.airline.split('-')[1]}}</p> -->
+            </div>
+            <p class="flight-bags-detail collapsed" (click)="isCollapsed[0] = !isCollapsed[0]"
+               style="cursor: pointer; color: #0065b8;">{{'combine-payment.label-bag-fees' | translate }}
+              <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[0] === true"></i>
+              <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[0] === true"></i>
+            </p>
+            <div id="collapse0" class="collapse" [collapse]="isCollapsed[0]" [isAnimated]="true">
+              <p><strong>{{'combine-payment.label-estimated-fees' | translate }}</strong><br>
+                {{'combine-payment.label-handbag' | translate }}<br>
+                {{'combine-payment.label-handbag' | translate }}<br>
+                {{'combine-payment.label-handbag' | translate }}<br>
+                {{'combine-payment.label-confirm-bag' | translate }}
+                <span>{{departureFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span>
+              </p>
+            </div>
+            <p>{{'combine-payment.label-taxes' | translate }} <span
+              class="float-right text-danger">{{flightTaxes | currency: currency :'symbol':'.0-2'}}</span>
+            </p>
+            <p>{{'combine-payment.label-total' | translate }} <span
+              class="float-right text-danger">{{flightPrice | currency: currency :'symbol':'.0-2'}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="card-footer text-muted">
+          {{'combine-payment.label-taxes' | translate }} <span
+          class="float-right text-danger">{{totalTaxes | currency: currency :'symbol':'.0-2'}}</span>
+        </div>
+        <div class="card-footer text-muted">
+          {{'combine-payment.label-total' | translate }} <span
+          class="float-right text-danger">{{totalTripPrice | currency: currency :'symbol':'.0-2'}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </div> -->

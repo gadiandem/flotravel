@@ -1,0 +1,136 @@
+<div class="tab-pane fade py-3 m-3 m-md-0 pt-lg-4 active show">
+  <form [formGroup]="searchForm" (ngSubmit)="searchPackages()">
+    <div class="row">
+      <div class="form-group col-md-8">
+        <div class="input-group m-0">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="icon fa fa-map-marker"></i><span
+                class="d-none d-md-block">&nbsp;{{'dashboard-packages.label-where'
+                | translate }}</span>
+            </span>
+          </div>
+          <input [(ngModel)]="search" typeaheadOptionField="displayName" [typeahead]="suggestions$"
+            formControlName="destination" [typeaheadAsync]="true" [typeaheadOptionsLimit]="limit"
+            (typeaheadOnSelect)="select($event.item)" class="form-control" type="search"
+            placeholder="{{'dashboard-packages.placeholder-where' | translate }}"
+            [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }" />
+          <span class="invalid-feedback">
+            <span *ngIf="searchForm.get('destination').errors?.required">
+              {{'dashboard-packages.invalid-location' | translate }}
+            </span>
+            <span *ngIf="searchForm.get('destination').errors?.minlength">
+              {{'dashboard-packages.incorrect-location' | translate }}
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <kendo-daterange class="row" calendarType="classic">
+      <div class="col-4">
+        <div class="form-group">
+          <label class="m-0">{{'dashboard-hotel.label-check-in' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="row">
+              <div class="input-group-prepend col-1">
+                <span class="input-group-text">
+                  <i class="icon fa fa-calendar-check-o"></i>
+                </span>
+              </div>
+              <div class="input-group-prepend col-9 ml-0">
+                <kendo-dateinput format="dd-MM-yyyy" kendoDateRangeStartInput [min]="minDateStart"
+                  formControlName="startDate" placeholder="Check-in Date"></kendo-dateinput>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <label class="m-0">{{'dashboard-hotel.label-check-out' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="row">
+              <div class="input-group-prepend col-1">
+                <span class="input-group-text">
+                  <i class="icon fa fa-calendar-check-o"></i>
+                </span>
+              </div>
+              <div class="input-group-prepend col-9 ml-0">
+                <kendo-dateinput format="dd-MM-yyyy" kendoDateRangeEndInput formControlName="endDate"
+                  placeholder="Check-out Date">
+                </kendo-dateinput>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <kendo-daterange-popup #popup [animate]="{ type: 'fade', duration: 100, direction: 'down' }">
+        <ng-template kendoDateRangePopupTemplate>
+          <kendo-multiviewcalendar calendarType="classic" kendoDateRangeSelection>
+          </kendo-multiviewcalendar>
+          <div class="row">
+            <div class="col-12 py-1">
+              <button class="float-right btn btn-info mr-3" (click)="onChangeCheckOutDate($event, popup)">Done</button>
+            </div>
+          </div>
+        </ng-template>
+      </kendo-daterange-popup>
+    </kendo-daterange>
+    <!-- <div class="row">
+        <div class="col-md-4 widthcolhalf">
+          <div class="form-group">
+            <label class="m-0">Check-in</label>
+            <div class="input-group mb-3 checkinDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" ngbDatepicker #checkin="ngbDatepicker" class="form-control" formControlName="startDate" [startDate]="minDateStart" [minDate]="minDateStart"
+                     (click)="checkin.toggle()" placeholder="Check-in" (dateSelect)="getStartDate($event)" placement="bottom"
+                     [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('startDate').errors }"/>
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('startDate').errors?.required">
+                  Please Select Time.
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 widthcolhalf">
+            <label class="m-0">Check-out</label>
+            <div class="input-group mb-3 checkoutDate">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" ngbDatepicker #checkout="ngbDatepicker" class="form-control" formControlName="endDate" [startDate]="startDate" [minDate]="startDate"
+                     (click)="checkout.toggle()" placeholder="Check-out" (dateSelect)="getEndDate($event)" placement="bottom"
+                     [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('endDate').errors }"/>
+              <span class="invalid-feedback">
+                  <span *ngIf="searchForm.get('endDate').errors?.required">
+                    Please enter your checkout date.
+                  </span>
+              </span>
+            </div>
+          </div>
+    </div> -->
+    <div class="new-rooms">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="mb-0 m-0 font-weight-light">Guests</label>
+          <div class="form-group mb-md-0" style="margin-bottom: 0 !important;">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+              </div>
+              <input #menuDrop type="text" class="guests-input form-control" (click)="toggleDrop()"
+                [value]="travellerCount +' travellers, ' + roomCount + ' rooms'" style="background:#fff;">
+              <app-room-guests *ngIf="showDropDown" [roomGuests]="roomGuests" (roomGuestsNew)="updateRoomGuests($event)"
+                (showDropDown)="changeShowDropDown($event)" class="guests-dropdown shadow-box p-3"></app-room-guests>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="submit" name="submit" class="search-hotel btn btn-danger mt-3"
+      value="{{'dashboard-packages.button-find-special-packages' | translate }}" />
+  </form>
+</div>

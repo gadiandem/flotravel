@@ -1,0 +1,78 @@
+<div class="shadow-box p-3 mt-3" *ngIf="productExist">
+    <h3 style="font-weight: 400">{{smartDelay?.pricedProduct?.productInformation?.productDisplay?.productname || smartDelay?.pricedProduct?.productInformation?.productIdentifier}}</h3>
+    <p style="font-weight: 400; font-size: 14px;" [innerHTML]="smartDelay?.pricedProduct?.productInformation?.productDisplay?.description"> </p>
+   <!--<span class="fw-bold priceb" style="font-size: 14px; font-weight: 400;float: right;">
+      {{'$'}}{{+smartDelay?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.totalAmount?.amount | number: '1.1-2'}} {{'flight-add-on.label-per-person' | translate }}</span> -->
+      <div *ngIf="fetching" class="container mt-5 mb-5 text-center" style="width: 100%;">
+      <div class="spinner-border text-primary"></div>
+      <span class="text-center mt-3" ngPreserveWhitespaces>&emsp; {{'flight-add-on.label-loading' | translate }}</span>
+    </div>
+    <form [formGroup]="addonSmartDelayForm">
+      <div  class="form-group row" style="font-size: 14px; font-weight: 200;">
+        <div id="myAnswers" class="col-12">
+          <div id="chooseButton" class="fixtures select-answers pt-3">
+            <h6> {{'flight-add-on.refund-option' | translate }}</h6>
+            <div class="blue-bg p-3 chpage">
+              <div class="d-flex justify-content-between align-items-center pbox form-check">
+                  <label style="font-size: 14px;" class="form-check-label m-0" for="smartdelay_yes">
+                      <input class="form-check-input" id="smartdelay_yes" type="radio" value="YES" formControlName="smartdelay">&nbsp;
+                      {{smartDelay?.pricedProduct?.productInformation?.productDisplay?.optin}}
+                       <!-- {{highlight?.highlightproduct + ', ' + highlight?.text || 'Yes, I need the Protection Plan (Travellers aged 66 years old and above are not covered)'}} -->
+                  </label>
+                  <div class="product-price">
+                      <p class="m-0"><span class="fw-bold priceb">{{currency || smartDelay?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.currency}}&nbsp;
+                          {{smartDelay?.pricedProduct?.customerPriceBreakdowns?.customerPriceBreakdowns[0]?.baseAmount?.amount || 0}}</span></p>
+                      <p class="m-0"><span style="display: inline;">{{'flight-add-on.label-per-person' | translate }}</span></p>
+                  </div>
+              </div>
+            <!--<p style="font-weight: 300;">{{'flight-add-on.smart-subtitle' | translate }}</p> -->
+                  <div class="solicitation col-10">
+                <ul class="m-0 p-0 d-md-flex flex-md-wrap list-unstyled" *ngIf="smartDelay?.pricedProduct?.productInformation?.productDisplay?.details as detail">
+                  <li *ngIf="detail?.item1" ><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item1"></span></li>
+                  <li *ngIf="detail?.item2"><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item2"></span></li>
+                  <li *ngIf="detail?.item3"><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item3"></span></li>
+                  <li *ngIf="detail?.item4"><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item4"></span></li>
+                  <li *ngIf="detail?.item5"><i class="fas fa-check"></i>&nbsp;<span [innerHTML]="detail?.item5"></span></li>
+                <!--  <li><i class="fas fa-check"></i>{{'flight-add-on.smart-point-one' | translate }}</li>
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.smart-point-two' | translate }}</li>
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.smart-point-three' | translate }}</li> -->
+                </ul>
+                <div class="my-2" style="font-weight: 700; padding-left: 10px">
+                  <a (click)="openTermsAndConditionComponent()" style="color: #007bff; text-decoration: none;background-color: transparent; cursor: pointer;"
+             class="alert-link"> {{'flight-add-on.label-terms' | translate }}</a>
+                  <!-- <a href="https://assets.hepstar.com/documents/SmartDelay_Terms_and_Conditions_(90_minutes).pdf" target="_blank" class="alert-link">{{'flight-add-on.label-terms' | translate }}</a> -->
+                </div>
+              </div>
+            </div>
+            <div class="bg-light p-3 mt-3">
+              <label style="font-size: 14px; " class="form-check-label m-0" for="smartdelay_no">
+                <input class="form-check-input mx-1" id="smartdelay_no" type="radio" value="NO" formControlName="smartdelay" [checked]="true"> &nbsp;
+                &nbsp; &nbsp; &nbsp; Do not add to this Booking
+                <!-- &nbsp; &nbsp; &nbsp; No, I don't need the Protection Plan
+                (Travellers aged 66 years old and above are not covered) -->
+              </label>
+             <!-- <ul class="list-group">
+                <li class="list-group-item border-0" style="padding:0.5rem 0rem;">
+                  <input class="form-check-input mx-1" id="traceme_select" type="checkbox" formControlName="quote" aria-label="...">
+                  &nbsp; &nbsp; &nbsp; &nbsp;{{'flight-add-on.smart-get-access' | translate }}
+                </li>
+                <label for="traceme_select">
+                  <p style="margin-left: 45px; margin-bottom: 0px !important;">{{'flight-add-on.smart-yes' | translate }}
+                  </p>
+                </label>
+              </ul> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  <div class="shadow-box p-3 mt-3"  *ngIf="!fetching && !fetchFailed && !productExist" >
+    <div *ngIf="!productExist">
+      <alert type="danger" ngPreserveWhitespaces>
+        {{'flight-add-on.smart-unavailable' | translate }}
+      </alert>
+      <!-- <button type="button" class="btn btn-danger" (click)="fetchProductPriceList()">Try Again</button> -->
+    </div>
+  </div>
+</div>

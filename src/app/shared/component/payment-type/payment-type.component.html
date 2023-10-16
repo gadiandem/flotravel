@@ -1,0 +1,15 @@
+<form [formGroup]="paymentType" class="form-inline">
+    <div class="form-group">
+      <div class="btn-group" btnRadioGroup formControlName="radio" (click)="updatePaymentType($event)">
+        <label btnRadio="VCN" class="btn btn-secondary">{{'payment-type.label-wallet' | translate }}</label>
+        <label *ngIf="creditCardPayment" btnRadio="CC" class="btn btn-secondary">{{'payment-type.label-credit-card' | translate }}</label>
+        <div *ngIf="isVcnPayment || !creditCardPayment" class="text-danger d-flex ">
+          <p class="text-danger ml-2 pt-2 align-items-baseline">{{'payment-type.label-agent-vcn' | translate }}</p>
+        </div>
+        <div *ngIf="!isVcnPayment && creditCardPayment" class="text-danger d-flex ">
+          <p class="text-danger ml-2 pt-2 align-items-baseline">{{'payment-type.label-agent-card' | translate }}</p>
+        </div>
+        <!-- <label btnRadio="C" class="btn btn-secondary">C</label> -->
+      </div>
+    </div>
+  </form>

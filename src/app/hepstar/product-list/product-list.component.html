@@ -1,0 +1,173 @@
+<main role="main" class="margin-top: 70px">
+    <div class="container-fluid shadow-box d-none d-md-block p-0">
+      <form [formGroup]="searchForm" class="flight-search">
+        <div class="px-3">
+          <div class="row pt-2" style="cursor: pointer;">
+          <!-- <div class="row pt-2" style="cursor: pointer;" (click)="openModalWithComponent()"> -->
+            <div class="col-lg-2 col-12">
+              <label class="mb-0 font-weight-light">Residence Country</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly [value]="searchData?.residenceCountry"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col-lg-2 col-12">
+              <label class="mb-0 font-weight-light">Country of Travel</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly [value]="searchData?.countryOfTravel"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div> -->
+            <div class="col-lg-2 col-6">
+              <label class="mb-0 font-weight-light">Traveling Date</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly [value]="searchData?.startDate | date"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-6">
+              <label class="mb-0 font-weight-light">Return Date</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly [value]="searchData?.endDate | date"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-12">
+              <label class="mb-0 font-weight-light">Travellers</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly
+                    [value]="(searchData?.adults || 1) +' Adult, ' + (searchData?.children || 0) + ' Child,' + (searchData?.infants || 0) + ' Infants'" style="background:#fff;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="container-fluid mt-3 mx-md-5">
+        <div class="row mt-2">
+          <div class="col-12 d-block d-md-none mb-3">
+            <div class="font-weight-bold mt-3">{{searchData?.residenceCountry}}</div>
+            <div class="my-2">{{searchData?.startDate | date: 'MMM d'}} -
+              {{searchData?.endDate | date: 'MMM d'}},
+              {{searchData?.startDate | date: 'y'}}; Travellers: {{(searchData?.adults || 1)}} adults, {{searchData?.children || 0}} children, {{searchData?.infants || 0}} infant(s)</div>
+            <!-- <div class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal"
+              style="cursor: pointer;border: 1px solid;" (click)="openModalWithComponent()">
+              CHANGE
+            </div> -->
+          </div>
+          <div class="col-md-3 we-sort-filter">
+            <div class="mb-4">
+              <h5 class=" border-bottom pl-3 pb-2"><i class="fa fa-list text-default"></i> Sort & Filter</h5>
+              <div class="custom-control pl-0">
+                <select name="" class="form-control custom-select">
+                <!-- <select name="" class="form-control custom-select" (change)="onSortChange($event.target.value)"> -->
+                  <option value="priceIncrease">Price( increase)</option>
+                  <option value="priceDecrease">Price( Decrease)</option>
+                  <option value="popularity">Popularity</option>
+                  <option value="new">New First</option>
+                  <option value="rating">Rating</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <div *ngIf="fetchFailed" class="mb-5">
+              <alert type="danger" ngPreserveWhitespaces>
+                There is some erros:&emsp;<strong>{{errorMes}}</strong>
+              </alert>
+              <button type="button" class="btn btn-danger" (click)="fetchProductPriceList()">Try Again</button>
+              <!-- <button type="button" class="btn btn-danger">Try Again</button> -->
+            </div>
+            <div *ngIf="fetching" class="text-center mt-3 loading-space">
+              <div class="spinner-border text-primary"></div>
+              <span ngPreserveWhitespaces>&emsp;Loading...</span>
+            </div>
+            <div *ngIf="!fetching && !fetchFailed" class="hotels-list">
+              <div *ngIf="!productExist" class="mb-5">
+                <alert type="danger" ngPreserveWhitespaces>
+                  There is no product price available
+                </alert>
+                <button type="button" class="btn btn-danger" (click)="fetchProductPriceList()">Try Again</button>
+                <!-- <button type="button" class="btn btn-danger">Try Again</button> -->
+              </div>
+              <div *ngFor="let product of packages |  paginate: { itemsPerPage: 10, currentPage: p }"
+                class="row hotel-item py-3 mb-3">
+                <div class="col-md-4">
+                    <div class="hotel-img-item">
+                      <img class="hotel-img" [errorImage]="defaultData" [defaultImage]="defaultData"
+                           [lazyLoad]="product?.pricedProduct?.productInformation?.productDisplay?.logo || '/assets/no-image'" [useSrcset]="true" />
+                    </div>
+                    <div class="pt-2 d-none d-md-block">{{product?.pricedProduct?.productInformation?.productDisplay?.productname}}</div>
+                    <!-- </div> -->
+                  </div>
+                  <div class="col-md-8 pl-md-0 pt-3 pt-md-0 hotel-info">
+                    <div class="row">
+                      <div class="col-8">
+                        <h5 class="hotel-title">{{product?.pricedProduct?.productInformation?.productDisplay?.productname}}</h5>
+                        <p style="font-size: 12px;">
+                          <i class="fas fa-shield-alt"></i>
+                          &nbsp;{{product?.pricedProduct?.productInformation?.productDisplay?.highlight?.text}}</p>
+                        <ul *ngIf="product?.pricedProduct?.productInformation?.productDisplay?.details as detail">
+                          <li *ngIf="detail?.item1" [innerHTML]="detail?.item1"></li>
+                          <li *ngIf="detail?.item2" [innerHTML]="detail?.item2"></li>
+                          <li *ngIf="detail?.item2" [innerHTML]="detail?.item3"></li>
+                          <li *ngIf="detail?.item4" [innerHTML]="detail?.item4"></li>
+                          <li *ngIf="detail?.item5" [innerHTML]="detail?.item5"></li>
+                        </ul>
+                        <div class="d-none d-md-block">
+                          <div style="color:#666666;font-size: 14px;font-weight: bold;">{{product?.pricedProduct?.productInformation?.catagory}}
+                          </div>
+                        </div>
+                        <div style="color:#007864; font-size: 11px; margin-bottom:10px;">{{product?.pricedProduct?.productInformation?.internalName}}</div>
+                        <a target="_blank" style="font-size: 12px;" href="{{product?.pricedProduct?.productInformation?.productMedia?.termsAndConditions}}">Terms & Conditions</a>
+                      </div>
+                      <div class="col-4 text-right">
+                        <div class="mb-2 d-none d-md-block"><span class="hotel-price-from">{{0.2 | percent}}</span></div>
+                        <del class="hotel-price-cancel d-none d-md-block">{{(+product?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.totalAmount?.amount /(0.8)) || 1000 | number:'.0-2'}}</del>
+                        <span class="hotel-price mt-md-2">{{(+product?.pricedProduct?.productPriceBreakdown?.priceDetails[0]?.totalAmount?.amount || 420.20) | currency:currency:'symbol':'.0-2'}}</span>
+                        <!-- <div style="margin-bottom:15px">{{product?.prices?.countryTaxes[0]?.name}} {{product?.prices?.countryTaxes[0]?.taxAmount}} {{product?.context?.currency}}</div> -->
+                        <!-- <div >Scope: {{product?.pricedProduct?.productInformation?.productDisplay?.optout}}</div> -->
+                        <div style="margin-bottom:15px">Type: {{product?.pricedProduct?.productInformation?.category}}</div>
+                        <button class="btn btn-danger btn-sm" (click)="goToCard(product)">Book Now</button>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <pagination-controls *ngIf="!fetching && !fetchFailed" (pageChange)="p = $event" directionLinks="true"
+              autoHide="true">
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
+      <div class="d-none d-lg-block we-ads">
+        <img class="img-fluid" src="assets/ads.jpg">
+      </div>
+    </div>
+  </main>

@@ -1,0 +1,8 @@
+.fa-angle-left {
+    -webkit-animation:spin 4s linear infinite;
+    -moz-animation:spin 4s linear infinite;
+    animation:spin 4s linear infinite;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(90); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(90); } }
+@keyframes spin { 100% { -webkit-transform: rotate(90); transform:rotate(90); } }

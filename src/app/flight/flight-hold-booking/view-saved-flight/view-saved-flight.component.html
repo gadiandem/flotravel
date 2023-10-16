@@ -1,0 +1,202 @@
+<div class="container-fluid mb-md-5 mt-5 pt-4 pb-3 d-md-block px-3 p-0">
+  <main role="main">
+    <div class="container mt-3 pt-3 pb-5">
+      <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+        <div class="spinner-border text-primary"></div>
+        <span ngPreserveWhitespaces>&emsp;{{'flight-history-detail.label-loading' | translate }}</span>
+      </div>
+      <div class="row" *ngIf="!isLoading">
+        <div class="col-md-7">
+          <div class="shadow-box p-3">
+            <div class="row">
+              <div class="col-12">
+                <h4 class='text-danger mb-4'>{{'flight-history-detail.label-title' | translate }}</h4>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3 mb-4">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'flight-history-detail.label-booking-details' | translate
+                  }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'flight-history-detail.label-id' | translate }}</label>&emsp;
+                  {{bookingId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'flight-history-detail.label-supplier' | translate
+                    }}</label>&emsp;{{bookingDetail?.holdBookingResponse?.ownerId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label> Airline ID: </label>&emsp;{{bookingDetail?.holdBookingResponse?.ownerId}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'flight-history-detail.label-status' | translate }}</label>&emsp; {{bookingDetail?.status}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>Payment Time Limit: </label>&emsp;{{bookingDetail?.holdBookingResponse?.paymentTimeLimit}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label> Total Amount: </label>&emsp;{{bookingDetail?.holdBookingResponse?.totalOrderPrice}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'flight-history-detail.label-contact-details' | translate
+                  }}</h5>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'flight-history-detail.label-name' | translate
+                    }}</label>&emsp;{{bookingDetail?.flightPaymentReq?.paymentInfo?.payer?.firstName}}
+                  {{bookingDetail?.flightPaymentReq?.paymentInfo?.payer?.lastName}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'flight-history-detail.label-email' | translate
+                    }}</label>&emsp;{{bookingDetail?.flightPaymentReq?.paymentInfo?.payer?.email}}
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'flight-history-detail.label-phone' | translate
+                    }}</label>&emsp;{{bookingDetail?.flightPaymentReq?.paymentInfo?.payer?.mobile}}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 mt-sm-3">
+              <div class="col-12">
+                <h5 class='text-danger border-bottom mb-4'>{{'flight-history-detail.label-add-on' | translate }}</h5>
+              </div>
+              <div class="col-12 col-md-12">
+                <div class="form-group" ngPreserveWhitespaces>
+                  <label>{{'flight-history-detail.label-included' | translate }}</label>&emsp;
+                  <span *ngIf="bookingDetail?.flightPaymentReq?.addonGca == true">{{'flight-history-detail.label-gac' |
+                    translate }} &emsp;</span>
+                  <span
+                    *ngIf="bookingDetail?.flightPaymentReq?.addonSmartDelay == true">{{'flight-history-detail.label-smart-delay'
+                    | translate }} &emsp;</span>
+                  <span
+                    *ngIf="bookingDetail?.flightPaymentReq?.addonRefundProtect == true">{{'flight-history-detail.label-refund-protect'
+                    | translate }} &emsp;</span>
+                  <span *ngIf="bookingDetail?.flightPaymentReq?.traceMeData">
+                    {{'flight-history-detail.label-baggage-protection' | translate }} &emsp;</span>
+                  <span
+                    *ngIf="bookingDetail?.flightPaymentReq?.subscribePolicyData">{{'flight-history-detail.label-insurance'
+                    | translate }} &emsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5 ">
+          <div class="shadow-box">
+            <div class="card mb-3" style="border-radius: 0px;">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h6 class="mt-2"> Booking {{bookingDetail?.holdBookingResponse?.ownerId}}</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div>
+                  <h5 class="text-danger mb-3"> {{'flight-checkout.label-departure' | translate }}
+                  </h5>
+                  <div class="row mb-3"
+                    *ngFor="let segment of bookingDetail?.flightPaymentReq?.departureFlight?.flightSegments; let i = index;">
+                    <div class="col-3">
+                      {{segment?.depDateTime | date:'dd MMM'}} {{segment?.depDateTime | date:'HH:mm'}}<br>
+                      {{segment?.arrDateTime | date:'dd MMM'}} {{segment?.arrDateTime | date:'HH:mm'}}<br>
+                    </div>
+                    <div class="col-8" style="border-left: 1px solid #eee072;">
+                      <div class="flight-cart-start">
+                        {{segment?.depAirportCode || 'London (United Kingdom)'}}<br>
+                        {{segment?.depCityName}}<br>
+                        {{segment?.airline}}
+                      </div>
+                      <div class="flight-cart-end">
+                        {{segment?.arrAirportCode|| 'London (United Kingdom)'}}<br>
+                        <small>{{segment?.arrCityName}}</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="bookingDetail?.flightPaymentReq?.returnFlight">
+                    <h5 class="text-danger mb-3">
+                      {{'flight-checkout.label-return' | translate }} </h5>
+                    <div class="row mb-3"
+                      *ngFor="let segment of bookingDetail?.flightPaymentReq?.returnFlight?.flightSegments; let i = index;">
+                      <div class="col-3">
+                        {{segment?.depDateTime | date:'dd MMM'}} {{segment?.depDateTime | date:'HH:mm'}}<br>
+                        {{segment?.arrDateTime | date:'dd MMM'}} {{segment?.arrDateTime | date:'HH:mm'}}<br>
+                      </div>
+                      <div class="col-8" style="border-left: 1px solid #eee072;">
+                        <div class="flight-cart-start">
+                          {{segment?.depAirportCode || 'London (United Kingdom)'}}<br>
+                          {{segment?.depCityName}}<br>
+                          {{segment?.airline}}
+                        </div>
+                        <div class="flight-cart-end">
+                          {{segment?.arrAirportCode|| 'London (United Kingdom)'}}<br>
+                          <small>{{segment?.arrCityName}}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="bookingDetail?.flightPaymentReq?.nextFlights">
+                    <h5 class="text-danger mb-3">
+                      {{'flight-checkout.label-next-flight' | translate }}
+                    </h5>
+                    <div class="row mb-3"
+                      *ngFor="let segment of bookingDetail?.flightPaymentReq?.nextFlights[0]?.flightSegments; let i = index;">
+                      <div class="col-3">
+                        {{segment?.depDateTime | date:'dd MMM'}} {{segment?.depDateTime | date:'HH:mm'}}<br>
+                        {{segment?.arrDateTime | date:'dd MMM'}} {{segment?.arrDateTime | date:'HH:mm'}}<br>
+                      </div>
+                      <div class="col-8" style="border-left: 1px solid #eee072;">
+                        <div class="flight-cart-start">
+                          {{segment?.depAirportCode || 'London (United Kingdom)'}}<br>
+                          {{segment?.depCityName}}<br>
+                          {{segment?.airline}}
+                        </div>
+                        <div class="flight-cart-end">
+                          {{segment?.arrAirportCode|| 'London (United Kingdom)'}}<br>
+                          <small>{{segment?.arrCityName}}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer text-muted">
+                  <h6>{{'flight-history-detail.label-total' | translate }}
+                    <small class="float-right text-danger">
+                      {{bookingDetail?.holdBookingResponse?.totalOrderPrice | currency:currency:'symbol':'.0-2'}}
+                    </small>
+                  </h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-6">
+              <button class="btn btn-danger ml-5" (click)="VCNPayment()">{{'hotel-checkout.label-wallet-payment' | translate }}
+                &emsp;<i class="fa fa-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

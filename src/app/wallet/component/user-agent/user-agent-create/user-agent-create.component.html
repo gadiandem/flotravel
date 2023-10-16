@@ -1,0 +1,104 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-user-agents.create-label-title' | translate }}</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <form [formGroup]="addBankForm" class="form-horizontal clearfix">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-user-agents.manager-email' | translate }}</label>
+              <div class="col-6">
+                <input class="form-control" id="email" formControlName="email"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('email').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('email').errors?.required">
+                    {{'wallet-user-agents.create-invalid-email' | translate }}
+                  </span>
+                  <span *ngIf="addBankForm.get('email').errors?.email">
+                    {{'wallet-user-agents.create-incorrect-email' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-user-agents.manager-fname' | translate }}</label>
+              <div class="col-6">
+                <input class="form-control" id="firstName" type="text" formControlName="firstName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('firstName').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('firstName').errors?.required">
+                    {{'wallet-user-agents.create-invalid-fname' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-user-agents.manager-lname' | translate }}</label>
+              <div class="col-6">
+                <input class="form-control" id="lastName" type="text" formControlName="lastName"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('lastName').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('lastName').errors?.required">
+                    {{'wallet-user-agents.create-invalid-lname' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-user-agents.manager-role' | translate }}</label>
+              <div class="col-6">
+                <input class="form-control" id="role" type="text" formControlName="role"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('role').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('role').errors?.required">
+                    {{'wallet-user-agents.create-invalid-role' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-4 col-form-label text-sm-right">{{'wallet-user-agents.manager-status' | translate }}</label>
+              <div class="col-6">
+                <input class="form-control" id="status" type="text" formControlName="status"
+                  [ngClass]="{ 'is-invalid': formSubmitError && addBankForm.get('status').errors }" />
+                <span class="invalid-feedback">
+                  <span *ngIf="addBankForm.get('status').errors?.required">
+                    {{'wallet-user-agents.create-invalid-status' | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr />
+      <div class="clearfix">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary btn-sm mr-2" (click)="addBank()">{{'wallet-user-agents.button-submit' | translate }}</button>
+          <button type="button" class="btn btn-warning btn-sm" (click)="cancel()">{{'wallet-user-agents.button-cancel' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

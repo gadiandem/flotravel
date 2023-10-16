@@ -1,0 +1,78 @@
+<div class="tab-pane fade py-3 m-3 m-md-0 pt-lg-4 active show">
+    <form [formGroup]="searchForm" (ngSubmit)="searchTraceme()">
+      <div class="row">
+        <div class="col-md-10">
+          <div class="nav nav-tabs nav-fill border-0 mb-3" role="tablist">
+            <a class="nav-item nav-link rounded-0" [ngClass]="journeyIndex === 1 ? 'active' : ''"
+              (click)="journeyChange(1)">One Way</a>
+            <a class="nav-item nav-link rounded-0" [ngClass]="journeyIndex === 2 ? 'active' : ''"
+              (click)="journeyChange(2)">Round Trip</a>
+            <a class="nav-item nav-link rounded-0" [ngClass]="journeyIndex === 3 ? 'active' : ''"
+              (click)="journeyChange(3)">Multi City</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="form-group">
+            <label class="m-0">Start Date</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" class="form-control fromdate" formControlName="startDate" bsDatepicker
+                [bsConfig]="bsConfig" (bsValueChange)="onValueChange($event)" [minDate]="minDate"
+                [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('startDate').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="searchForm.get('startDate').errors?.required">
+                    Please enter your departuring.
+                  </span>
+                </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-5 returning">
+          <div class="form-group">
+            <label class="m-0">End Date</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+              </div>
+              <input type="text" class="form-control todate" formControlName="endDate" bsDatepicker [bsConfig]="bsConfig"
+              [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('endDate').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="searchForm.get('endDate').errors?.required">
+                  Please enter your returning.
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10">
+          <div class="form-group">
+            <label class="m-0">Luggage Count</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+              </div>
+              <select formControlName="luggageCount" class="form-control custom-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input type="submit" name="submit" class="search-hotel btn btn-danger" value="Find TraceMe">
+    </form>
+    </div>

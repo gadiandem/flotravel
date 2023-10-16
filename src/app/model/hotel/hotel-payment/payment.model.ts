@@ -1,0 +1,31 @@
+export class PaymentModel {
+  amount: string;
+  orderDate: string;
+  currency: string;
+  currencyName: string;
+  custom: string;
+  item_name: string;
+  item_price: string;
+  quantity: string;
+  orderId: string;
+  tracking: string;
+  traceNumber: string;
+  paymentChannel: string;
+  payer: string;
+  payOption: string;
+  responseStatus: string;
+  sessionId: string;
+  city: string;
+  checkInDate: string;
+  checkOutDate: string;
+  noOfNight: string;
+  noOfRooms: string;
+  holder: string;
+  hotelInfo: string;
+  roomDetails: string;
+  cancelPoliciesInfos: string;
+  bookingId: string;
+  bookingStatus: string;
+  bookingRemarks: string;
+  token: string;
+}

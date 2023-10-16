@@ -1,0 +1,10 @@
+.block-center {
+    margin: 0 auto;
+    /* width: 200px;
+    min-height: 120px; */
+    background-size: cover;
+    height:30px;
+}
+.wd-xl {
+    width: 500px;
+}

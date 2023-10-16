@@ -1,0 +1,299 @@
+<div class="tab-pane fade py-3 m-3 m-md-0 pt-lg-4 active show">
+  <form [formGroup]="searchForm" (ngSubmit)="searchFlight()">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="nav nav-tabs nav-fill border-0 mb-3" role="tablist">
+          <a class="nav-item nav-link rounded-0" [ngClass]="typeFlight === 2 ? 'active' : ''"
+            (click)="flightTypeChange(2)"> {{'dashboard-flights.label-round-trip' | translate }}</a>
+          <a class="nav-item nav-link rounded-0" [ngClass]="typeFlight === 1 ? 'active' : ''"
+            (click)="flightTypeChange(1)"> {{'dashboard-flights.label-one-way' | translate }}</a>
+          <a class="nav-item nav-link rounded-0" [ngClass]="typeFlight === 3 ? 'active' : ''"
+            (click)="flightTypeChange(3)"> {{'dashboard-flights.label-multi-city' | translate }}</a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="m-0">{{'dashboard-flights.label-flying-from' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+            </div>
+            <!-- <input type="text" class="form-control" formControlName="flyFrom" placeholder="City or Airport"> -->
+            <input [(ngModel)]="searchFlyFrom[0]" [typeaheadItemTemplate]="customItemTemplate" type="search"
+              typeaheadOptionField="displayName" [typeahead]="sugFlyFrom$" formControlName="flyFrom"
+              [typeaheadAsync]="true" [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectFlyFrom($event.item)"
+              class="form-control" placeholder="{{'dashboard-flights.placeholder-flying-from' | translate }}"
+              [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('flyFrom').errors }">
+            <span class="invalid-feedback">
+              <span *ngIf="searchForm.get('flyFrom').errors?.required">
+                {{'dashboard-flights.invalid-flying-from' | translate }}
+              </span>
+              <span *ngIf="searchForm.get('flyFrom').errors?.minlength">
+                {{'dashboard-flights.incorrect-flying-from' | translate }}
+              </span>
+            </span>
+            <ng-template #customItemTemplate let-model="item" let-index="index">
+              {{model.displayName | truncatetext:100:0}}
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="m-0"> {{'dashboard-flights.label-destination' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+            </div>
+            <!-- <input type="text" class="form-control" formControlName="destination" placeholder="Arrival"> -->
+            <input [(ngModel)]="searchFlyTo[0]" typeaheadOptionField="displayName" type="search"
+              [typeaheadItemTemplate]="customItemTemplate" [typeahead]="sugFlyTo$" formControlName="destination"
+              [typeaheadAsync]="true" [typeaheadOptionsLimit]="7" (typeaheadOnSelect)="selectDestination($event.item)"
+              class="form-control" placeholder="  {{'dashboard-flights.placeholder-destination' | translate }}"
+              [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('destination').errors }">
+            <span class="invalid-feedback">
+              <span *ngIf="searchForm.get('destination').errors?.required">
+                {{'dashboard-flights.invalid-destination' | translate }}
+              </span>
+              <span *ngIf="searchForm.get('destination').errors?.minlength">
+                {{'dashboard-flights.incorrect-destination' | translate }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="typeFlight !== 2">
+      <div class="col-6">
+        <div class="form-group">
+          <label class="m-0">{{'dashboard-flights.label-departing' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+            </div>
+            <kendo-datepicker #datepickerDeparturing class="form-control" formControlName="departuring"
+              calendarType="classic" (click)="onOpenDatepicker($event, datepickerDeparturing)"
+              (valueChange)="onValueChange($event)"
+              [ngClass]="{ 'is-invalid': formSubmitError && searchForm.get('departuring').errors }" title="Select Date"
+              format="dd-MM-yyyy" placeholder="Departure Date" [min]="minDate"></kendo-datepicker>
+            <span class="invalid-feedback">
+              <span *ngIf="searchForm.get('departuring').errors?.required">
+                {{'dashboard-flights.invalid-departing' | translate }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <kendo-daterange *ngIf="typeFlight === 2" class="row" calendarType="classic">
+      <div class="col-md-6">
+        <label class="m-0 font-weight-light"> {{'dashboard-flights.label-departing' | translate }}</label>
+        <div class="form-group">
+          <!-- <label class="m-0">{{'dashboard-hotel.label-check-out' | translate }}</label> -->
+          <div class="input-group mb-3">
+            <div class="row">
+            <div class="input-group-prepend col-md-1">
+              <span class="input-group-text">
+                <i class="icon fa fa-calendar-check-o"></i>
+              </span>
+            </div>
+            <div class="input-group-prepend col-md-9 ml-0">
+            <kendo-dateinput format="dd-MM-yyyy" kendoDateRangeStartInput formControlName="departuringRoundtrip" [min]="minDate"
+              (valueChange)="onValueChange($event)" placeholder="dd-MM-yyyy">
+            </kendo-dateinput>
+          </div>
+        </div>
+        </div>
+          <span class="invalid-feedback">
+            <span *ngIf="searchForm.get('departuringRoundtrip').errors?.required">
+              {{'dashboard-flights.invalid-departing' | translate }}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="m-0 font-weight-light">{{'dashboard-flights.label-returning' | translate }}</label>
+        <div class="form-group" style="margin-bottom: 0;">
+          <div class="input-group mb-3">
+            <div class="row">
+            <div class="input-group-prepend col-md-1">
+              <span class="input-group-text">
+                <i class="icon fa fa-calendar-check-o"></i>
+              </span>
+            </div>
+            <div class="input-group-prepend col-md-9 ml-0">
+            <kendo-dateinput format="dd-MM-yyyy" kendoDateRangeEndInput formControlName="returning"
+              placeholder="dd-MM-yyyy">
+            </kendo-dateinput>
+          </div>
+          </div>
+        </div>
+          <span class="invalid-feedback">
+            <span *ngIf="searchForm.get('returning').errors?.required">
+              {{'dashboard-one-step-return.invalid-returning' | translate }}
+            </span>
+          </span>
+        </div>
+      </div>
+      <kendo-daterange-popup #popup [animate]="{ type: 'fade', duration: 100, direction: 'down' }">
+        <ng-template kendoDateRangePopupTemplate>
+          <kendo-multiviewcalendar calendarType="classic" kendoDateRangeSelection>
+          </kendo-multiviewcalendar>
+          <div class="row">
+            <div class="col-12 py-1">
+              <button class="float-right btn btn-info mr-3" (click)="onChangeCheckOutDate($event, popup)">Done</button>
+            </div>
+          </div>
+        </ng-template>
+      </kendo-daterange-popup>
+    </kendo-daterange>
+    <div class="row">
+      <div class="col-md-4 col-sm-6">
+        <div class="form-group">
+          <label class="m-0">{{'dashboard-flights.label-adults' | translate }}</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-user"></i></span>
+            </div>
+            <select formControlName="adults" class="form-control custom-select">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="form-group">
+          <label class="m-0">{{'dashboard-flights.label-children' | translate }} <small
+              class="text-danger"><b>{{'dashboard-flights.label-child-years' | translate }}</b></small></label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-child"></i></span>
+            </div>
+            <select formControlName="children" class="form-control custom-select">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="form-group">
+          <label class="m-0">Infants</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-child"></i></span>
+            </div>
+            <select formControlName="infants" class="form-control custom-select">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5 col-sm-6">
+        <div class="form-group">
+          <label class="m-0">Cabin Type</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-user"></i></span>
+            </div>
+            <select formControlName="classType" class="form-control custom-select">
+              <option value="7">Any Cabin</option>
+              <option value="1">First Class</option>
+              <option value="2">Business</option>
+              <option value="3">Economy</option>
+              <option value="4">Premium Economy</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="new-flight" *ngIf="typeFlight === 3">
+      <div formArrayName="anotherCities">
+        <div class="row" *ngFor="let city of flightsControls; let i = index" [formGroupName]="i">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="m-0">{{'dashboard-flights.label-flying-from' | translate }}</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                </div>
+                <!-- <input type="text" class="form-control" formControlName="flyFromNext" placeholder="City or Airport"> -->
+                <input [(ngModel)]="searchDestinationNexts[i]" typeaheadOptionField="displayName" type="search"
+                  [typeaheadItemTemplate]="customItemTemplate" [typeahead]="sugDestinationNexts$[i]"
+                  formControlName="flyFromNext" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7"
+                  (typeaheadOnSelect)="selectFlyFromNext($event.item)" class="form-control"
+                  placeholder="{{'dashboard-flights.placeholder-flying-from' | translate }}">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="m-0">{{'dashboard-flights.label-destination' | translate }}</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                </div>
+                <!-- <input type="text" class="form-control" formControlName="destinationNext" placeholder="City or Airport"> -->
+                <input [(ngModel)]="searchArrivalNexts[i]" typeaheadOptionField="displayName" type="search"
+                  [typeaheadItemTemplate]="customItemTemplate" [typeahead]="sugArrivalNexts$[i]"
+                  formControlName="destinationNext" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7"
+                  (typeaheadOnSelect)="selectDestinationNext($event.item)" class="form-control"
+                  placeholder="{{'dashboard-flights.placeholder-destination' | translate }}">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="m-0">{{'dashboard-flights.label-departing' | translate }}</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                </div>
+                <!-- <input type="text" class="form-control fromdate" formControlName="departuringNext" bsDatepicker
+                  [bsConfig]="bsConfig"> -->
+                <kendo-datepicker #datepickerDepartureNext class="form-control" formControlName="departuringNext"
+                  calendarType="classic" (click)="onOpenDatepicker($event, datepickerDepartureNext)" title="Select Date" format="dd-MM-yyyy" placeholder="Next Date"
+                  [min]="minDate"></kendo-datepicker>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1 d-flex align-items-center align-self-center">
+            <i class="fa fa-times" aria-hidden="true" (click)="removeitem(i)" *ngIf="i >= 1"></i>
+          </div>
+        </div>
+        <span class="add-flight float-right" style="cursor:pointer;" (click)="onAddCity()"><i
+            class="fa fa-plus-circle"></i> {{'dashboard-flights.label-another-flight' | translate }} </span>
+      </div>
+    </div>
+    <!-- <div class="form-check mt-3">
+      <input class="form-check-input" type="checkbox" id="bspBooking" formControlName="bspBooking">
+      <label class="form-check-label" for="bspBooking"> {{'dashboard-flights.checkbox-bsp' | translate }}
+      </label>
+    </div> -->
+    <input type="submit" name="submit" class="search-hotel btn btn-danger"
+      value="{{'dashboard-flights.button-find-flight' | translate }}">
+  </form>
+</div>

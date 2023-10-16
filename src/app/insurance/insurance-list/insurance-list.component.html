@@ -1,0 +1,278 @@
+<main role="main">
+  <div *ngIf="!fetching && !fetchFailed">
+    <div class="container mb-md-5 mt-5 pt-4 pb-3 shadow-box d-md-block px-3 p-0">
+      <form [formGroup]="searchForm" class="flight-search">
+        <div class="px-3">
+          <div class="row pt-2" style="cursor: pointer;" (click)="openModalWithComponent()">
+            <div class="col-lg-2 col-12">
+              <label class="mb-0 font-weight-light">Residence Country</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly [value]="searchInsuranceForm.residenceCountry"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-12">
+              <label class="mb-0 font-weight-light">Country of Travel</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly [value]="searchInsuranceForm.countryOfTravel"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-6">
+              <label class="mb-0 font-weight-light">Traveling Date</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly [value]="searchInsuranceForm.startDate | date"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-6">
+              <label class="mb-0 font-weight-light">Return Date</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly [value]="searchInsuranceForm.endDate | date"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-12">
+              <label class="mb-0 font-weight-light">Travellers</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+                  </div>
+                  <input type="text" class="form-control" readonly
+                    [value]="(searchInsuranceForm?.travellers.adt || 1) +' Adult, ' + (searchInsuranceForm?.travellers.chd || 0) + ' Child,' + (searchInsuranceForm?.travellers.inf || 0) + ' Infants'"
+                    style="background:#fff;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-10">
+          <div class="row mt-2">
+            <div class="col-12 d-block d-md-none mb-3">
+              <div *ngIf="!fetchFailed">{{errorMes}}</div>
+              <div class="font-weight-bold mt-3">{{searchInsuranceForm.residenceCountry}}</div>
+              <div class="my-2">{{searchInsuranceForm.startDate | date: 'MMM d'}} -
+                {{searchInsuranceForm.endDate | date: 'MMM d'}},
+                {{searchInsuranceForm.startDate | date: 'y'}}; Travellers: {{(searchInsuranceForm?.travellers.adt ||
+                1)}} adults, {{searchInsuranceForm?.travellers.chd || 0}} children,
+                {{searchInsuranceForm?.travellers.inf || 0}} infant(s)</div>
+              <div class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal"
+                style="cursor: pointer;border: 1px solid;" (click)="openModalWithComponent()">
+                CHANGE
+              </div>
+            </div>
+            <div class="col-md-3 we-sort-filter">
+              <div class="mb-4">
+                <h5 class=" border-bottom pl-3 pb-2"><i class="fa fa-list text-default"></i> Sort & Filter</h5>
+                <div class="custom-control pl-0">
+                  <select name="" class="form-control custom-select" (change)="onSortChange($event.target.value)">
+                    <option value="priceIncrease">Price( increase)</option>
+                    <option value="priceDecrease">Price( Decrease)</option>
+                    <option value="popularity">Popularity</option>
+                    <option value="new">New First</option>
+                    <option value="rating">Rating</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div *ngIf="fetchFailed" class="mb-5">
+                <alert type="danger" ngPreserveWhitespaces>
+                  {{'flight-list.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+                </alert>
+                <button type="button" class="btn btn-danger" (click)="fetchInsuranceList()">Try Again</button>
+                <!-- <button type="button" class="btn btn-danger">Try Again</button> -->
+              </div>
+              <!--  <div *ngIf="fetching" class="text-center mt-3 loading-space">
+            <div class="spinner-border text-primary"></div>
+            <span ngPreserveWhitespaces>&emsp;Loading...</span>
+          </div> -->
+              <div *ngIf="!fetching && !fetchFailed" class="hotels-list">
+                <div *ngFor="let package of packageListView |  paginate: { itemsPerPage: 10, currentPage: p }"
+                  class="row hotel-item py-3 mb-3">
+                  <div class="col-12 pt-md-0">
+                    <div class="row">
+                      <div class="col-8">
+                        <h5 class="hotel-title">{{package?.title || 'Gold Plan'}}</h5>
+                        <p style="font-size: 12px;"><i class="fa fa-map-marker"></i> {{package?.type || 'with Covid 19
+                          plan'}}</p>
+                        <div class="d-none d-md-block">
+                          <div style="color:#666666;font-size: 14px;font-weight: bold;">{{package?.name|| 'Gold Plan'}}
+                          </div>
+                          <p style="color:#666666;font-size: 14px;margin-bottom:10px;line-height: 15px;">
+                            {{package?.desc}}</p>
+                        </div>
+                        <div style="color:#007864; font-size: 11px; margin-bottom:10px;">{{'non-refundable'}}</div>
+                        <div style="color:#666666; font-size: 12px;"><b>4/5</b> Excellant 3,687 reviews</div>
+                      </div>
+                      <div class="col-4 text-right">
+                        <div class="mb-2 d-none d-md-block"><span class="hotel-price-from">{{(package?.discount/100 ||
+                            0.25) | percent}}</span></div>
+                        <del class="hotel-price-cancel d-none d-md-block">{{(package.price / (1 - package?.discount/100
+                          || 0.25 || 0) | currency:currency:'symbol':'.0-2')}}</del>
+                        <div class="hotel-price mt-md-2">{{(package?.price || 420.20) |
+                          currency:currency:'symbol':'.0-2'}}</div>
+                        <div style="margin-bottom:15px">Flight Price</div>
+                        <button class="btn btn-danger btn-sm" (click)="goToDetail(package.id)">Book Now</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <pagination-controls *ngIf="!fetching && !fetchFailed" (pageChange)="p = $event" directionLinks="true"
+                autoHide="true">
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="d-none d-lg-block we-ads">
+            <img class="img-fluid" src="assets/ads.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--skeleton loading-->
+    <div *ngIf="fetching" class="container">
+      <div class="row">
+        <div class="col-12 d-block d-md-none">
+          <div class="font-weight-bold my-4">
+            <span class="sort-filter"> <ngx-skeleton-loader
+                [theme]="{'background-color': '#ccc', 'height.px': 17, 'width': '30%'}"></ngx-skeleton-loader></span>
+          </div>
+        </div>
+        <div class="col-md-2 we-sort-filter">
+          <div class="mb-4 d-none d-md-block">
+            <h5 class=" border-bottom pb-2"><ngx-skeleton-loader
+                [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+            <div class="custom-control pl-0">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 30}"></ngx-skeleton-loader>
+            </div>
+          </div>
+          <div class="star-rating mb-4 d-none d-md-block">
+            <h5 class=" border-bottom pl-0 pb-2"><ngx-skeleton-loader
+                [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+            <ngx-skeleton-loader [count]="2"
+              [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+          </div>
+          <div class="facility mb-4 d-none d-md-block">
+            <h5 class="pb-2 border-bottom pl-0 pb-2"><ngx-skeleton-loader
+                [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+            <ngx-skeleton-loader [count]="4"
+              [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+          </div>
+          <div class="facility mb-4 d-none d-md-block">
+            <h5 class="pb-2 border-bottom pl-0 pb-2"><ngx-skeleton-loader
+                [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader></h5>
+            <ngx-skeleton-loader [count]="4"
+              [theme]="{'background-color': '#ccc', 'height.px': 15}"></ngx-skeleton-loader>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <h1 class="flight-title mb-3" style="font-size:26px;">
+            <ngx-skeleton-loader
+              [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '40%'}"></ngx-skeleton-loader>
+          </h1>
+          <div class="row mb-4">
+            <div class="col-4" style="padding-right: 0px;">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+            </div>
+            <div class="col-4" style="padding-right: 0px;padding-left: 0px;">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+            </div>
+            <div class="col-4" style="padding-left: 0px;">
+              <ngx-skeleton-loader [theme]="{'background-color': '#ccc', 'height.px': 59}"></ngx-skeleton-loader>
+            </div>
+          </div>
+          <div class="flights-list">
+            <div class="flight-item mb-3" *ngFor="let flight of [1, 2, 3, 4]; let i = index;">
+              <div class="row">
+                <div class="col-md-5 col-7">
+                  <div class="px-3 pt-3">
+                    <h5 class="flight-title">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 25, 'width': '30%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                    </h5>
+                    <p class="title">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 15, 'width': '50%'}"></ngx-skeleton-loader>
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3 d-none d-md-block px-3 pt-3">
+                  <ngx-skeleton-loader
+                    [theme]="{'background-color': '#ccc', 'height.px': 40, 'width': '50%'}"></ngx-skeleton-loader>
+                </div>
+                <div class="col-md-4 col-5">
+                  <div class="text-right p-3 pr-4">
+                    <span>
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': 'rgb(0, 25, 89)', 'height.px': 25, 'width': '50%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                    </span><br>
+                    <p style="font-size: 12px;">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 10, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-9">
+                  <div class="px-3 pb-md-3">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': '#ccc', 'height.px': 42, 'width': '90%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="text-right pt-md-0 p-3 pr-4">
+                    <ngx-skeleton-loader
+                      [theme]="{'background-color': 'rgb(10, 48, 73)', 'height.px': 38, 'width.px': 80}"></ngx-skeleton-loader>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 collapsed">
+                  <p class="px-3 py-2 m-0" style="background:#eee; color:#007864; cursor:pointer;">
+                    <span><ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 17, 'width.px': 93.58 , 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+                    <span class="float-right"><ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'height.px': 21, 'width.px': 76.52 , 'margin-bottom.px': 0}"></ngx-skeleton-loader></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 d-none d-md-block">
+          <ngx-skeleton-loader
+            [theme]="{'height.px': 600, 'width.px': 160, 'background-color': '#ccc'}"></ngx-skeleton-loader>
+        </div>
+      </div>
+    </div>
+</main>

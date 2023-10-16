@@ -1,0 +1,73 @@
+<div class="container  my-5 pt-5">
+    <div class="col-sm-8 offset-sm-2">
+      <div class="card">
+        <div class="card-header">
+          Parital Flights Approval
+        </div>
+        <div class="card-body mx-3">
+          <form [formGroup]="flightForm">
+            <div class="form-group row">
+              <label for="provider">Provider</label>
+              <input appTrim class="form-control" id="provider" formControlName="provider" disabled
+                [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('provider').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="flightForm.get('provider').errors?.required">
+                  invalid provider
+                </span>
+              </span>
+            </div>
+            <div class="form-group row">
+              <label for="creatdDate">Booked on</label>
+              <input appTrim class="form-control" id="creatdDate" formControlName="creatdDate"  disabled
+                [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('creatdDate').errors }">
+                <span class="invalid-feedback">
+                    <span *ngIf="flightForm.get('creatdDate').errors?.required">
+                      invalid creatd date
+                    </span>
+                </span>
+            </div>
+            <div class="form-group row">
+              <label for="id"> Booking ID</label>
+              <input appTrim class="form-control" id="id" formControlName="id" disabled
+                [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('id').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="flightForm.get('id').errors?.required">
+                    invalid Booking ID
+                </span>
+              </span>
+            </div>
+              <div class="form-group row">
+                <label for="ticket"> Ticket No.</label>
+                <input appTrim class="form-control" id="ticket" formControlName="ticket" disabled
+                  [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('ticket').errors }">
+                <span class="invalid-feedback">
+                  <span *ngIf="flightForm.get('ticket').errors?.required">
+                      invalid Ticket No
+                  </span>
+                </span>
+              </div>
+              <div class="form-group row">
+                <label for="status"> Status </label>
+                <select class="form-control" id="status" formControlName="status"
+                  [ngClass]="{ 'is-invalid': formSubmitError && flightForm.get('status').errors }">
+                  <option value="PENDING"> PENDING</option>
+                  <option value="CONFIRMED"> CONFIRMED </option>
+                  <option value="DENIED"> DENIED</option>
+                </select>
+                <span class="invalid-feedback">
+                  <span *ngIf="flightForm.get('status').errors?.required">
+                    invalid Status
+                  </span>
+                </span>
+              </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="search-hotel btn btn-danger" (click)="updateRequest()">
+            Update Request
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+

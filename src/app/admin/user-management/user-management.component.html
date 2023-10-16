@@ -1,0 +1,72 @@
+<div class="container mt-3 pb-3" style="min-height: 500px;">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h2 class="heading">{{'admin-user-management.label-title' | translate }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <kendo-grid [data]="gridView" kendoGridSelectBy="id" [pageSize]="10" [pageable]="true" [skip]="skip"
+        [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }" (pageChange)="pageChange($event)">
+        <ng-template kendoGridToolbarTemplate>
+          <input placeholder="{{'admin-user-management.label-search-column' | translate }}" kendoTextBox (input)="onFilter($event)"/>
+          <span *ngIf="isLoading">
+            <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+            </div><span ngPreserveWhiteSpaces>&emsp;{{'admin-user-management.label-loading' | translate }}</span>
+          </span>
+          <button kendoGridExcelCommand type="button" icon="file-excel">{{'admin-user-management.label-excel' | translate }}</button>
+          <button kendoGridPDFCommand icon="file-pdf">{{'admin-user-management.label-pdf' | translate }}</button>
+        <!-- <button class="btn btn-success btn-sm" style="float:right;" (click)="createNewUser()"><i
+              class="icon fa fa-plus"></i>&emsp; {{'admin-user-management.label-agency-create' | translate }}</button> -->
+        </ng-template>
+        <kendo-grid-column title="#" [width]="50" [columnMenu]="false">
+          <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+            <div style="text-align: center;">{{rowIndex + 1}}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="name" title="{{'admin-user-management.title-user' | translate }}" [width]="200">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.profileImg != undefined" class="customer-photo"
+              [ngStyle]="{'background-image' : 'url(' + dataItem.profileImg + ')'}"></div>
+            <div class="customer-name">{{ dataItem.firstName + ' ' + dataItem.lastName }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="agentName" title="{{'admin-user-management.title-agent' | translate }}" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="customer-name">{{ dataItem.agentName }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="email" title="{{'admin-user-management.title-email' | translate }}" [width]="200">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="customer-name">{{ dataItem.email }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="mobile" title="{{'admin-user-management.title-mobile' | translate }}" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="customer-name">{{ dataItem.mobile }}</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="enabled" title="{{'admin-user-management.title-status' | translate }}" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span *ngIf="dataItem.enabled === true" class="badge badge-success">{{'admin-user-management.title-enable' | translate }}</span>
+            <span *ngIf="dataItem.enabled === false" class="badge badge-danger">{{'admin-user-management.title-disable' | translate }}</span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column title="{{'admin-user-management.title-action' | translate }}" [width]="100" [class]="{'text-center': true}"
+          [resizable]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button class="btn btn-warning btn-sm mr-1" (click)="editUser(dataItem.id)"><i class="icon fa fa-pencil"
+                style="color: white;" aria-hidden="true"></i></button>
+            <button class="btn btn-danger btn-sm ml-1" (click)="deleteUser(dataItem)"><i class="icon fa fa-times"
+                aria-hidden="true"></i></button>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="profileImg" title="{{'admin-user-management.title-img' | translate }}" hidden="true">
+        </kendo-grid-column>
+        <kendo-grid-excel fileName="User.xlsx"></kendo-grid-excel>
+        <kendo-grid-pdf fileName="User.pdf" [repeatHeaders]="true" paperSize="A2" [allPages]="true"></kendo-grid-pdf>
+      </kendo-grid>
+      <div kendoDialogContainer></div>
+    </div>
+  </div>
+</div>

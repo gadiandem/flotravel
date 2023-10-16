@@ -1,0 +1,244 @@
+<main role="main">
+  <div class="container pt-5 pb-5">
+    <div class="row mb-3">
+      <div class="col-4 mt-5">
+        <h2 class="heading">{{'hotel-history-list.label-title' | translate }}</h2>
+      </div>
+      <div class="col-8 mt-3">
+        <form [formGroup]="searchForm" (ngSubmit)="searchHistory()">
+          <div class="row my-3">
+            <div class="col-lg-3 col-8">
+              <label class="m-0 font-weight-light">{{'hotel-history-list.label-from' | translate }}</label>
+              <div class="form-group mb-0">
+                <div class="input-group checkinDate">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" ngbDatepicker #checkin="ngbDatepicker" class="form-control" formControlName="fromDate"
+                         (click)="checkin.toggle()" (dateSelect)="getFromDate($event)" placement="bottom" placeholder="mm/dd/yyyy">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-6">
+              <label class="m-0 font-weight-light">{{'hotel-history-list.label-to' | translate }}</label>
+              <div class="form-group mb-0">
+                <div class="input-group checkoutDate">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" ngbDatepicker #checkout="ngbDatepicker" class="form-control" formControlName="toDate" [startDate]="fromDate" [minDate]="fromDate"
+                         (click)="checkout.toggle()" placeholder="dd/mm/yyyy" (dateSelect)="getToDate($event)" placement="bottom"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-12 pt-1">
+              <input type="submit" class="btn btn-danger mt-3" value="Refresh">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="userBooking" kendoGridSelectBy="id" [selectedKeys]="mySelection"
+                    [pageSize]="10" [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true"
+                    [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="{{'hotel-history-list.label-searching' | translate }}" kendoTextBox (input)="onFilter($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;{{'hotel-history-list.label-loading' | translate }}</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">{{'hotel-history-list.label-excel' | translate }}</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">{{'hotel-history-list.label-pdf' | translate }}</button>
+          </ng-template>
+
+          <kendo-grid-column-group title="{{'hotel-history-list.label-bookings' | translate }}" [columnMenu]="false">
+            <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="customer" title="{{'hotel-history-list.label-customer' | translate }}" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <!-- <div class="customer-photo" [ngStyle]="{'background-image' : photoURL(dataItem)}"></div> -->
+                <div class="customer-name" ngPreserveWhitespaces>
+                  {{ dataItem.payer.firstName | uppercase }} {{ dataItem.payer.lastName | uppercase}} </div>
+                <div>{{dataItem.payer.email}}</div>
+                <!-- <div>{{dataItem.status}}</div> -->
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column  field="id" title="{{'hotel-history-list.label-id' | translate }}" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="customer-name text-container" ngPreserveWhitespaces>
+                  {{ dataItem.id }}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <!--  <kendo-grid-column field="agent" title="{{'hotel-history-list.label-agent' | translate }}" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div *ngIf="dataItem?.user" class="customer-name" ngPreserveWhitespaces>
+                    {{ dataItem?.user.firstName | uppercase }} {{ dataItem?.user.lastName | uppercase}} </div>
+                  <div *ngIf="dataItem?.user">{{dataItem?.user.email}}</div>
+                </ng-template>
+              </kendo-grid-column> -->
+            <kendo-grid-column field="item" title="{{'hotel-history-list.label-hotel' | translate }}" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="hotel" ngPreserveWhitespaces>{{ dataItem?.hotelInfo?.name }}</div>
+                <div>{{dataItem?.hotelInfo?.address}}</div>
+                <div>{{dataItem.currency}}{{dataItem.amount | currency:dataItem.currency:'symbol':'.0-2'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="createDate" title="{{'hotel-history-list.label-date' | translate }}" [width]="180" [class]="{'text-center': true}"
+                               [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.createDate | date:'full'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <!--   <kendo-grid-column field="stay" title="Stay" [width]="180" [class]="{'text-center': true}"
+                [resizable]="true">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div ngPreserveWhitespaces>{{dataItem.checkInDate | date}}&emsp;<i class="fa fa-arrow-right"></i>
+                    &emsp;{{dataItem.checkOutDate | date}}</div>
+                </ng-template>
+              </kendo-grid-column>
+
+            <kendo-grid-column field="guest" title="Guest" [width]="150" [class]="{'text-center': true}">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div *ngFor="let item of dataItem?.roomDetails?.roomDetails; let i = index">
+                    <p>{{i + 1}}. {{item.roomDescription}}</p>
+                    <p ngPreserveWhitespaces>{{item.adultCount}}&emsp;+&emsp;{{item.childCount}}(s)</p>
+                  </div>
+                </ng-template>
+              </kendo-grid-column> -->
+
+            <kendo-grid-column field="status" title="{{'hotel-history-list.label-status' | translate }}" [width]="70" [class]="{'text-center': true}"
+                               filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <span *ngIf="dataItem.status === 'PENDING'" class="badge badge-warning">{{'hotel-history-list.label-pending' | translate }}</span>
+                <span *ngIf="dataItem.status === 'CONFIRMED' && dataItem.refundedAmount === 0"
+                      class="badge badge-success">{{'hotel-history-list.label-confirmed' | translate }}</span>
+                <span *ngIf="dataItem.refundedAmount > 0" class="badge badge-secondary">{{'hotel-history-list.label-cancelled' | translate }}</span>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="{{'hotel-history-list.label-action' | translate }}" [width]="150" [class]="{'text-center': true}"
+                               [columnMenu]="false" filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <button class="btn btn-warning btn-sm mr-1" (click)="viewDetail(dataItem)">{{'hotel-history-list.label-detail' | translate }}</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)">{{'hotel-history-list.label-delete' | translate }}</button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+
+          <kendo-grid-pdf fileName="HotelBookingList.pdf" [repeatHeaders]="true" paperSize="A3" [allPages]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="HotelBookingList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+    <hr *ngIf="agentBookingList != null && agentBookingList.length > 0" />
+    <div class="row" *ngIf="agentBookingList != null && agentBookingList.length > 0">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="agentBookingList" kendoGridSelectBy="id" [selectedKeys]="mySelection"
+                    [pageSize]="10" [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true"
+                    [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="{{'hotel-history-list.label-searching' | translate }}" kendoTextBox (input)="onFilter($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;{{'hotel-history-list.label-loading' | translate }}</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">{{'hotel-history-list.label-excel' | translate }}</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">{{'hotel-history-list.label-pdf' | translate }}</button>
+          </ng-template>
+
+          <kendo-grid-column-group title="{{'hotel-history-list.label-bookings' | translate }}" [columnMenu]="false">
+            <kendo-grid-column field="index" title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="customer" title="{{'hotel-history-list.label-customer' | translate }}" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <!-- <div class="customer-photo" [ngStyle]="{'background-image' : photoURL(dataItem)}"></div> -->
+                <div class="customer-name" ngPreserveWhitespaces>
+                  {{ dataItem.payer.firstName | uppercase }} {{ dataItem.payer.lastName | uppercase}} </div>
+                <div>{{dataItem.payer.email}}</div>
+                <!-- <div>{{dataItem.status}}</div> -->
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="id" title="{{'hotel-history-list.label-bookings' | translate }}" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="customer-name text-container" ngPreserveWhitespaces>
+                  {{ dataItem.id }}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="agent" title="{{'hotel-history-list.label-agent' | translate }}" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="customer-name" ngPreserveWhitespaces>
+                  {{ dataItem?.user.firstName | uppercase }} {{ dataItem?.user.lastName | uppercase}} </div>
+                <div>{{dataItem?.user.email}}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="item" title="{{'hotel-history-list.label-hotel' | translate }}" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="hotel" ngPreserveWhitespaces>{{ dataItem?.hotelInfo?.name }}</div>
+                <div>{{dataItem?.hotelInfo?.address}}</div>
+                <div>{{dataItem.currency}}{{dataItem.amount | currency:dataItem.currency:'symbol':'.0-2'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="createDate" title="{{'hotel-history-list.label-date' | translate }}" [width]="180" [class]="{'text-center': true}"
+                               [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.createDate | date:'full'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <!--  <kendo-grid-column field="stay" title="Stay" [width]="180" [class]="{'text-center': true}"
+                [resizable]="true">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div ngPreserveWhitespaces>{{dataItem.checkInDate | date}}&emsp;<i class="fa fa-arrow-right"></i>
+                    &emsp;{{dataItem.checkOutDate | date}}</div>
+                </ng-template>
+              </kendo-grid-column>
+
+         <kendo-grid-column field="guest" title="Guest" [width]="150" [class]="{'text-center': true}">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div *ngFor="let item of dataItem?.roomDetails?.roomDetails; let i = index">
+                    <p>{{i + 1}}. {{item.roomDescription}}</p>
+                    <p ngPreserveWhitespaces>{{item.adultCount}}&emsp;+&emsp;{{item.childCount}}(s)</p>
+                  </div>
+                </ng-template>
+              </kendo-grid-column> -->
+
+            <kendo-grid-column field="status" title="{{'hotel-history-list.label-status' | translate }}" [width]="70" [class]="{'text-center': true}"
+                               filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <span *ngIf="dataItem.status === 'PENDING'" class="badge badge-warning">{{'hotel-history-list.label-pending' | translate }}</span>
+                <span *ngIf="dataItem.status === 'CONFIRMED' && dataItem.refundedAmount === 0"
+                      class="badge badge-success">{{'hotel-history-list.label-confirmed' | translate }}</span>
+                <span *ngIf="dataItem.refundedAmount > 0" class="badge badge-secondary">{{'hotel-history-list.label-cancelled' | translate }}</span>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column title="{{'hotel-history-list.label-action' | translate }}" [width]="150" [class]="{'text-center': true}"
+                               [columnMenu]="false" filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <button class="btn btn-warning btn-sm mr-1" (click)="viewDetail(dataItem)">{{'hotel-history-list.label-detail' | translate }}</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)">{{'hotel-history-list.label-delete' | translate }}</button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+
+          <kendo-grid-pdf fileName="HotelAgentBookingList.pdf" [repeatHeaders]="true" paperSize="A3" [allPages]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="HotelAgentBookingList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</main>

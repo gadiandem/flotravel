@@ -1,0 +1,49 @@
+.tour-img{
+    float: left;
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    background-position: center center;
+  }
+
+label {
+  margin-left: 0px;
+}
+
+.custom-control-label {
+  margin: 0px 0px 0px 0px;
+  font: 12px Roboto;
+  font-weight: normal !important;
+  padding-top: 5px;
+}
+
+.hotel-image {
+  max-height: 200px;
+}
+
+.textTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.limitTextHeight {
+  height: 70px;
+  overflow: hidden;
+  margin: 0px;
+}
+.hotel-img {
+  float: left;
+  width: 100%;
+  height: auto;
+  background-size: cover;
+  background-position: center center;
+}
+
+.hotel-img-item {
+  overflow: hidden;
+  max-height: 180px;
+}

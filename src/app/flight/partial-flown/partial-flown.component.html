@@ -1,0 +1,93 @@
+<main role="main">
+    <div class="container mt-3 pt-5 pb-5">
+      <div class="row">
+        <div class="col-md-12">
+          <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+            [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+            <ng-template kendoGridToolbarTemplate>
+              <input placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event.target.value)"/>
+              <span *ngIf="isLoading">
+                <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+                </div><span ngPreserveWhiteSpaces>&emsp;{{'flight-history-list.label-loading' | translate }}</span>
+              </span>
+              <span  *ngIf="errorMessage">
+                <div  role="status">
+                </div><span style="color:red" ngPreserveWhiteSpaces>&emsp;{{'flight-history-list.error-message' | translate }} {{errorMessage}}</span>
+              </span>
+              <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">{{'flight-history-list.label-excel' | translate }}</button>
+              <button kendoGridPDFCommand icon="file-pdf" style="float:right;">{{'flight-history-list.label-pdf' | translate }}</button>
+            </ng-template>
+  
+            <kendo-grid-column-group title="Flights Saved List" [columnMenu]="false">
+              <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+                <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                  <div>{{rowIndex + 1}}</div>
+                </ng-template>
+              </kendo-grid-column>
+            <!--  <kendo-grid-column field="customer" title="Airline" [width]="80">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div class="customer-name" ngPreserveWhitespaces>
+                    {{ dataItem.holdBookingResponse.airlineId | uppercase }}</div>
+                </ng-template>
+              </kendo-grid-column> -->
+              <kendo-grid-column field="id" title="{{'flight-history-list.label-id' | translate }}" [width]="200">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div class="customer-name text-container" ngPreserveWhitespaces>
+                    {{ dataItem.id }}  </div>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="item_name" title="Proivder" [width]="80">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div ngPreserveWhitespaces>{{ dataItem.item_name }}</div>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="createDate" title="Booked on" [width]="120">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div ngPreserveWhitespaces>{{ dataItem.createDate }} GMT</div>
+               </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="flight" title="Flight" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div class="customer-name" ngPreserveWhitespaces>
+                    {{ dataItem.departureFlight.depAirportCode}} - {{ dataItem.departureFlight.arrAirportCode}}
+                    <br>
+                    <span *ngIf="dataItem.returnFlight">
+                      {{ dataItem.returnFlight.depAirportCode}} - {{ dataItem.returnFlight.arrAirportCode}}
+                    </span>
+                  </div>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="ticket" title="Ticket" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div *ngIf="dataItem.qrTicketInfo"class="customer-name" ngPreserveWhitespaces>
+                    {{ dataItem.qrTicketInfo.ticketDocInfo[0].ticketDocument[0].ticketDocNbr}}           
+                  </div>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="bookingSuccess" title="Status" [width]="120" [class]="{'text-center': true}"
+                filter="boolean">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <span *ngIf="dataItem.bookingStatus === 'PENDING'">PENDING</span>
+                  <span *ngIf="dataItem.bookingStatus === 'PENDING'" class="badge badge-warning">wait for admin approval</span>
+                  <span *ngIf="dataItem.bookingStatus === 'CONFIRMED'" class="badge badge-success">CONFIRMED</span>
+                  <span *ngIf="dataItem.bookingStatus === 'DENIED'" class="badge badge-warning">DENIED</span>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column title="Action" [width]="150" [class]="{'text-center': true}"
+                [columnMenu]="false" filter="boolean">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div class="text-center">
+                    <button  [disabled]="dataItem.bookingStatus !== 'CONFIRMED'" class="btn btn-warning btn-sm mr-1" (click)="reShopFlight(dataItem)">ReShop</button>
+                    <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)">{{'flight-history-list.label-delete' | translate }}</button>
+                  </div>
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid-column-group>
+            <kendo-grid-pdf fileName="PartialFlightBookingList.pdf" [repeatHeaders]="true"></kendo-grid-pdf>
+            <kendo-grid-excel fileName="PartialFlightBookingList.xlsx"></kendo-grid-excel>
+          </kendo-grid>
+        </div>
+      </div>
+
+    </div>
+  </main>

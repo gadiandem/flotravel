@@ -1,0 +1,395 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+.loginpage {
+    -webkit-box-shadow: -1px 0px 8px 3px rgba(0,0,0,0.41);
+    -moz-box-shadow: -1px 0px 8px 3px rgba(0,0,0,0.41);
+    box-shadow: -1px 0px 8px 3px rgba(0,0,0,0.41);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.bgimage{
+    background:url(../assets/login.jpg);
+}
+body {
+    background-size: cover;
+    background-repeat: no-repeat, repeat;
+    font-family: 'Roboto', sans-serif;
+    font-size:14px;
+    line-height:20px;
+}
+#header-bar{
+    background-color: #fe4848;
+    z-index: 1;
+}
+.footer{
+    background-color: #303343 !important;
+}
+.form-signin {
+    padding: 20px 40px;
+    margin: 0 auto;
+}
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.navbar-brand {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* DASHBOARD */
+.c1{
+    border:1px solid #CECDC8;
+}
+
+
+/*****************************************************************/
+
+.search{
+    background: url(../assets/bg.jpg) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height:800px;
+    padding-bottom:100px;
+}
+
+.search .nav-tabs {
+    border: none;
+    border-bottom: none;
+    opacity: 0.9;
+}
+.search .nav-tabs li a {
+    border: none !important;
+    border-bottom: none !important;
+    background: transparent;
+    color: #fff !important;
+    text-decoration:none;
+}
+.search .nav-tabs li.active a {
+    border: none !important;
+    border-bottom: none !important;
+    color: #fff !important;
+    background: transparent !important;
+    border: 1px solid;
+}
+.search .nav-tabs li {
+    padding: 12px;
+    margin-right: 5px;
+    background: #2C2E3E ;
+    font-size: 17px !important; }
+.search .nav-tabs li a {
+    padding: 15px 24px !important;
+    color: #000;
+}
+.search .nav-tabs li.active {
+    color: #fff !important;
+    background: #fe4848 !important;
+}
+.search .tab-content {
+    background: rgba(255,255,255,.7);
+    padding: 30px 60px;
+}
+.form-control {
+    padding: 8px 30px;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    border-radius: 0;
+}
+
+label{
+    margin-bottom: 3px;
+    font-weight: 500;
+}
+.btn-danger{
+    background:#fe4848;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group .form-field {
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+.form-group .form-field .icon {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 12px;
+    color: rgba(0, 0, 0, 0.5); }
+.form-group .form-field .form-control {
+    padding-right: 50px;
+}
+
+
+.daterangepicker td, .daterangepicker th {
+    color: #023B5E;
+}
+.daterangepicker td.off, .daterangepicker td.off.end-date, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date {
+    color: #E3E1E9;
+}
+.datepicker-dropdown {
+    z-index: 999 !important;
+}
+.daterangepicker .footer {
+    border: 1px solid #f1f1f1;
+    clear: both;
+    margin: 10px;
+    padding: 10px;
+    color: #023B5E;
+    background-color:#fff !important;
+}
+.daterangepicker .footer a{
+    font-weight: 100;
+    font-family: monospace;
+}
+.daterangepicker select.monthselect, .daterangepicker select.yearselect {
+    border-radius: 0px !important;
+    border: 0px solid #fa8d28;
+}
+.daterangepicker th.month {
+    font-size: 16px;
+    line-height: 30px;
+    color: #ff8000;
+}
+.daterangepicker .calendar-table td, .daterangepicker .calendar-table th {
+    border: 1px solid #f1f1f1;
+}
+.daterangepicker td.in-range {
+    background: #f9d5d5;
+    color: #023B5E;
+}
+.daterangepicker td.active, .daterangepicker td.active:hover {
+    background: #fe4848;
+    border-radius: 0px;
+}
+.footer{
+    background-color: #303343 !important;
+}
+
+
+/***********************************************/
+.cust-breadcrumb{
+    background: none;
+    padding: 0;
+    padding-bottom: 0px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+    border-radius: 0;
+    font-size: 12px;
+}
+a:hover{
+    text-decoration: none;
+}
+.booking-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+}
+.booking-list > li {
+    margin-bottom: 30px;
+    position: relative;
+
+}
+.booking-item {
+    cursor: pointer;
+    display: block;
+    position: relative;
+    padding: 15px;
+    border: 1px solid #e6e6e6;
+    color: #737373;
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    -ms-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+}
+.booking-item:hover, .booking-item.active {
+    color: #737373;
+    border: 1px solid #fe4848;
+}
+.booking-item-img-wrap {
+    position: relative;
+}
+
+.booking-item-rating {
+    border-bottom: 1px solid #f7f7f7;
+    display: inline-block;
+}
+.booking-item-rating .booking-item-rating-stars {
+    display: inline-block;
+    margin-right: 17px;
+    margin-bottom: -5px;
+    color: #ed8323;
+    padding: 0;
+    list-style: none;
+}
+.icon-group > li {
+    float: left;
+    margin-right: 5px;
+}
+.booking-item-rating .booking-item-rating-stars .fa {
+    margin-right: 0;
+}
+.booking-item-rating .booking-item-rating-number {
+    margin-right: 7px;
+}
+.booking-item-price-from {
+    display: block;
+    font-size: 12px;
+    line-height: 1em;
+
+}
+.booking-item-price {
+    font-size: 30px;
+    color: #626262;
+    line-height: 1em;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.filter{
+    border: 1px solid #f2f2f2;
+    border-radius: 5px;
+    background: rgba(200,200,200,.1);
+}
+
+.breadcrumb-item {
+    color: #455a64;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+    content: none;
+}
+.breadcrumb-item.active {
+    color: #455a64;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #fe4848 !important;
+}
+
+.pagination .page-link{
+    color: #C82333 !important;
+}
+.pagination .page-item{
+
+}
+.pagination .page-item.active a{
+    background-color: #C82333 !important;
+    color: #fff !important;
+    border-color: #C82333 !important;
+}
+
+.list {
+    list-style: none;
+    margin: 0;
+    margin-bottom: 0px;
+    padding: 0;
+}
+.hotel-address{
+    font-size: 12px;
+    line-height: 24px;
+    color: #7A7A7A;
+}
+.hotel-facilities {
+    list-style:none;
+    list-style-image: url('../assets/arrow.png');
+}
+.hotel-facilities > li {
+    padding:4px;
+}
+.details-tab .nav-item a {
+    color:#fe4848 !important;
+}
+
+.checkout .form-control {
+    padding: 8px 8px;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    border-radius: 0;
+}
+
+.order-payment-list > li{
+    border-top: 1px dashed #ccc;
+}
+.heading{
+    border-bottom: 2px dotted #fe4848;
+    width1: 20%;
+    padding-bottom: 5px;
+}
+.icon-group {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    color:#f0a42b !important;
+}
+.booking-item-header-price {
+    border: 1px solid #efefef;
+    padding: 35px;
+    text-align: center;
+    margin: 0px;
+}
+.ui-autocomplete .ui-menu-item {
+    padding: 3px;
+    font-size: 12px;
+    padding-left: 24px;
+    color: #707070;
+}
+.ui-menu-item :hover {
+    background: #ddd;
+    color:#fff;
+}
+.rcount{
+    display: block;
+    font-size: 26px;
+    padding: 7px;
+    border: 1px solid #1a1a1a;
+    margin-top: 4px;
+    text-align: center;
+}
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,.8);
+}
+/*--------------------------- Mobile View ---------------------------------*/
+@media only screen and (max-width:768px){
+    .search .nav-tabs li a {
+        padding: 0px 0px !important;
+    }
+    .tab-title{
+        font-size: 19px;
+    }
+    .search .tab-content {
+        padding: 10px 10px;
+    }
+    .heading {
+        font-size:20px;
+        font-weight:bold;
+    }
+    #maps{
+        width:330px !important;
+    }
+    .hidden-xs{
+        display:none;
+    }
+}

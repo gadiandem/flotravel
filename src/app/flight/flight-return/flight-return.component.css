@@ -1,0 +1,72 @@
+.we-body {
+  padding-top: 10px;
+}
+
+.menu-dropdown {
+  width: 270px;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 0px 0px 8px 8px;
+  position: absolute;
+  left: 10px;
+  top: 30px;
+  box-shadow: 1px 4px 12px rgba(26, 28, 38, 0.1);
+  background-color: white;
+  z-index: 99;
+  display: inline-block;
+  min-width: 120px;
+  margin-left: 14px;
+}
+
+.menu-dropdown-mobile {
+  width: 270px;
+  overflow: hidden;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 0px 0px 8px 8px;
+  position: absolute;
+  left: -40px;
+  float: left;
+  top: 30px;
+  box-shadow: 1px 4px 12px rgba(26, 28, 38, 0.1);
+  background-color: white;
+  z-index: 1000;
+  display: block;
+  min-width: 120px;
+  margin-left: 14px;
+}
+
+.small-date {
+  font-weight: 400 !important;
+}
+
+.flight-cart-start-dep:before {
+  position: absolute;
+  top: 10px;
+  background: #fff;
+  width: 13px;
+  height: 13px;
+  content: '';
+  border-radius: 100%;
+  left: 26px;
+  border: 1px solid #fba800;
+}
+
+.flight-cart-end-dep:before {
+  position: absolute;
+  bottom: 10px;
+  background: #fba800;
+  width: 13px;
+  height: 13px;
+  content: '';
+  border-radius: 100%;
+  left: 26px;
+}
+
+label {
+  margin-left: 0px;
+}
+
+#select-box-btns {
+  white-space: nowrap;
+}

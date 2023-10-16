@@ -1,0 +1,68 @@
+::ng-deep .dropdown-menu {
+  min-width: max-content !important;
+}
+
+::ng-deep typeahead-container {
+  width: max-content !important;
+}
+
+.menu-dropdown {
+  width: 300px;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 0px 0px 8px 8px;
+  position: absolute;
+  left: 10px;
+  top: 30px;
+  box-shadow: 1px 4px 12px rgba(26, 28, 38, 0.1);
+  background-color: white;
+  z-index: 99;
+  display: inline-block;
+  min-width: 120px;
+  margin-left: 14px;
+}
+
+/*@media screen and (max-width: 767px){*/
+/*  ::ng-deep bs-datepicker-container{*/
+/*    transform: translate3d(20px, 453px, 0px)!important;*/
+/*    top: 0% !important;*/
+/*  }*/
+/*}*/
+@media screen and (max-width: 767px){
+  ::ng-deep bs-datepicker-container{
+    transform: translate3d(10px, 306px, 0px)!important;
+    top: 0% !important;
+  }
+}
+
+.colorChange {
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 0.5rem 0.5rem;
+  font-weight: 400;
+  color: #212529;
+}
+
+.colorChange:hover {
+  background-color: #007bff;
+}
+
+::ng-deep .history-dropdown {
+  min-width: max-content !important;
+}
+
+.k-dateinput {
+  font-size: 18px;
+  background-color: #eeeeee !important;
+}
+.k-dateinput-wrap {
+  background-color: #eeeeee !important;
+}
+::ng-deep .k-input-inner{
+  width: 100% !important;
+  border: 0.888889px solid rgb(206, 212, 218) !important;
+  height: 100% !important;
+  background-color: transparent;
+}

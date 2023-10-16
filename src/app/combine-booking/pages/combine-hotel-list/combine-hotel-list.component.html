@@ -1,0 +1,152 @@
+<div class="container-fluid my-md-5 mt-5 pt-5 pb-3 shadow-box p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+        <span class="input-group-text border-0" id="basic-addon1">
+          <i class="fa fa-search text-info"></i>
+        </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0"
+        placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <app-combine-search-box [searchHotelListRequest]="searchHotelListRequest" [fetching]="fetching"
+      (searchHotelBox)="searchHotel($event)"></app-combine-search-box>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div class="row mt-2">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter" (click)="showFormFilter()">{{'hotel-list.label-sort-filter' | translate }}</span>
+        <span class="float-right show-map" (click)="showMap()">{{'hotel-list.label-show-map' | translate }}</span>
+      </div>
+      <div *ngIf="mapOpen" class="mb-4 text-center border we-map" style="background: #CAE5CD;">
+        <img alt="map" class="img-fluid" src="../../../../assets/google-map.jpg">
+      </div>
+    </div>
+    <div id="sortFilter" class="col-md-2 we-sort-filter">
+      <div class="mb-4 d-none d-md-block">
+        <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mappType' [zoom]='12'
+          mapTypeControl="false">
+          <agm-marker *ngFor="let data of markerList; let i = index" [latitude]="data.lat" [longitude]="data.lng"
+            [markerDraggable]="data.draggable">
+            <agm-info-window>
+              <strong>{{data.label}}</strong>
+            </agm-info-window>
+          </agm-marker>
+        </agm-map>
+      </div>
+      <div class="mb-4">
+        <h5 class=" border-bottom pl-0 pb-2"><i class="fa fa-list text-default"></i> {{'hotel-list.label-sort' |
+          translate }}</h5>
+        <div class="custom-control pl-0">
+          <select name="" class="form-control custom-select" (change)="onSortChange($event.target.value)">
+            <option value="priceIncrease">{{'hotel-list.label-price-increase' | translate }}</option>
+            <option value="priceDecrease">{{'hotel-list.label-price-decrease' | translate }}</option>
+            <option value="popularity">{{'hotel-list.label-popularity' | translate }}</option>
+            <option value="new">{{'hotel-list.label-new-first' | translate }}</option>
+            <option value="rating">{{'hotel-list.label-rating' | translate }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="star-rating mb-4">
+        <h5 class=" border-bottom pl-0 pb-2"><i class="fa fa-star text-default"></i> {{'hotel-list.label-star-rating' |
+          translate }}</h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start5" [checked]="ratingStarFiler.fiveStar"
+            (change)="fiveStarFilter()">
+          <label class="custom-control-label" for="start5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-star-five'
+            | translate }} <small>( {{ratingStarCount.fiveStar}}
+              )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start4" [checked]="ratingStarFiler.fourStar"
+            (change)="fourStarFilter()">
+          <label class="custom-control-label" for="start4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-star-four'
+            | translate }} <small>( {{ratingStarCount.fourStar}}
+              )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start3" [checked]="ratingStarFiler.threeStar"
+            (change)="threeStarFilter()">
+          <label class="custom-control-label" for="start3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-star-three'
+            | translate }}
+            <small>( {{ratingStarCount.threeStar}} )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start2" [checked]="ratingStarFiler.twoStar"
+            (change)="twoStarFilter()">
+          <label class="custom-control-label" for="start2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-star-two' |
+            translate }} <small>( {{ratingStarCount.twoStar}}
+              )</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="start1" [checked]="ratingStarFiler.oneStar"
+            (change)="oneStarFilter()">
+          <label class="custom-control-label" for="start1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-star-one' |
+            translate }} <small>( {{ratingStarCount.oneStar}}
+              )</small></label>
+        </div>
+      </div>
+      <div class="facility mb-4">
+        <h5 class="pb-2 border-bottom pl-0 pb-2"><i class="fas fa-star-of-life text-default"></i>
+          {{'hotel-list.label-facility' | translate }}</h5>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility1">
+          <label class="custom-control-label" for="facility1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-wi-fi' |
+            translate }} <small> (55)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility2">
+          <label class="custom-control-label" for="facility2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-parking'
+            | translate }} <small>(123)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility3">
+          <label class="custom-control-label"
+            for="facility3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-airport-shuttle' | translate }}
+            <small>(13)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility4">
+          <label class="custom-control-label"
+            for="facility4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-fitness-center' | translate }}
+            <small>(123)</small></label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="facility5">
+          <label class="custom-control-label"
+            for="facility5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'hotel-list.label-indoor-pool' | translate }}
+            <small>(13)</small></label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div *ngIf="fetchFailed" class="mb-5 mt-3">
+        <alert type="danger" ngPreserveWhitespaces>
+          {{'hotel-list.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger" (click)="fetchHotelList()"> {{'hotel-list.label-try-again' |
+          translate }}</button>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed" class="hotels-list">
+        <div *ngIf="hotelListView.length === 0">
+          <alert type="danger" ngPreserveWhitespaces>
+            {{'hotel-list.invalid-hotel' | translate }}
+          </alert>
+        </div>
+        <app-hotel-list-item [hotelList] = "hotelListView" [currency]="currency" [flightMinPrice]="flightMinPrice" [p]="p"
+        [numberOfNight]="numberOfNight" (selectedHotel)="gotoDetail($event)"></app-hotel-list-item>
+      </div>
+      <pagination-controls *ngIf="!fetching && !fetchFailed" (pageChange)="update($event)" directionLinks="true"
+        autoHide="true">
+      </pagination-controls>
+    </div>
+    <div class="col-md-2">
+      <img class="sticky mt-5 w-100 d-none d-md-block" style="height: auto; margin-top: 0px !important;top: 65px;"
+        src="../../../../assets/ads.jpg">
+    </div>
+  </div>
+</div>
+<!-- loading skeleton -->
+<app-hotel-list-skeleton *ngIf="fetching"></app-hotel-list-skeleton>

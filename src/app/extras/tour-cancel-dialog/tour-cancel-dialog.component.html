@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">{{'tour-cancel-dialogs.label-title' | translate }}</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="cancellationForm" (ngSubmit)="submit()">
+    <div class="form-group">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="icon fa fa-comment"></i> &nbsp;{{'tour-cancel-dialogs.label-statement' | translate }}</span>
+        </div>
+        <input formControlName="reason" class="form-control" placeholder="{{'tour-cancel-dialogs.label-why' | translate }}"
+        [ngClass]="{ 'is-invalid': formSubmitError && cancellationForm.get('reason').errors }"/>
+        <span class="invalid-feedback">
+          <span *ngIf="cancellationForm.get('reason').errors?.required">
+            {{'tour-cancel-dialogs.label-reason' | translate }}
+          </span>
+        </span>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">{{'tour-cancel-dialogs.label-close' | translate }}</button>
+  <button type="button" class="btn btn-danger" (click)="submit()">{{'tour-cancel-dialogs.label-points' | translate }}</button>
+</div>

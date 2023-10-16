@@ -1,0 +1,219 @@
+<main role="main" class="margin-top: 70px">
+  <div class="container mt-3 pt-5 pb-5" style="min-height: 800px;">
+    <div class="row">
+      <div class="col-4 mb-4">
+        <h2 class="heading">{{'hepstar-transactions.label-title' | translate }} </h2>
+      </div>
+      <div class="col-8 mb-4">
+        <form [formGroup]="searchForm" (ngSubmit)="searchHistory()">
+          <div class="row my-3">
+            <div class="col-lg-3 col-6">
+              <label class="m-0 font-weight-light">{{'insurance-transactions.label-from' | translate }}</label>
+              <div class="form-group mb-0">
+                <div class="input-group checkinDate">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" ngbDatepicker #checkin="ngbDatepicker" class="form-control" formControlName="fromDate"
+                         (click)="checkin.toggle()" (dateSelect)="getFromDate($event)" placement="bottom" placeholder="mm/dd/yyyy">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-6">
+              <label class="m-0 font-weight-light">{{'insurance-transactions.label-to' | translate }}</label>
+              <div class="form-group mb-0">
+                <div class="input-group checkoutDate">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                  </div>
+                  <input type="text" ngbDatepicker #checkout="ngbDatepicker" class="form-control" formControlName="toDate" [startDate]="fromDate" [minDate]="fromDate"
+                         (click)="checkout.toggle()" placeholder="dd/mm/yyyy" (dateSelect)="getToDate($event)" placement="bottom"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-12 pt-1">
+              <input type="submit" class="btn btn-danger mt-3" value="Refresh">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+          [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;{{'hepstar-transactions.label-loading' | translate }} </span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">{{'hepstar-transactions.label-excel' | translate }}</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">{{'hepstar-transactions.label-pdf' | translate }}</button>
+          </ng-template>
+
+          <kendo-grid-column-group title="{{'hepstar-transactions.label-hepstar-list' | translate }}" [columnMenu]="false">
+            <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="accountBooking" title="{{'hepstar-transactions.label-customer' | translate }}" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <!-- <div class="customer-photo" [ngStyle]="{'background-image' : photoURL(dataItem)}"></div> -->
+                <div class="customer-name" ngPreserveWhitespaces>
+                  {{ dataItem.payer.firstName | uppercase }} {{ dataItem.payer.lastName | uppercase}} </div>
+                <div>{{dataItem.payer.email}}</div>
+                <!-- <div>{{dataItem.status}}</div> -->
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="id" title="{{'hepstar-transactions.label-id' | translate }}" [width]="180">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="customer-name text-container" ngPreserveWhitespaces>
+                  {{ dataItem.id }}  </div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="item_name" title="{{'hepstar-transactions.label-name' | translate }}" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="" ngPreserveWhitespaces>{{ dataItem.item_name }}</div>
+                <div>{{dataItem.name}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="amount" title="{{'hepstar-transactions.label-price' | translate }}" [width]="120">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.amount | currency:dataItem.currencyName:'symbol':'.0-2'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="createDate" title="{{'hepstar-transactions.label-date' | translate }}" [width]="180" [class]="{'text-center': true}"
+              [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.createDate | date:'medium'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="bookingStatus" title="{{'hepstar-transactions.label-status' | translate }}" [width]="100" [class]="{'text-center': true}"
+              filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <span *ngIf="dataItem.bookingStatus === 'PENDING'" class="badge badge-warning">{{'hepstar-transactions.label-pending' | translate }}</span>
+                <span *ngIf="dataItem.status === '0000' && dataItem.bookingStatus === 'CONFIRMED'">{{'hepstar-transactions.label-confirm' | translate }}</span>
+                <span *ngIf="dataItem.bookingStatus === 'CANCEL'" class="badge badge-secondary">{{'hepstar-transactions.label-cancel' | translate }}</span>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="Action" [width]="150" [class]="{'text-center': true}"
+              [columnMenu]="false" filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <button class="btn btn-warning btn-sm mr-1" (click)="viewDetail(dataItem)">{{'hepstar-transactions.label-detail' | translate }}</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)">{{'hepstar-transactions.label-delete' | translate }}</button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+
+          <kendo-grid-pdf fileName="hepstarBookingList.pdf" [repeatHeaders]="true" paperSize="A2" [allPages]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="hepstarBookingList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+    <div *ngIf="agentBooking && agentBooking.length > 0" class="col-12 my-4">
+      <h2 class="heading">{{'hepstar-transactions.label-agent' | translate }}</h2>
+    </div>
+    <div class="row mt-5" *ngIf="agentBooking && agentBooking.length > 0">
+      <div class="col-md-12">
+        <kendo-grid [kendoGridBinding]="agentBooking" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+          [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+          <ng-template kendoGridToolbarTemplate>
+            <input placeholder="Search in all columns..." kendoTextBox (input)="onFilterAgent($event.target.value)" />
+            <span *ngIf="isLoading">
+              <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+              </div><span ngPreserveWhiteSpaces>&emsp;{{'hepstar-transactions.label-loading' | translate }}</span>
+            </span>
+            <button kendoGridExcelCommand type="button" icon="file-excel" style="float:right;">{{'hepstar-transactions.label-excel' | translate }}</button>
+            <button kendoGridPDFCommand icon="file-pdf" style="float:right;">{{'hepstar-transactions.label-pdf' | translate }}</button>
+          </ng-template>
+
+          <kendo-grid-column-group title="{{'hepstar-transactions.label-agent' | translate }}" [columnMenu]="false">
+            <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+              <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+                <div>{{rowIndex + 1}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="accountBooking" title="{{'hepstar-transactions.label-customer' | translate }}" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <!-- <div class="customer-photo" [ngStyle]="{'background-image' : photoURL(dataItem)}"></div> -->
+                <div class="customer-name" ngPreserveWhitespaces>
+                  {{ dataItem.payer.firstName | uppercase }} {{ dataItem.payer.lastName | uppercase}} </div>
+                <div>{{dataItem.payer.email}}</div>
+                <!-- <div>{{dataItem.status}}</div> -->
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="id" title="{{'hepstar-transactions.label-id' | translate }}" [width]="180">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="customer-name text-container" ngPreserveWhitespaces>
+                  {{ dataItem.id }}  </div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="item_name" title="{{'hepstar-transactions.label-name' | translate }}" [width]="200">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="" ngPreserveWhitespaces>{{ dataItem.item_name }}</div>
+                <div>{{dataItem.name}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="amount" title="{{'hepstar-transactions.label-price' | translate }}" [width]="120">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="" ngPreserveWhitespaces>{{ dataItem.item_name }}</div>
+                <div>{{dataItem.amount | currency:dataItem.currencyName:'symbol':'.0-2'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+            
+            <!-- <kendo-grid-column field="traceNumber" title="TraceNumber" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div>{{dataItem.traceNumber}}</div>
+              </ng-template>
+            </kendo-grid-column> -->
+
+            <kendo-grid-column field="createDate" title="{{'hepstar-transactions.label-date' | translate }}" [width]="180" [class]="{'text-center': true}"
+              [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.createDate | date:'medium'}}</div>
+              </ng-template>
+            </kendo-grid-column>
+
+            <!-- <kendo-grid-column field="startDate" title="Start Date" [width]="160" [class]="{'text-center': true}"
+              [resizable]="true">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div ngPreserveWhitespaces>{{dataItem.startDate}}</div>
+              </ng-template>
+            </kendo-grid-column> -->
+
+            <kendo-grid-column field="bookingStatus" title="{{'hepstar-transactions.label-status' | translate }}" [width]="100" [class]="{'text-center': true}"
+              filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <span *ngIf="dataItem.bookingStatus === 'PENDING'" class="badge badge-warning">{{'hepstar-transactions.label-pending' | translate }}</span>
+                <span *ngIf="dataItem.status === '0000'" class="badge badge-success">{{'hepstar-transactions.label-confirm' | translate }}</span>
+                <span *ngIf="dataItem.bookingStatus === 'CANCEL'" class="badge badge-secondary">{{'hepstar-transactions.label-cancel' | translate }}</span>
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column title="Action" [width]="150" [class]="{'text-center': true}"
+              [columnMenu]="false" filter="boolean">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="text-center">
+                  <button class="btn btn-warning btn-sm mr-1" (click)="viewDetail(dataItem)">{{'hepstar-transactions.label-detail' | translate }}</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)">{{'hepstar-transactions.label-delete' | translate }}</button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid-column-group>
+
+          <kendo-grid-pdf fileName="hepstarAgentBookingList.pdf" [repeatHeaders]="true" paperSize="A2" [allPages]="true"></kendo-grid-pdf>
+          <kendo-grid-excel fileName="hepstarAgentBookingList.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</main>

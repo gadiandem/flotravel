@@ -1,0 +1,60 @@
+<div class="shadow-box p-3 mt-3" *ngIf="productExist">
+  <div>
+    <h3 style="font-weight: 400;">{{searchListResult?.products[0]?.name}}</h3>
+    <p style="font-weight: 700;">{{'flight-add-on.insurance-subheading' | translate }}</p>
+  </div>
+  <form [formGroup]="axaInsuranceForm">
+      <div  class="form-group row">
+        <div id="myAnswers" class="col-12">
+          <div id="chooseButton" class="fixtures select-answers pt-3">
+            <h6>{{'flight-add-on.insurance-option' | translate }}</h6>
+            <div class="blue-bg p-3 chpage">
+              <div class="d-flex justify-content-between align-items-center pbox form-check">
+                <div class="bg-light">
+                  <label class="form-check-label m-0" for="insurance_yes">
+                    <input class="form-check-input " id="insurance_yes" type="radio" value="YES" formControlName="quote"> &nbsp;
+                    &nbsp; &nbsp; &nbsp; {{'flight-add-on.insurance-yes' | translate }}
+                  </label>
+                </div>
+                <div class="product-price">
+                  <p class="m-0"><span class="fw-bold priceb">{{searchListResult?.packagePrice | currency:currency:'symbol':'.0-2' }}</span></p>
+                  <p class="m-0"><span style="display: inline;">{{'flight-add-on.label-per-person' | translate }}</span></p>
+                </div>
+              </div>
+              <div class="solicitation" [hidden]="isInsurance">
+                <ul class="m-0 p-0 flex-md-wrap list-unstyled">
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.insurance-point-one' | translate }}</li>
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.insurance-point-two' | translate }}</li>
+                  <li><i class="fas fa-check"></i> {{'flight-add-on.insurance-point-three' | translate }}</li>
+                 <!-- <li><i class="fas fa-check"></i><span>&nbsp;Code: {{searchListResult?.products[0]?.guarantees[0]?.code}}</span><br/>
+                  </li>
+                  <li><i class="fas fa-check"></i><span>&nbsp;Label: {{searchListResult?.products[0]?.guarantees[0]?.label}}</span><br/>
+                  </li>
+                  <li><i class="fas fa-check"></i><span>&nbsp;Limit: {{searchListResult?.products[0]?.guarantees[0]?.limit}}</span><br/>
+                  </li>
+                  <li><i class="fas fa-check"></i><span>&nbsp;Excess: {{searchListResult?.products[0]?.guarantees[0]?.excess}}</span>
+                  </li> -->
+                </ul>
+              </div>
+            </div>
+            <div class="my-2" style="font-weight: 700; padding-left: 10px">
+              <a (click)="openTermsAndConditionComponent()" style="color: #007bff; text-decoration: none;background-color: transparent; cursor: pointer;"
+             class="alert-link"> {{'flight-add-on.label-terms' | translate }}</a>
+              <!-- <a href="/assets/documents/Policy conditions.pdf" target="_blank" class="alert-link"> {{'flight-add-on.label-terms' | translate }}</a> -->
+            </div>
+            <div class="bg-light p-3 mt-3">
+              <label class="form-check-label m-0" for="insurance_no">
+                <input class="form-check-input mx-1" id="insurance_no" type="radio" value="NO" formControlName="quote" [checked]="true"> &nbsp;
+                &nbsp; &nbsp; &nbsp; {{'flight-add-on.insurance-no' | translate }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  <div class="shadow-box p-3 mt-3" *ngIf="(!fetching && !fetchFailed) && !productExist" >
+        <alert type="danger" ngPreserveWhitespaces>
+          {{'flight-add-on.insurance-unavailable' | translate }}
+        </alert>
+  </div>
+</div>

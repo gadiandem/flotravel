@@ -1,0 +1,114 @@
+<div class="container mt-5">
+    <div class="row mb-3">
+      <div class="col-sm-4">
+        <div class="card">
+          <img class="card-img-top img-thumbnail" src="{{imagePath.value || 'assets/logo2.png'}}" alt="">
+        </div>
+      </div>
+  
+      <div class="col-sm-8">
+        <div class="card">
+          <div class="card-header">
+            Merchant Info
+          </div>
+          <div class="card-body">
+            <form [formGroup]="merchantForm">
+              <div class="col-12">
+                <div class="form-group row">
+                  <label for="firstName">Merchant Account</label>
+                  <input class="form-control" id="merchantAccount" formControlName="merchantAccount"
+                    [ngClass]="{ 'is-invalid': formSubmitError && merchantForm.get('merchantAccount').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="merchantForm.get('merchantAccount').errors?.required">
+                      Please enter your MerchantAccount
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group row">
+                  <label for="logo">Profile</label>
+                  <input class="form-control" id="logo" formControlName="profileImg" #imagePath
+                    [ngClass]="{ 'is-invalid': formSubmitError && merchantForm.get('profileImg').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="merchantForm.get('profileImg').errors?.required">
+                      Please fill your profile image.
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group row">
+                  <label for="currency">Currency</label>
+                  <input class="form-control" id="currency" formControlName="currency"
+                    [ngClass]="{ 'is-invalid': formSubmitError && merchantForm.get('currency').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="merchantForm.get('currency').errors?.required">
+                      Please enter your input Currency
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group row">
+                  <label for="vcnAgentAccount">VcnAgent Account</label>
+                  <input class="form-control" id="vcnAgentAccount" formControlName="vcnAgentAccount"
+                    [ngClass]="{ 'is-invalid': formSubmitError && merchantForm.get('vcnAgentAccount').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="merchantForm.get('vcnAgentAccount').errors?.required">
+                      Please enter your VcnAgent Account
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group row">
+                  <label for="vcnAgentPassword">VcnAgent Password</label>
+                  <input class="form-control" id="vcnAgentPassword" formControlName="vcnAgentPassword"
+                    [ngClass]="{ 'is-invalid': formSubmitError && merchantForm.get('vcnAgentPassword').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="merchantForm.get('vcnAgentPassword').errors?.required">
+                      Please enter your vcnAgentPassword.
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group row">
+                  <label for="apiAccount">API Account</label>
+                  <input class="form-control" id="apiAccount" formControlName="apiAccount"
+                    [ngClass]="{ 'is-invalid': formSubmitError && merchantForm.get('apiAccount').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="merchantForm.get('apiAccount').errors?.required">
+                      Please enter your API Account
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group row">
+                  <label for="apiPassword">API Password</label>
+                  <input class="form-control" id="apiPassword" formControlName="apiPassword"
+                    [ngClass]="{ 'is-invalid': formSubmitError && merchantForm.get('apiPassword').errors }">
+                  <span class="invalid-feedback">
+                    <span *ngIf="merchantForm.get('apiPassword').errors?.required">
+                      Please enter your API Password
+                    </span>
+                  </span>
+                </div>
+                <div class="row">
+                  <div class="col-md-3 col-4">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="generateCard"
+                        formControlName="generateCard">
+                      <label class="custom-control-label" for="generateCard">GenerateCard</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-4">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="demo" formControlName="demo">
+                      <label class="custom-control-label" for="demo">Deno</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer">
+            <button class="search-hotel btn btn-danger" (click)="updateMerchant()">
+              Update Merchant
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

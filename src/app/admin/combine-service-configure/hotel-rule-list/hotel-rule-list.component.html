@@ -1,0 +1,103 @@
+<div class="row mt-2">
+  <div class="col-12 mb-4">
+    <h2 class="heading">{{'hotel-rule-configure.hotel-configure-list-lable' | translate }}</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <kendo-grid [kendoGridBinding]="gridView" kendoGridSelectBy="id" [selectedKeys]="mySelection" [pageSize]="10"
+      [pageable]="true" [sortable]="true" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }">
+      <ng-template kendoGridToolbarTemplate>
+        <input placeholder="{{'hotel-rule-configure.table-placeholder' | translate }}" kendoTextBox
+          (input)="onFilter($event.target.value)" />
+        <span *ngIf="isLoading">
+          <div class="spinner-grow spinner-grow-sm text-primary" role="status">
+          </div><span ngPreserveWhiteSpaces>&emsp;{{'hotel-rule-configure.loading' | translate }}</span>
+        </span>
+        <button kendoGridExcelCommand type="button" icon="file-excel">{{'hotel-rule-configure.export-excel' | translate }}</button>
+        <button kendoGridPDFCommand icon="file-pdf" icon="file-pdf">{{'hotel-rule-configure.export-pdf' | translate}}</button>
+        <button class="btn btn-success btn-sm" style="float:right;" (click)="createRule()"><i
+          class="icon fa fa-plus"></i>&emsp; {{'hotel-rule-configure.button-create-rule' | translate }}</button>
+      </ng-template>
+
+      <kendo-grid-column-group title="{{'hotel-rule-configure.table-title' | translate }}" [columnMenu]="false">
+        <kendo-grid-column title="#" [width]="30" [columnMenu]="false">
+          <ng-template let-rowIndex="rowIndex" kendoGridCellTemplate let-dataItem>
+            <div>{{rowIndex + 1}}</div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="code" title="Code" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="" ngPreserveWhitespaces>
+              {{ dataItem.code | uppercase }}</div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="cityName" title="City Name" [width]="200">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="" ngPreserveWhitespaces>{{ dataItem.cityName }}</div>
+            <div>{{dataItem.name}}</div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="countryName" title="Country Name" [width]="120">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div>{{dataItem.countryName}}</div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="providers" title="Providers" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngFor="let provider of dataItem.providers; let i = index">
+              <div>{{i + 1}} - {{provider.name}}</div>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="hotelPreferenceInclude" title="Hotel Preference Include" [width]="180" [class]="{'text-center': true}"
+          [resizable]="true">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngFor="let hotelPreferenceInclude of dataItem.hotelPreferenceIncludes; let i = index">
+              <div>{{i + 1}} - {{hotelPreferenceInclude.name}}</div>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="hotelPreferenceExcludes" title="Hotel Preference Excludes" [width]="160" [class]="{'text-center': true}"
+          [resizable]="true">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngFor="let hotelPreferenceExclude of dataItem.hotelPreferenceExcludes; let i = index">
+              <div>{{i + 1}} - {{hotelPreferenceExclude.name}}</div>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="starPreferences" title="StarPreferences" [width]="100" [class]="{'text-center': true}"
+          filter="boolean">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div *ngFor="let starPreference of dataItem.starPreferences; let i = index">
+                <div>{{starPreference.name}}</div>
+              </div>
+            </ng-template>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column title="Action" [width]="150" [class]="{'text-center': true}" [columnMenu]="false"
+          filter="boolean">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="text-center">
+              <button class="btn btn-info btn-sm mr-1" (click)="viewDetail(dataItem)"><i class="icon fa fa-info-circle" style="color: white;" aria-hidden="true"></i></button>
+              <button class="btn btn-warning btn-sm mr-1" (click)="editRule(dataItem)"><i class="icon fa fa-pencil" style="color: white;" aria-hidden="true"></i></button>
+              <button class="btn btn-danger btn-sm" (click)="deleteRecord(dataItem)"><i class="icon fa fa-times" style="color: white;" aria-hidden="true"></i></button>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid-column-group>
+
+      <kendo-grid-pdf fileName="CombineBookingHotelList.pdf" [repeatHeaders]="true" paperSize="A2" [allPages]="true"></kendo-grid-pdf>
+      <kendo-grid-excel fileName="CombineBookingHotelList.xlsx"></kendo-grid-excel>
+    </kendo-grid>
+  </div>
+</div>

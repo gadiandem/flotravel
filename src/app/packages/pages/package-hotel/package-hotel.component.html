@@ -1,0 +1,165 @@
+<div class="container-fluid my-5 pt-5 pb-3 shadow-box d-md-block p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0"
+             placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <app-package-list-search-box [packageShoppingReq]="packageShoppingReq"
+                                 (searchRequest)="shoppingPackage($event)"></app-package-list-search-box>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div *ngIf="fetchFailed" class="mb-5" style="height: 500px; width: 100%;">
+    <alert type="danger" ngPreserveWhitespaces>
+      {{'package-hotel.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+    </alert>
+    <button type="button" class="btn btn-danger"
+            (click)="fetchHotelDetail()">{{'package-hotel.label-try-again' | translate }}</button>
+  </div>
+  <div *ngIf="!fetchFailed" class="row hotel-details">
+    <div class="col-12 mt-md-4">
+      <div class="shadow-box p-3">
+        <div class="row">
+          <div class="col-md-9">
+            <img class="img-fluid d-block d-md-none mb-4" [src]="selectedPackage?.hotelImage">
+            <h2 class="title">{{selectedPackage?.name}}</h2>
+            <div class="address">
+              <span><i class="fa fa-map-marker"></i> &nbsp;{{selectedPackage?.cityName}}</span><br>
+              <span style="color:#ffda23">
+                    <i *ngFor="let s of  [1, 2, 3, 4]" class="fa fa-star"></i>
+                  </span> &nbsp;{{starRating}}  {{'package-hotel.label-star-rating' | translate }}
+            </div>
+          </div>
+          <div class="col-md-3 mt-3 mt-md-0">
+            <p class="price"><small>{{'package-hotel.label-price-from' | translate }} </small> <span
+              style="font-size:22px;">{{selectedPackage?.price | currency:currency:'symbol':'.0-2'}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-8 d-none d-md-block">
+            <div class="col-12">
+              <ngx-gallery *ngIf="galleryOptions && galleryImages?.length" [options]="galleryOptions"
+                           [images]="galleryImages"></ngx-gallery>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mapType' [zoom]='12'
+                       mapTypeControl="true">
+                <agm-marker [latitude]="marker.lat" [longitude]="marker.lng" [title]="marker.label"
+                            [markerDraggable]="marker.draggable">
+                  <agm-info-window>
+                    <strong>{{marker.label}}</strong>
+                  </agm-info-window>
+                </agm-marker>
+              </agm-map>
+              <div style="font-size:16px;margin-top:5px; color: #666;"><i class="fa fa-map-marker"></i>
+                {{selectedPackage.name}}</div>
+            </div>
+            <div class="col-12 mb-4">
+              <h4 class="heading">{{'package-hotel.label-hotel-facilities' | translate }}</h4>
+              <ul class="hotel-facilities mb-0">
+                <li *ngFor="let facility of selectedPackage?.fullFacilityDescriptions">{{facility?.name}}</li>
+              </ul>
+              <a pageScroll href="#amenities"><b>{{'package-hotel.label-amenities' | translate }}</b></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h4 class="title mt-3">{{'package-hotel.label-choose-room' | translate }}</h4>
+      <div class="d-block d-md-none shadow-box p-2 mb-3">
+        <div class="font-weight-bold mt-1 text-danger"></div>
+        <div class="row">
+          <div class="col-6">
+            <div class="font-weight-bold">{{'package-hotel.placeholder-check-in' | translate }}</div>
+            {{packageShoppingReq.date | date}}
+          </div>
+          <div class="col-6">
+            <div class="font-weight-bold">{{'package-hotel.label-city-code' | translate}} </div>
+            {{packageShoppingReq?.cityCode}}
+          </div>
+        </div>
+        <div class="btn btn-default btn-sm mb-2">
+          {{'package-hotel.label-change' | translate }}
+        </div>
+      </div>
+      <div class="rooms-list">
+        <div *ngFor="let room of packageHotelDetailRes; let i = index;">
+          <div class="room-item d-block mb-3">
+            <div class="row">
+              <div class="col-md-4 d-none d-md-block">
+                <div class="hotel-img h-100" [errorImage]="defaultHotelImage" [defaultImage]="defaultHotelImage"
+                     [lazyLoad]="selectedPackage?.hotelImage" [useSrcset]="true">
+                </div>
+              </div>
+              <div class="col-md-4 d-block d-md-none">
+                <img [src]="selectedPackage?.hotelImage" class="img-fluid">
+              </div>
+              <div class="col-md-8 room-info py-3">
+                <div class="row px-md-0 px-3">
+                  <div class="col-7">
+                    <h5 class="room-title">{{room?.roomType}}
+                      , {{roomCount}} {{'package-hotel.label-queen-bed' | translate}} </h5>
+                    <small class="hidden-xs"><i
+                      class="fas fa-users"></i> {{'package-hotel.label-sleeps' | translate}} {{travellerCount}}<br><i
+                      class="fas fa-bed"></i> {{roomCount}} {{'package-hotel.label-queen-bed' | translate}}<span
+                      *ngIf="roomCount > 1">s</span><br>
+                    </small><br><br>
+                    <div style="color:#007864;">{{'package-hotel.label-cancellation' | translate}} <br><small
+                      class="text-muted">{{'package-hotel.label-before' | translate}} {{packageShoppingReq?.date | date}}</small>
+                    </div>
+                  </div>
+                  <div class="col-5 pr-3">
+                    <div class="text-right pr-1 px-md-3">
+                      <del class="room-price-cancel">
+                        {{((+room?.pricePerNight) * (1 + defaultDiscount / 100)) | currency:currency:'symbol':'.0-2'}}
+                      </del> &nbsp;
+                      <span class="room-price">{{(selectedPackage?.price) | currency:currency:'symbol':'.0-2'}}</span>
+                      <div>{{'package-hotel.label-for' | translate}} {{selectedPackage.dayCount}} {{'package-hotel.label-day' | translate}}</div>
+                      <button class="btn btn-danger mt-2"
+                              (click)="goToSupplement(room)">{{'package-hotel.button-reserve' | translate}}</button>
+                      <div style="font-size:10px;">{{'package-hotel.label-2-minutes' | translate}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-overview' | translate}} </h4>
+        <p>{{selectedPackage?.overview}}</p>
+      </div>
+      <div class="mt-3 p-3 shadow-box" id="amenities">
+        <h4 class="title">{{'package-hotel.label-full-facilities-description' | translate}}</h4>
+        <ul>
+          <li *ngFor="let facility of selectedPackage?.fullFacilityDescriptions">{{facility?.name}}</li>
+        </ul>
+      </div>
+      <div class="mt-4 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-breakfast' | translate}} </h4>
+        <p>{{selectedPackage?.breakfast ? 'Yes' : 'No'}}</p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-rating' | translate}}</h4>
+        <p>{{selectedPackage?.starRate || 5}}</p>
+      </div>
+      <div class="mt-3 mb-5 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-hotel-remarks' | translate}}</h4>
+        <p>{{selectedPackage?.remark || 'There is no hotel remark'}}</p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">{{'package-hotel.label-additional-info' | translate}} </h4>
+        <p><span [innerHTML]="selectedPackage?.additionalInfo"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
+<app-package-hotel-skeleton *ngIf="fetching"></app-package-hotel-skeleton>

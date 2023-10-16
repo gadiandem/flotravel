@@ -1,0 +1,196 @@
+<main role="main">
+  <div class="container-fluid shadow-box d-none d-md-block p-0">
+    <div class="flight-search">
+      <div class="px-3">
+        <div class="row pt-2" style="cursor: pointer;" (click)="openModalWithComponent()">
+          <div class="col-lg-2 col-12">
+            <label class="mb-0 font-weight-light">Departure Airport</label>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                </div>
+                <input type="text" class="form-control" readonly [value]="searchGcaForm.flights[0]?.departure_airport.iata"
+                       style="background:#fff;">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-12">
+            <label class="mb-0 font-weight-light">Arrival Airport</label>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-map-marker"></i></span>
+                </div>
+                <input type="text" class="form-control" readonly [value]="searchGcaForm.flights[0]?.arrival_airport.iata"
+                       style="background:#fff;">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-6">
+            <label class="mb-0 font-weight-light">Departing Date</label>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-calendar-check-o"></i></span>
+                </div>
+                <input type="text" class="form-control" readonly [value]="searchGcaForm.flights[0]?.departure_date | date"
+                       style="background:#fff;">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-6">
+            <label class="mb-0 font-weight-light">Flight No</label>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fab fa-avianex"></i></span>
+                </div>
+                <input type="text" class="form-control" readonly [value]="searchGcaForm.flights[0]?.flight_no"
+                       style="background:#fff;">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-12">
+            <label class="mb-0 font-weight-light">Passengers</label>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon fa fa-users"></i></span>
+                </div>
+                <input type="text" class="form-control" readonly
+                       [value]="(adults || 1) +' Adult, ' + (children || 0) + ' Child,' + (infants || 0) + ' Infants'" style="background:#fff;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <div class="container-fluid mt-3 mx-md-5">
+      <div class="row mt-2">
+        <div class="col-md-3 we-sort-filter">
+        </div>
+        <div class="col-md-9">
+          <div *ngIf="selectedDepartureServices.length > 0">
+            <div class="shadow-box blue-bg mb-3" *ngFor="let selectedService of selectedDepartureServices; let i = index">
+              <h5 class="text-danger mx-3 pt-3 mb-0">
+                Departure Service
+                <small class="font-weight-light float-right" style="color: #444; padding-top: 3px;">
+                  <a class="text-danger" (click)="removeService(i)">Remove</a>
+                </small>
+              </h5>
+              <div class="row mt-2">
+                <div class="col-md-9 col-7 pl-5">
+                  <h5 class="hotel-title mb-2"><span>{{selectedService.service_name}}</span></h5>
+                  <p style="font-size: 12px;"><i class="fas fa-fighter-jet"></i>&nbsp;{{selectedDepartureTerminal?.terminalName}}</p>
+                  <p style="font-size: 12px;"><i class="fas fa-fighter-jet"></i>&nbsp;{{gcaData.data[0]?.name}}</p>
+                  <p style="font-size: 12px;"><i class="fas fa-map-marker"></i>&nbsp;{{gcaData.data[0]?.city}}</p>
+                  <p style="font-size: 12px;"><i class="fas fa-map-marker"></i>&nbsp;{{gcaData.data[0]?.country}}</p>
+                  <!-- <div class="d-none d-md-block">
+                    <div style="color:#666666;font-size: 14px;font-weight: bold;">{{'Service details'}}
+                    </div>
+                    <div *ngFor="let field of service.fields">
+                      <p style="color:#666666;font-size: 10px;margin-bottom:10px;line-height: 15px;">
+                        {{field?.label}}</p>
+                    </div>
+                  </div> -->
+                </div>
+                <div class="col-md-3 col-5 p-3 pr-4">
+                  <!-- <div class="text-right">
+                    <span class="flight-price">{{+selectedService?.price| currency:selectedRoom?.currency:'symbol':'.0-2'}}</span><br>
+                    <p style="font-size: 12px;margin-bottom:3px;">including taxes and fees</p>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <h1 class="flight-title mb-3" style="font-size:24px;"><i class="icon fa fa-calendar-check-o"></i> Select Departure Date & Time:</h1>
+              <input type="text" class="form-control mb-5 col-sm-3"
+                       [popover]="popTemplate" placement="bottom" [outsideClick]="true" #popoverRef="bs-popover" value="{{dateTime | date:'MMM d, y, HH:MM:ss'}}" >
+              <ng-template #popTemplate>
+                <input type="text"
+                       placeholder="Datepicker"
+                       class="form-control"
+                       bsDatepicker
+                       [(ngModel)]="date"
+                       [minDate]="minDate"
+                       [bsConfig]="{ isAnimated: true, dateInputFormat: 'YYYY-MM-DD' }"
+                       (ngModelChange)="updateDate()" >
+                <timepicker [(ngModel)]="time" (ngModelChange)="updateTime()">
+                </timepicker>
+    
+                <div style="padding:5px">
+                  <span class="btn-group pull-left" style="margin-right:10px;">
+                    <button type=button class="btn btn-sm btn-info" [hidden]="!isDateVisible" (click)="today()">Today</button>
+                    <button type=button class="btn btn-sm btn-info" [hidden]="isDateVisible" (click)="now()">Now</button>
+                    <button type=button class="btn btn-sm btn-danger" (click)="clear()">Clear</button>
+                  </span>
+                  <span class="btn-group pull-right">
+                    <button type=button class="btn btn-sm btn-success" (click)="close()">Close</button>
+                  </span> <span class=clearfix></span>
+                </div>
+              </ng-template>
+            </div>
+            <div class="col-6 text-right" >
+              <button class="btn btn-danger btn-lg mt-5" (click)="continueBooking()">Continue Booking</button>
+            </div>
+          </div>
+
+
+          <h1 class="flight-title mb-3" style="font-size:24px;"><i class="fas fa-plane-departure"></i> Select Departure Service</h1>
+          <div *ngIf="fetchFailed && !fetching">
+            <alert type="danger" ngPreserveWhitespaces>
+              There is some erros:&emsp;<strong>{{errorMes}}</strong>
+            </alert>
+            <button type="button" class="btn btn-danger" (click)="fetchGcaList()">Try Again</button>
+          </div>
+          <div *ngIf="fetching" class="text-center mt-3 pb-5">
+            <div class="spinner-border text-primary"></div>
+            <span ngPreserveWhitespaces>&emsp;Loading...</span>
+          </div>
+
+
+          <div class="flights-list" *ngIf="!fetching && !fetchFailed">
+            <alert *ngIf="terminalListDepartureView.length === 0" type="danger" ngPreserveWhitespaces>
+              There is no GCA available
+            </alert>
+            <div *ngFor="let terminal of terminalListDepartureView; let i = index;">
+              <div class="flight-item py-3 mb-3" *ngFor="let service of terminal.services;let i= index;" >
+                  <div class="row">
+                    <div class="col-md-9 col-7 pl-5">
+                      <h5 class="hotel-title mb-2">Service : <span>{{service.service_name}}</span></h5>
+                      <p style="font-size: 12px;"><i class="fas fa-fighter-jet"></i>&nbsp;{{terminal.terminal_name}}</p>
+                      <p style="font-size: 12px;"><i class="fas fa-fighter-jet"></i>&nbsp;{{gcaData.data[0].name}}</p>
+                      <p style="font-size: 12px;"><i class="fas fa-map-marker"></i>&nbsp;{{gcaData.data[0].city}}</p>
+                      <p style="font-size: 12px;"><i class="fas fa-map-marker"></i>&nbsp;{{gcaData.data[0].country}}</p>
+                      <!-- <div class="d-none d-md-block">
+                        <div style="color:#666666;font-size: 14px;font-weight: bold;">{{'Service details'}}
+                        </div>
+                        <div *ngFor="let field of service.fields">
+                          <p style="color:#666666;font-size: 10px;margin-bottom:10px;line-height: 15px;">
+                            {{field?.label}}</p>
+                        </div>
+                      </div> -->
+                    </div>
+                    <div class="col-md-3 col-5 p-3 pr-4">
+                      <div class="text-right">
+                        <button class="btn btn-success btn-sm" (click)="addService(terminal.terminal_id, service)">Add Service</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block we-ads">
+      <img class="img-fluid" src="assets/ads.jpg">
+    </div>
+  </div>
+</main>
+

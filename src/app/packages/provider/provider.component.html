@@ -1,0 +1,63 @@
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/region">
+              Region List
+            </a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/tax">
+              Tax List
+            </a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/hotel">
+              Hotel List
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/hotelRoom">
+              Room Type
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" routerLink="/packages/provider/packageList">
+              PackageInfo List
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/packageAvailability">
+              Package Availability
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/tour">
+              Optional Tour List
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/supplement">
+              Supplement List
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/transfer">
+              Transfer List
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/packages/provider/hotelFacility">
+              Hotel Facility
+            </a>
+          </li>
+          </ul>
+        </div>
+    </nav>
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-1 main-view">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

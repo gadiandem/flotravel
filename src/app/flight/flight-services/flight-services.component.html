@@ -1,0 +1,101 @@
+<div class="container-fluid mb-md-5 mt-5 pt-4 pb-3 d-md-block px-3 p-0">
+    <div *ngIf="!fetching" class="container">
+        <div class="row mt-5">
+            <div class="col-md-3">
+                <div class="font-weight-bold my-4">
+                    <span class="sort-filter" (click)="showFormFilter()">{{'flight-summary.label-sort-filter' |
+                        translate
+                        }}</span>
+                </div>
+                <div id="sortFilter" class="col-md-12 we-sort-filter">
+                    <app-flight-sidebar></app-flight-sidebar>
+                </div>
+                <div *ngIf="errorMes">
+                    <alert type="danger" ngPreserveWhitespaces>
+                        {{'flight-summary.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+                    </alert>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="flights-list" *ngIf="!fetching">
+                    <div class="flights-list" *ngIf="errorMes">
+                        <alert *ngIf="errorMes" type="danger" ngPreserveWhitespaces>
+                            {{'flight-summary.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+                        </alert>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="px-3 pt-3 list-group col-md-12 list-group-item list-group-item-light"
+                                *ngFor="let segment of servicesOffers">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <input type="checkbox" (click)="clickedOption($event, segment)"
+                                                name="offers" multiple>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <div>
+                                               <b>{{segment?.serviceDefinition?.name}} ({{segment?.serviceDefinition?.serviceCode}}) </b>  &nbsp;&nbsp;- &nbsp;&nbsp;
+                                                {{segment?.alaCarteOfferItem?.unitPrice?.totalAmount | currency:
+                                                segment?.alaCarteOfferItem?.unitPrice?.currency :'symbol':'.0-2'}}
+                                            </div>
+                                            <div *ngFor="let passenger of segment?.alaCarteOfferItem?.eligibility?.paxRefID">
+                                                <span> For passenger: {{passenger}}</span>
+                                            </div>
+                                            <div *ngFor="let paxSegment of segment?.alaCarteOfferItem?.eligibility?.paxSegmentRefID">
+                                                <span> Available on the following segments: {{paxSegment}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card mb-3  shadow-sm" style="border-radius: 0px;">
+                    <div class="card-header">
+                        <div class="col-md-12">
+                            <h6>Flight Information</h6>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" *ngFor="let segment of servicesAvailable?.paxSegmentList">
+                            <div class="col-md-12">
+                                <h6 class="mt-2"><b>Flight Segment: {{segment?.paxSegmentID}}</b></h6>
+                                <span *ngIf="segment?.operatingCarrierInfo">
+                                    {{segment?.operatingCarrierInfo?.carrierName}}
+                                    ({{segment?.operatingCarrierInfo?.carrierDesigCode}})
+                                </span>
+                            </div>
+                            <div class="col-12">
+                                <h5 class="card-title">Departure </h5>
+                            </div>
+                            <div class="col-12">
+                                {{segment?.dep?.aircraftScheduledDateTime?.value | date:'dd MMM' }}<br>
+                                <b>{{segment?.dep?.iatalocationCode}}</b><br>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <h5 class="card-title">Arrival </h5>
+                            </div>
+                            <div class="col-12">
+                                {{segment?.arrival?.aircraftScheduledDateTime?.value | date:'dd MMM' }}<br>
+                                <b>{{segment?.arrival?.iatalocationCode}}</b><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class=" text-right col-md-6 col-6">
+                <button class="btn btn-danger float-right px-5 btn-lg mb-4 mr-2" (click)="reserve()"> Continue
+                    Booking</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--skeleton loading-->
+<app-flight-list-depature-skeleton *ngIf="fetching"></app-flight-list-depature-skeleton>

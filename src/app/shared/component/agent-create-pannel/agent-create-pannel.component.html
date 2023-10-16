@@ -1,0 +1,141 @@
+<form [formGroup]="subAgentForm">
+<div class="modal-content">
+    <div class="modal-header">
+      <h4>{{agentDetail? 'Create' : 'Edit'}} SubAgent</h4>
+    </div>
+    <div class="modal-body">
+      <!-- <div class="row justify-content-center">
+        <div class="col-12">
+          <div class="card col-4 offset-4">
+            <img class="card-img-top img-thumbnail" src="{{imageSubAgent.value || 'assets/logo2.png'}}"
+              alt="{{agentDetail?.name}}">
+          </div>
+        </div>
+      </div> -->
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="name">Agent Name</label>
+            <input class="form-control" id="name" formControlName="name"
+              [ngClass]="{ 'is-invalid': formSubAgentError && subAgentForm.get('name').errors }">
+            <span class="invalid-feedback">
+              <span *ngIf="subAgentForm.get('name').errors?.required">
+                Please enter your agent name.
+              </span>
+            </span>
+          </div>
+          <div formGroupName="agentInfo">
+            <div class="form-group">
+              <label for="email">Address</label>
+              <input class="form-control" id="address" formControlName="address"
+                [ngClass]="{ 'is-invalid': formSubAgentError && subAgentForm.get('agentInfo.address').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="subAgentForm.get('agentInfo.address').errors?.required">
+                  Please enter your address.
+                </span>
+              </span>
+            </div>
+            <!-- <div class="form-group">
+              <label for="logo">Logo</label>
+              <input class="form-control" id="logo" formControlName="logo" #imageSubAgent
+                [ngClass]="{ 'is-invalid': formSubAgentError && subAgentForm.get('agentInfo.logo').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="subAgentForm.get('agentInfo.logo').errors?.required">
+                  Please fill photo image.
+                </span>
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="website">Website</label>
+              <input class="form-control" id="website" formControlName="website"
+                [ngClass]="{ 'is-invalid': formSubAgentError && subAgentForm.get('agentInfo.website').errors }">
+              <span class="invalid-feedback">
+                <span *ngIf="subAgentForm.get('agentInfo.website').errors?.required">
+                  Please enter your website address.
+                </span>
+              </span>
+            </div> -->
+          </div>
+          <!-- <div formGroupName="tariff" class="row mx-1">
+            <div class="form-group col-md-3 col-sm-6" style="padding-left: 0px;">
+              <label for="hotel-tariff">Hotel_nuitee Tariff</label>
+              <div class="input-group">
+                <input class="form-control" id="hotel-tariff" formControlName="hotel_nuitee"
+                  [ngClass]="{ 'is-invalid': formSubAgentError && subAgentForm.get('tariff.hotel_nuitee').errors }">
+                <div class="input-group-append">
+                  <span class="input-group-text" ngPreserveWhitespaces>&nbsp;%&nbsp;</span>
+                </div>
+                <span class="invalid-feedback">
+                  <span
+                    *ngIf="subAgentForm.get('tariff.hotel_nuitee').errors?.pattern && (subAgentForm.get('tariff.hotel_nuitee').dirty || subAgentForm.get('tariff.hotel_nuitee').touched)">This
+                    field must contain only digits</span>
+                  <span *ngIf="subAgentForm.get('tariff.hotel_nuitee').errors?.required">
+                    Please enter your Hotel tariff.
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="form-group col-md-3 col-sm-6">
+              <label for="flight-tariff">Flight NDC Tariff</label>
+              <div class="input-group">
+                <input class="form-control" id="flight-tariff" formControlName="flight_NDC"
+                  [ngClass]="{ 'is-invalid': formSubAgentError && subAgentForm.get('tariff.flight_NDC').errors }">
+                <div class="input-group-append">
+                  <span class="input-group-text" ngPreserveWhitespaces>&nbsp;%&nbsp;</span>
+                </div>
+                <span class="invalid-feedback">
+                  <span
+                    *ngIf="subAgentForm.get('tariff.flight_NDC').errors?.pattern && (subAgentForm.get('tariff.flight_NDC').dirty || subAgentForm.get('tariff.flight_NDC').touched)">This
+                    field must contain only digits</span>
+                  <span *ngIf="subAgentForm.get('tariff.flight_NDC').errors?.required">
+                    Please enter your flight tariff.
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="form-group col-md-3 col-sm-6">
+              <label for="thingToDo">ThingToDo Tariff</label>
+              <div class="input-group">
+                <input class="form-control" id="thingToDo" formControlName="thingToDo"
+                  [ngClass]="{ 'is-invalid': formSubAgentError && subAgentForm.get('tariff.thingToDo').errors }">
+                <div class="input-group-append">
+                  <span class="input-group-text" ngPreserveWhitespaces>&nbsp;%&nbsp;</span>
+                </div>
+                <span class="invalid-feedback">
+                  <span
+                    *ngIf="subAgentForm.get('tariff.thingToDo').errors?.pattern && (subAgentForm.get('tariff.thingToDo').dirty || subAgentForm.get('tariff.thingToDo').touched)">This
+                    field must contain only digits</span>
+                  <span *ngIf="subAgentForm.get('tariff.thingToDo').errors?.required">
+                    Please enter your ThingToDo tariff.
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="form-group col-md-3 col-sm-6">
+              <label for="insurance">Insurance Tariff</label>
+              <div class="input-group">
+                <input class="form-control" id="insurance" formControlName="insurance"
+                  [ngClass]="{ 'is-invalid': formSubAgentError && subAgentForm.get('tariff.insurance').errors }">
+                <div class="input-group-append">
+                  <span class="input-group-text" ngPreserveWhitespaces>&nbsp;%&nbsp;</span>
+                </div>
+                <span class="invalid-feedback">
+                  <span
+                    *ngIf="subAgentForm.get('tariff.insurance').errors?.pattern && (subAgentForm.get('tariff.insurance').dirty || subAgentForm.get('tariff.insurance').touched)">This
+                    field must contain only digits</span>
+                  <span *ngIf="subAgentForm.get('tariff.insurance').errors?.required">
+                    Please enter your Insurance tariff.
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary mb-1 mr-1" (click)="submit()">Save</button>
+      <button class="btn btn-danger mb-1" (click)="closeModal()">Cancel</button>
+    </div>
+  </div>
+</form>

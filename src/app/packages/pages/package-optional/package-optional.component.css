@@ -1,0 +1,10 @@
+label {
+  margin-left: 0px;
+}
+
+.custom-control-label {
+  margin: 0px 0px 0px 0px;
+  font: 12px Roboto;
+  font-weight: normal !important;
+  padding-top: 5px;
+}

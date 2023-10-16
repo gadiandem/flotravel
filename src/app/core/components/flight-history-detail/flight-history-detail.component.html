@@ -1,0 +1,337 @@
+<div style="background: #f0f2f6;">
+  <main-header></main-header>
+  <div class="container mt-5 pt-3 pb-5">
+    <div *ngIf="isLoading" class="text-center mt-3 loading-space">
+      <div class="spinner-border text-primary"></div>
+      <span ngPreserveWhitespaces>&emsp;{{'flight-history-detail.label-loading' | translate }}</span>
+    </div>
+    <div class="row" *ngIf="!isLoading">
+      <div class="col-md-8">
+        <div class="shadow-box p-3">
+          <div class="row">
+            <div class="col-12">
+              <h4 class='text-danger mb-4'>{{'flight-history-detail.label-title' | translate }}</h4>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'flight-history-detail.label-booking-details' | translate }}</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-id' | translate }}</label>&emsp;
+                {{bookingId}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-status' | translate }}</label>&emsp;{{bookingDetail?.bookingStatus}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-success' | translate }}</label>&emsp;{{bookingDetail?.bookingSuccess}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-payment' | translate }}</label>&emsp;{{bookingDetail?.partnerMessage}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'flight-history-detail.label-contact-details' | translate }}</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-email' | translate }}</label>&emsp;{{bookingDetail?.payer?.email}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-phone' | translate }}</label>&emsp;{{bookingDetail?.payer?.mobile}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-fname' | translate }}</label>&emsp;{{bookingDetail?.payer?.firstName}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-lname' | translate }}</label>&emsp;{{bookingDetail?.payer?.lastName}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4" *ngIf="bookingDetail?.paymentTariff">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'flight-history-detail.label-tariff-details' | translate }}</h5>
+            </div>
+            <div *ngFor="let tariff of bookingDetail?.paymentTariff?.tariffItem | keyvalue">
+              <div class="row pl-3">
+                <div class="col-12 col-md-6">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <label>{{'flight-history-detail.label-user-email' | translate }}</label>&emsp;{{tariff?.value?.userEmail}}
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <label>{{'flight-history-detail.label-tariff' | translate }}</label>&emsp;{{tariff?.value?.tariff_value/100 | percent: '.0-2'}}
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <label>{{'flight-history-detail.label-user-name' | translate }}</label>&emsp;{{tariff?.value?.userName}}
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group" ngPreserveWhitespaces>
+                    <label>{{'flight-history-detail.label-role' | translate }}</label>&emsp;{{tariff?.value?.userRole}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'flight-history-detail.label-Transaction-details' | translate }}</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-order-no' | translate }}</label>&emsp;{{bookingDetail?.orderId}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-trace-number' | translate }}</label>&emsp;{{bookingDetail?.traceNumber}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-tracking' | translate }}</label>&emsp;{{bookingDetail?.tracking}}
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 mt-sm-3 mb-4">
+            <div class="col-12">
+              <h5 class='text-danger border-bottom mb-4'>{{'flight-history-detail.label-ticket-info' | translate }}</h5>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-ticket' | translate }}</label>&emsp;{{bookingDetail?.orderViewRSInfo?.ticketDocInfos[0]?.ticketDocuments[0]?.ticketDocNbr}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-type' | translate }}</label>&emsp;{{bookingDetail?.orderViewRSInfo?.ticketDocInfos[0]?.ticketDocuments[0]?.type}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-booklets' | translate }}</label>&emsp;{{bookingDetail?.orderViewRSInfo?.ticketDocInfos[0]?.ticketDocuments[0]?.numberofBooklets}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-date' | translate }}</label>&emsp;{{bookingDetail?.orderViewRSInfo?.ticketDocInfos[0]?.ticketDocuments[0]?.dateOfIssue}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-time' | translate }}</label>&emsp;{{bookingDetail?.orderViewRSInfo?.ticketDocInfos[0]?.ticketDocuments[0]?.timeOfIssue}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-location' | translate }}</label>&emsp;{{bookingDetail?.orderViewRSInfo?.ticketDocInfos[0]?.ticketDocuments[0]?.ticketingLocation}}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-group" ngPreserveWhitespaces>
+                <label>{{'flight-history-detail.label-primary' | translate }}</label>&emsp;{{bookingDetail?.orderViewRSInfo?.ticketDocInfos[0]?.ticketDocuments[0]?.primaryDocInd}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 ">
+        <div class="shadow-box">
+          <div class="card mb-3" style="border-radius: 0px;">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-12">
+                  <h6 class="mt-2">{{bookingDetail?.item_name}}</h6>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <h5 class="text-danger mb-3"> {{'flight-history-detail.label-departure' | translate }}
+                  <!-- <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"> -->
+                  <!-- <i class="fa fa-clock-o"></i> {{departureFlight?.flight?.flightSegments[0].duration}}</span> -->
+                </h5>
+                <div class="row mb-3"
+                  *ngFor="let segment of bookingDetail?.orderViewRSInfo?.dataList?.flightSegments; let i = index;">
+                  <div class="col-3">
+                    {{segment?.departure?.time}}<br>
+                    <b>{{segment?.departure?.date | date:'dd MMM'}}</b><br><br>
+                    {{segment?.arrival?.time}}<br>
+                    <b>{{segment?.arrival?.date | date:'dd MMM'}}</b>
+                  </div>
+                  <div class="col-9" style="border-left: 1px solid #eee072;">
+                    <div class="flight-cart-start">
+                      {{segment?.departure?.airportName || 'London (United Kingdom)'}}<br>
+                      <small>{{segment?.departure?.airportCode}}<br>
+                        <b>{{'flight-history-detail.label-business' | translate }}</b></small>
+                    </div>
+                    <div class="flight-cart-end">
+                      {{segment?.arrival?.airportName || 'London (United Kingdom)'}}<br>
+                      <small>{{segment?.arrival?.airportCode}}<br>
+                        <b>{{'flight-history-detail.label-business' | translate }}</b></small>
+                    </div>
+                  </div>
+                  <!-- <p class="airline-tile col-12">Airline: {{segment?.arrival?.airportName}}</p> -->
+                </div>
+                <!-- <p class="flight-bags-detail collapsed" (click)="isCollapsed[0] = !isCollapsed[0]">Show flights and bags fee
+                  details
+                  <i aria-hidden="true" class="fa fa-angle-double-down" *ngIf="isCollapsed[0] === true"></i>
+                  <i aria-hidden="true" class="fa fa-angle-double-up" *ngIf="!isCollapsed[0] === true"></i></p>
+                <div id="collapse0" class="collapse" [collapse]="isCollapsed[0]" [isAnimated]="true">
+                  <p><strong>Estimated Bag Fees</strong><br>
+                    Hand baggage: No fee upto 7 kg<br>
+                    Hand baggage: No fee upto 7 kg<br>
+                    Hand baggage: No fee upto 7 kg<br>
+                    Confirm bags fees, weight and size restrictions with
+                    <span>{{departureFlight?.flight?.flightSegments[0].airline.split('-')[1]}}</span></p>
+                </div> -->
+              </div>
+              <div class="card-footer text-muted">
+                <h6>{{'flight-history-detail.label-total' | translate }}
+                  <small class="float-right text-danger">
+                    {{bookingDetail?.amount | currency:currency:'symbol':'.0-2'}}
+                  </small>
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-md-4 order-1 order-md-2 mt-4 pl-md-0">
+          <div class="card shadow-box mb-3 rounded-0">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-12">
+                  <h6 class="mt-2">{{flightType}}</h6>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <h5 class="text-danger mb-3">
+                  Departure
+                  <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                      class="fa fa-clock-o"></i> {{departureFlight.flightSegments[0].duration}}</span>
+                </h5>
+                <div class="row mb-3">
+                  <div class="col-3">
+                    {{departureFlight.depDateTime.split(' ')[1]}}<br>
+                    <b>{{departureFlight.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                    {{departureFlight.arrDateTime.split(' ')[1]}}<br>
+                    <b>{{departureFlight.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                  </div>
+                  <div class="col-9" style="border-left: 1px solid #eee072;">
+                    <div class="flight-cart-start">
+                      {{searchFlightForm.flyFrom.name}}<br>
+                      <small>{{searchFlightForm.flyFrom.name}}<br>
+                        <b>Business</b></small>
+                    </div>
+                    <div class="flight-cart-end">
+                      {{searchFlightForm.destination.name}}<br>
+                      <small>{{searchFlightForm.destination.name}}<br>
+                        <b>Business</b></small>
+                    </div>
+                  </div>
+                </div>
+                <p>Airline: {{departureFlight.flightSegments[0].airline.split('-')[1]}}</p>
+                <a target="_top" href="">Show flights and bags fee details <i aria-hidden="true"
+                    class="fa fa-angle-double-down"></i></a>
+              </div>
+              <hr>
+              <div *ngIf="flightType === 'ROUND_TRIP'">
+                <h5 class="text-danger mb-3">
+                  Return
+                  <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                      class="fa fa-clock-o"></i> {{returnFlight.flightSegments[0].duration}}</span>
+                </h5>
+                <div class="row mb-3">
+                  <div class="col-3">
+                    {{returnFlight.depDateTime.split(' ')[1]}}<br>
+                    <b>{{returnFlight.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                    {{returnFlight.arrDateTime.split(' ')[1]}}<br>
+                    <b>{{returnFlight.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                  </div>
+                  <div class="col-9" style="border-left: 1px solid #eee072;">
+                    <div class="flight-cart-start">
+                      {{searchFlightForm.flyFrom.name}}<br>
+                      <small>{{searchFlightForm.flyFrom.name}}<br>
+                        <b>Business</b></small>
+                    </div>
+                    <div class="flight-cart-end">
+                      {{searchFlightForm.destination.name}}<br>
+                      <small>{{searchFlightForm.destination.name}}<br>
+                        <b>Business</b></small>
+                    </div>
+                  </div>
+                </div>
+                <a target="_top" href="">Show flights and bags fee details <i aria-hidden="true"
+                    class="fa fa-angle-double-down"></i></a>
+              </div>
+
+              <div *ngIf="flightType === 'MULTI_CITY'">
+                <div *ngFor="let flight of nextFlights; let i = index;">
+                  <h5 class="text-danger mb-3">
+                    Next Flight
+                    <span class="float-right" style="color: #444; font-size: 10px; padding-top: 10px;"><i
+                        class="fa fa-clock-o"></i> {{flight.flightSegments[0].duration}}</span>
+                  </h5>
+                  <div class="row mb-3">
+                    <div class="col-3">
+                      {{flight.depDateTime.split(' ')[1]}}<br>
+                      <b>{{flight.depDateTime.split(' ')[0] | date:'dd MMM'}}</b><br><br>
+                      {{flight.arrDateTime.split(' ')[1]}}<br>
+                      <b>{{flight.arrDateTime.split(' ')[0] | date:'dd MMM'}}</b>
+                    </div>
+                    <div class="col-9" style="border-left: 1px solid #eee072;">
+                      <div class="flight-cart-start">
+                        {{searchFlightForm.flyFromNext[i].name}}<br>
+                        <small>{{searchFlightForm.flyFromNext[i].name}}<br>
+                          <b>Business</b></small>
+                      </div>
+                      <div class="flight-cart-end">
+                        {{searchFlightForm.destinationNext[i].name}}<br>
+                        <small>{{searchFlightForm.destinationNext[i].name}}<br>
+                          <b>Business</b></small>
+                      </div>
+                    </div>
+                  </div>
+                  <p>Airline: {{flight.flightSegments[0].airline.split('-')[1]}}</p>
+                  <a target="_top" href="">Show flights and bags fee details <i aria-hidden="true"
+                      class="fa fa-angle-double-down"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-muted">
+              Taxes <span
+                class="float-right text-danger">{{totalTaxes | currency: departureFlightPrice.currency :'symbol':'.0-2'}}</span>
+            </div>
+            <div class="card-footer text-muted">
+              Total <span
+                class="float-right text-danger">{{totalTripPrice | currency: departureFlightPrice.currency :'symbol':'.0-2'}}</span>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+<main-footer></main-footer>

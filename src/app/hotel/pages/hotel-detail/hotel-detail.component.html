@@ -1,0 +1,220 @@
+<div class="container-fluid flight-search my-5 pt-5 pb-3 shadow-box d-md-block p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+        <span class="input-group-text border-0" id="basic-addon1">
+          <i class="fa fa-search text-info"></i>
+        </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0"
+        placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <app-hotel-search-box [searchHotelListRequest]="searchHotelListRequest" [fetching]="fetching"
+      (searchHotelBox)="searchHotel($event)"></app-hotel-search-box>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div *ngIf="fetchFailed" class="mb-5" style="height: 500px; width: 100%;">
+    <alert type="danger" ngPreserveWhitespaces>
+      {{'hotel-detail.error-message' | translate }}&emsp;<strong>{{errorMes}}</strong>
+    </alert>
+    <button type="button" class="btn btn-danger" (click)="fetHotelDetail()">{{'hotel-detail.label-try-again' | translate }}</button>
+  </div>
+  <div *ngIf="!fetching && !fetchFailed" class="row hotel-details">
+    <div class="col-md-10">
+      <div class="shadow-box p-3">
+        <div class="row">
+          <div class="col-md-9">
+            <img class="img-fluid d-block d-md-none mb-4"
+              [src]="selectedHotel?.image?.baseUrl + '/800x640/' + selectedHotel?.image?.name" [alt]="selectedHotel?.image?.name">
+            <h2 class="title">{{selectedHotel?.name}}</h2>
+            <div class="address">
+              <span><i class="fa fa-map-marker"></i> &nbsp;{{selectedHotel?.address}}</span><br>
+              <span style="color:#ffda23">
+                      <i *ngFor="let s of  [1, 2, 3, 4]" class="fa fa-star"></i>
+                    </span> &nbsp;{{starRating}}{{'hotel-detail.label-star-rating' | translate }}
+            </div>
+          </div>
+          <div class="col-md-3 mt-3 mt-md-0">
+            <p class="price"><small>{{'hotel-detail.label-price-from' | translate }}</small> <span
+              style="font-size:22px;">{{minPricePerNight | currency:currency:'symbol':'.0-2'}}</span>{{'hotel-detail.label-per-night' | translate }}
+            </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-8 d-none d-md-block">
+            <div class="col-12">
+              <ngx-gallery *ngIf="galleryOptions && galleryImages?.length" [options]="galleryOptions"
+                [images]="galleryImages"></ngx-gallery>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3 col-12 center" style="justify-content: center">
+              <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mappType' [zoom]='12'
+                mapTypeControl="true">
+                <agm-marker [latitude]="marker.lat" [longitude]="marker.lng" [title]="marker.label"
+                  [markerDraggable]="marker.draggable">
+                  <agm-info-window>
+                    <strong>{{marker.label}}</strong>
+                  </agm-info-window>
+                </agm-marker>
+              </agm-map>
+              <div style="font-size:16px;margin-top:5px; color: #666;"><i class="fa fa-map-marker"></i>
+                {{selectedHotel.name}}</div>
+            </div>
+            <div class="col-12 mb-4">
+              <h4 class="heading">{{'hotel-detail.label-hotel-facilities' | translate }}</h4>
+              <ul class="hotel-facilities mb-0" *ngIf="hotelDetailRes != null">
+                <li *ngFor="let item of (hotelDetailRes.hotelAttributeses | slice:0:5)">{{item}}</li>
+              </ul>
+              <a pageScroll href="#amenities"><strong>{{'hotel-detail.label-amenities' | translate }}</strong></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section class="mt-3">
+        <h4 class="title">{{'hotel-detail.label-choose-room' | translate }}</h4>
+        <div class="d-block d-md-none shadow-box p-2 mb-3">
+          <div class="font-weight-bold mt-1 text-danger"></div>
+          <div class="row">
+            <div class="col-6">
+              <div class="font-weight-bold">{{'hotel-detail.label-check-in' | translate }}</div>
+              {{searchHotelListRequest.checkinDate | date}}
+            </div>
+            <div class="col-6">
+              <div class="font-weight-bold">{{'hotel-detail.label-check-out' | translate }}</div>
+              {{searchHotelListRequest.checkoutDate | date}}
+            </div>
+          </div>
+          <div pageScroll href="#booking-search" class="btn btn-default btn-sm mb-2"
+               style="cursor: pointer;border: 1px solid;" (click)="showFormSearch()">
+               {{'hotel-detail.label-change' | translate }}
+          </div>
+        </div>
+        <div class="d-none d-md-block">
+          <div class="row room-search mb-4">
+            <div class="col-lg-3 col-6">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <i class="icon fa fa-calendar-check-o text-default"
+                   style="font-size: 20px;position: absolute;top: 17px;"></i>
+                <label class="ml-4 mb-0 font-weight-light">{{'hotel-detail.label-check-in' | translate }}</label><br>
+                <div class="ml-4 font-weight-bold">{{searchHotelListRequest.checkinDate | date}}</div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-6">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <i class="icon fa fa-calendar-check-o text-default"
+                   style="font-size: 20px;position: absolute;top: 17px;"></i>
+                <label class="ml-4 mb-0 font-weight-light">{{'hotel-detail.label-check-out' | translate }}</label><br>
+                <div class="ml-4 font-weight-bold">{{searchHotelListRequest.checkoutDate | date}}</div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-12">
+              <div class="shadow-box p-2 h-100" style="cursor: pointer;">
+                <i class="icon fa fa-user text-default" style="font-size: 20px;position: absolute;top: 17px;"></i>
+                <label class="ml-4 mb-0 font-weight-light">{{'hotel-detail.label-guests' | translate }}</label><br>
+                <div class="ml-4 font-weight-bold">{{travellerCount}} {{'hotel-detail.label-travellers' | translate }} {{roomCount}}{{'hotel-detail.label-room' | translate }}</div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-12">
+              <button class="btn btn-danger btn-block p-3 h-100" type="button" name="">{{'hotel-detail.label-search' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="rooms-list">
+        <div
+          *ngFor="let room of hotelDetailRes?.rateDetails?.rateDetails |  paginate: { itemsPerPage: 10, currentPage: p }">
+          <a class="room-item d-block mb-3" (click)="goToSummary(room)">
+            <div class="row">
+              <div class="col-md-4 d-none d-md-block">
+                <div class="hotel-img h-100" [errorImage]="defaultHotelImage" [defaultImage]="defaultHotelImage"
+                  [lazyLoad]="selectedHotel?.image?.baseUrl+ '/' + selectedHotel?.image?.name" [useSrcset]="true">
+                </div>
+              </div>
+              <div class="col-md-4 d-block d-md-none">
+                <img [src]="selectedHotel?.image?.baseUrl + '/800x640/' + selectedHotel?.image?.name" class="img-fluid">
+              </div>
+              <div class="col-md-8 room-info py-3">
+                <div class="row px-md-0 px-3">
+                  <div class="col-7">
+                    <h5 class="room-title">
+                      <span *ngFor="let item of  room?.rooms?.rooms; let j = index;">
+                        {{item.roomDescription}}<span *ngIf="j < (room?.rooms?.rooms?.length -1)">,</span>
+                      </span>
+                    </h5>
+                    <small class="hidden-xs"><i class="fa fa-users"></i> {{'hotel-detail.label-sleeps' | translate }} {{travellerCount}}<br><i
+                        class="fa fa-bed"></i>{{room?.rooms?.rooms?.length}} {{'hotel-detail.label-queen-room' | translate }}<span
+                        *ngIf="room?.rooms?.rooms?.length > 1">s</span></small><br><br>
+                    <!-- <div class="d-flex align-items-center"> -->
+                      <div *ngIf="room?.cancelPoliciesInfos?.refundableTag === 'NRFN'"
+                        class="d-flex align-items-center">
+                        <div style="color:#007864;">{{'hotel-detail.label-cancellation-rule' | translate }}</div>
+                      </div>
+                      <div *ngIf="room?.cancelPoliciesInfos?.refundableTag === 'NS'" class="d-flex align-items-center">
+                        <div style="color:#007864;">{{'hotel-detail.label-not-stated' | translate }}</div>
+                      </div>
+                      <div *ngIf="room?.cancelPoliciesInfos?.refundableTag === 'RFN'"
+                        class="d-flex align-items-center">
+                        <div style="color:#007864;">{{'hotel-detail.label-refund' | translate }} <br><small class="text-muted">
+                            {{room?.cancelPoliciesInfos?.cancelPolicyInfos[0]?.amount | currency: currency: 'symbol':
+                            '.0-2'}}
+                            {{'hotel-detail.label-before' | translate }} {{room?.cancelPoliciesInfos?.cancelPolicyInfos[0]?.cancelTime | date}}</small></div>
+                      </div>
+                    <!-- </div> -->
+                  </div>
+                  <div class="col-5 pr-3">
+                    <div class="text-right pr-1 px-md-3">
+                      <del class="room-price-cancel">
+                        {{((+room?.totalPrice / numberOfNight) * (1+defaultDiscount/100)) |
+                        currency:currency:'symbol':'.0-2'}}
+                      </del> &nbsp;
+                      <span class="room-price">{{(+room?.totalPrice / numberOfNight) |
+                        currency:currency:'symbol':'.0-2'}}</span>
+                      <div>{{'hotel-detail.label-one-night' | translate }}</div>
+                      <button class="btn btn-danger mt-2" (click)="goToSummary(room)">{{'hotel-detail.button-reserve' | translate }}</button>
+                      <div style="font-size:10px;">{{'hotel-detail.label-2-minutes' | translate }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <pagination-controls *ngIf="!fetching && !fetchFailed" (pageChange)="p = $event" directionLinks="true"
+          autoHide="true">
+        </pagination-controls>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title">{{'hotel-detail.label-about-hotel' | translate }} </h4>
+        <p>{{hotelDetailRes?.hotelAmenitiesDescription}}</p>
+      </div>
+      <div class="mt-3 p-3 shadow-box">
+        <h4 class="title">{{'hotel-detail.label-facilities-description' | translate }} </h4>
+        <p>{{hotelDetailRes?.hotelDiningDescription}}</p>
+      </div>
+      <div class="mt-4 p-3 shadow-box">
+        <h4 class="title">{{'hotel-detail.label-location' | translate }} </h4>
+        <p>{{hotelDetailRes?.hotelLocationDescription}}</p>
+      </div>
+      <div class="my-4 p-3 shadow-box">
+        <h4 class="title">{{'hotel-detail.label-attraction' | translate }} </h4>
+        <p><span [innerHTML]="hotelDetailRes?.hotelAttraction"></span></p>
+      </div>
+      <div class="mt-3 mb-5 p-3 shadow-box" id="amenities">
+        <h4 class="title">{{'hotel-detail.label-hotel-remarks' | translate }}</h4>
+        <div class="row ml-3" *ngIf="hotelDetailRes != null">
+          <ul class="hotel-facilities mb-0 col-md-3 col-sm-6" *ngFor="let item of hotelDetailRes?.hotelAttributeses">
+            <li>{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <!-- <img class="sticky mt-5 w-100" style="height: auto; margin-top: 25px !important;top: 65px;" src="assets/ads.jpg"> -->
+      <app-flocash-advertisement></app-flocash-advertisement>
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<app-hotel-detail-page-skeleton *ngIf="fetching"></app-hotel-detail-page-skeleton>

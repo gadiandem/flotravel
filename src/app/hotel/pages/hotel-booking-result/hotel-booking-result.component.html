@@ -1,0 +1,257 @@
+<div *ngIf="!fetching">
+  <div *ngIf="!fetchFailed">
+    <div class="container-fluid my-md-5 mt-5 py-5 shadow-box p-0">
+      <div class="container text-center">
+        <i class="text-success fs-3 mt-3 fas fa-check-circle"></i>
+        <p class="fs-5 mb-1">{{'hotel-payment.label-payment-successful' | translate }}</p>
+        <p class="text-dark my-2">{{'hotel-payment.booking-ref' | translate }} {{paymentResult?.id}}</p>
+        <p class="fs-6 mb-1">{{'hotel-payment.booking-ref' | translate }} (<span
+          class="text-info">{{paymentResult?.id}}</span>) {{'hotel-payment.label-to' | translate }}
+          <strong>{{paymentResult?.payer?.email}}</strong>.</p>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row mt-2">
+        <div class="col-lg-10">
+          <div class="flights-list">
+            <div class="flight-item shadow-box1 bg-white mb-3">
+              <div class="row d-flex p-3">
+                <div class="col-md-4">
+                  <img class="img-fluid" [errorImage]="defaultData" [defaultImage]="defaultData"
+                       [lazyLoad]="selectedHotel?.image?.baseUrl+ '/' + selectedHotel?.image?.name" [useSrcset]="true"/>
+                  <div class="pt-2 d-none d-md-block">{{selectedHotel?.name}}</div>
+                </div>
+                <div class="col-md-8 pt-3 pt-md-0 ">
+                  <div class="row">
+                    <div class="col-7">
+                      <h5 class="hotel-title textTitle">{{selectedHotel?.name}}</h5>
+                      <p style="font-size: 12px;"><i class="fa fa-map-marker"></i> {{selectedHotel?.address}}
+                      </p>
+                      <div class="d-none d-md-block">
+                        <div
+                          style="color:#666666;font-size: 14px;font-weight: bold;">{{selectedHotel?.title || 'Save 25% For Bookings All Year'}}</div>
+                        <p style="color:#666666;font-size: 12px;margin-bottom:10px;line-height: 15px;">
+                          {{selectedHotel?.hotelFeatures}}</p>
+                      </div>
+                      <div style="color:#666666; font-size: 12px;"><b>{{selectedHotel?.starRating}}
+                        /5</b> {{'hotel-payment.label-star' | translate }}
+                      </div>
+                    </div>
+                    <div class="col-5">
+
+                      <table class="fs-5 text-dark ml-auto">
+                        <tr>
+                          <td class="">{{'hotel-payment.label-taxes' | translate }}:</td>
+                          <td>{{0 | currency: currency: 'symbol':'.0-2'}}</td>
+                        </tr>
+                        <tr>
+                          <td class="">{{'hotel-payment.label-total' | translate }}:</td>
+                          <td>{{(paymentResult?.item_price || hotelPaymentRequest?.paymentInfo?.price) | currency: currency: 'symbol':'.0-2'}}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flights-list" *ngIf="hotelPaymentRequest?.subscribePolicyData">
+            <div class="flight-item shadow-box1 bg-white px-3 pt-4 pb-5 mb-3">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="d-md-flex">
+                    <div class="fs-5 hotel-price fw-bold mb-4">{{'flight-payment.label-insurance' | translate }}</div>
+                    <div class="text-dark pl-md-2 ml-md-5">
+                      ({{'flight-payment.label-itineraries' | translate }} {{hotelPaymentRequest?.subscribePolicyData?.productName || "Travel Insurance A"}}
+                      )
+                    </div>
+                  </div>
+                  <p class="text-dark">{{'flight-payment.label-insurance-policy' | translate }}</p>
+                </div>
+                <div class="col-md-6">
+                  <table class="fs-5 text-dark ml-auto">
+<!--                    <tr>-->
+<!--                      <td class="">{{'hotel-bookings.label-taxes' | translate }}:</td>-->
+<!--                      <td>{{(insuranceItemItem?.packagePrice|| 0) | currency:currency:'symbol':'.0-2'}}</td>-->
+<!--                    </tr>-->
+                    <tr>
+                      <td class="">{{'hotel-bookings.label-total' | translate }}:</td>
+                      <td>{{(hotelPaymentRequest?.subscribePolicyData?.priceAfterDiscountIncTax || 0) | currency:currency:'symbol':'.0-2'}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2">
+          <img class="sticky my-5 w-100 d-none d-md-block" style="height: auto; margin-top: 0px !important;top: 65px;"
+               src="assets/ads.jpg" alt="ads.jpg">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="fetchFailed">
+    <div class="container-fluid my-md-5 mt-5 py-5 shadow-box p-0">
+      <div class="container text-center">
+        <img class="mt-3 fs-3 text-warning" src="assets/ic_fail.png" style="width:70px;"/>
+        <p class="fs-5 mb-1">{{'package-payment.label-payment-failed' | translate }}</p>
+        <p class="fs-6 mb-1" *ngIf="errorMes !== ''"><strong class="text-danger">{{errorMes}}</strong></p>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row mt-2">
+        <div class="col-lg-10">
+          <div class="flights-list">
+            <div class="flight-item shadow-box1 bg-white mb-3">
+              <div class="row d-flex p-3">
+                <div class="col-md-4">
+                  <img class="img-fluid" [errorImage]="defaultData" [defaultImage]="defaultData"
+                       [lazyLoad]="selectedHotel?.image?.baseUrl+ '/' + selectedHotel?.image?.name" [useSrcset]="true"/>
+                  <div class="pt-2 d-none d-md-block">{{selectedHotel?.name}}</div>
+                </div>
+                <div class="col-md-8 pt-3 pt-md-0 ">
+                  <div class="row">
+                    <div class="col-7">
+                      <h5 class="hotel-title textTitle">{{selectedHotel?.name}}</h5>
+                      <p style="font-size: 12px;"><i class="fa fa-map-marker"></i> {{selectedHotel?.address}}
+                      </p>
+                      <div class="d-none d-md-block">
+                        <div
+                          style="color:#666666;font-size: 14px;font-weight: bold;">{{selectedHotel?.title || 'Save 25% For Bookings All Year'}}</div>
+                        <p style="color:#666666;font-size: 10px;margin-bottom:10px;line-height: 15px;">
+                          {{selectedHotel?.hotelFeatures}}</p>
+                      </div>
+                      <div style="color:#666666; font-size: 12px;"><b>{{selectedHotel?.starRating}}
+                        /5</b> {{'hotel-payment.label-star' | translate }}
+                      </div>
+                    </div>
+                    <div class="col-5">
+                      <table class="fs-5 text-dark ml-auto">
+                        <tr>
+                          <td class="">{{'hotel-payment.label-taxes' | translate }}:</td>
+                          <td>{{0 | currency: currency: 'symbol':'.0-2'}}</td>
+                        </tr>
+                        <tr>
+                          <td class="">{{'hotel-payment.label-total' | translate }}:</td>
+                          <td>{{selectedRoom?.totalPrice | currency:currency:'symbol':'.0-2'}}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2">
+          <img class="sticky my-5 w-100 d-none d-md-block" style="height: auto; margin-top: 0px !important;top: 65px;"
+               src="assets/ads.jpg" alt="ads.jpg">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--skeleton loading-->
+<div *ngIf="fetching">
+  <div class="container-fluid my-md-5 mt-5 py-5 shadow-box p-0">
+    <div class="container text-center">
+      <ngx-skeleton-loader
+        [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '10%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+      <p class="fs-5 mb-1">
+        <ngx-skeleton-loader
+          [theme]="{'background-color': '#ccc', 'height.px': 30, 'width': '30%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+      </p>
+      <p class="text-dark my-2">
+        <ngx-skeleton-loader
+          [theme]="{'background-color': '#ccc', 'height.px': 21, 'width': '15%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+      </p>
+      <p class="fs-6 mb-1">
+        <ngx-skeleton-loader
+          [theme]="{'background-color': '#ccc', 'height.px': 24, 'width': '50%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+      </p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row mt-2">
+      <div class="col-lg-10">
+        <div class="flights-list">
+          <div class="flight-item shadow-box1 bg-white mb-3">
+            <div class="row d-flex p-3">
+              <div class="col-md-4">
+                <div class="img-fluid">
+                  <ngx-skeleton-loader [theme]="{'height.px': 142,'background-color': '#ccc'}"></ngx-skeleton-loader>
+                </div>
+                <div class="pt-2 d-none d-md-block">
+                  <ngx-skeleton-loader [theme]="{'background-color': 'rgb(204, 204, 204)'}"></ngx-skeleton-loader>
+                </div>
+              </div>
+              <div class="col-md-8 pt-md-0 pt-3">
+                <div class="row">
+                  <div class="col-7 col-md-8">
+                    <h5 class="hotel-title">
+                      <ngx-skeleton-loader
+                        [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                    </h5>
+                    <p style="font-size: 12px;">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+                    </p>
+                    <div class="d-none d-md-block">
+                      <div style="color:#666666;font-size: 14px;font-weight: bold;">
+                        <ngx-skeleton-loader
+                          [theme]="{'background-color': '#ccc', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                      </div>
+                      <p style="color:#666666;font-size: 10px;margin-bottom:10px;line-height: 15px;">
+                        <ngx-skeleton-loader
+                          [theme]="{'background-color': '#ccc', 'height.px': 50}"></ngx-skeleton-loader>
+                      </p>
+                    </div>
+                    <div style="color:#007864; font-size: 11px; margin-bottom:10px;">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+                    </div>
+                    <div style="color:#666666; font-size: 12px;">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+                    </div>
+                  </div>
+                  <div class="col-5 col-md-4 text-right">
+                <span class="mt-md-2"><ngx-skeleton-loader [theme]="{'background-color': 'rgb(0, 25, 89)',
+                 'width': '50%', 'margin-bottom.px': 0, 'margin-top.px': 12}"></ngx-skeleton-loader></span>
+                    <div style="margin-bottom:15px">
+                      <ngx-skeleton-loader [theme]="{'background-color': '#ccc'}"></ngx-skeleton-loader>
+                    </div>
+                    <button class="btn btn-danger">
+                      <ngx-skeleton-loader
+                        [theme]="{'width.px': 75, 'height.px': 10,'background-color': 'rgb(10, 48, 73)'}"></ngx-skeleton-loader>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flights-list">
+          <div class="flight-item shadow-box1 bg-white px-3 pt-4 pb-5 mb-3">
+            <div class="row">
+              <div class="col-md-6">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': 'rgb(0, 25, 89)', 'height.px': 30, 'width': '30%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                <p class="text-dark">
+                  <ngx-skeleton-loader
+                    [theme]="{'background-color': '#ccc', 'height.px': 84, 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+                </p>
+              </div>
+              <div class="col-md-6 text-right">
+                <ngx-skeleton-loader
+                  [theme]="{'background-color': '#ccc', 'height.px': 90, 'width': '40%', 'margin-bottom.px': 0}"></ngx-skeleton-loader>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 d-none d-md-block">
+        <ngx-skeleton-loader
+          [theme]="{'height.px': 600, 'width.px': 160, 'background-color': '#ccc'}"></ngx-skeleton-loader>
+      </div>
+    </div>
+  </div>
+</div>

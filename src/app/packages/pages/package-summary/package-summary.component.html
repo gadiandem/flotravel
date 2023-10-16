@@ -1,0 +1,107 @@
+<div class="container-fluid my-md-5 mt-5 pt-5 pb-3 shadow-box p-0">
+  <div class="container">
+    <div class="input-group d-md-none">
+      <div class="input-group-prepend">
+                <span class="input-group-text border-0" id="basic-addon1">
+                    <i class="fa fa-search text-info"></i>
+                </span>
+      </div>
+      <input id="booking-search" (click)="showFormSearch()" type="search" class="form-control border-0"
+             placeholder="Search" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <app-package-list-search-box [packageShoppingReq]="searchPackageList"
+                                 (searchRequest)="shoppingPackage($event)"></app-package-list-search-box>
+  </div>
+</div>
+<div *ngIf="!fetching" class="container">
+  <div class="row">
+    <div class="col-12 d-block d-md-none">
+      <div class="font-weight-bold my-4">
+        <span class="sort-filter" (click)="showFormFilter()">{{'package-summary.label-sort-filter' | translate }}</span>
+        <span class="float-right show-map" (click)="showMap()">{{'package-summary.label-show-map' | translate }}</span>
+      </div>
+      <div *ngIf="mapOpen" class="mb-4 text-center border we-map" style="background: #CAE5CD;">
+        <img alt="map" class="img-fluid" src="/assets/google-map.jpg">
+      </div>
+    </div>
+    <div class="col-8 offset-2">
+      <div *ngIf="fetchFailed" class="my-4">
+        <alert type="danger" ngPreserveWhitespaces>
+          {{'package-summary.error-message' | translate }} &emsp;<strong>{{errorMes}}</strong>
+        </alert>
+        <button type="button" class="btn btn-danger"
+                (click)="fetchSummary()">{{'package-summary.label-try-again' | translate }}</button>
+      </div>
+      <div *ngIf="!fetching && !fetchFailed">
+        <div class="flights-list">
+          <div class="flight-item shadow-box1 blue-bg mb-3">
+            <div class="row d-flex p-3">
+              <div class="col-md-6">
+                <h6 class="text-danger mb-0"> {{'package-summary.label-trip-summary' | translate }}</h6>
+                <small> {{'package-summary.label-rules' | translate }}</small>
+              </div>
+              <div class="col-md-6">
+                <small class="font-weight-light"
+                       style="color: #444; padding-top: 8px; float: right; font-size: 16px;font-weight:300">
+                  {{'package-summary.label-trip-cost' | translate }} <span
+                  style="font-weight:400">{{(packageSummaryRes?.totalPrice || 0) | currency: currency :'symbol':'.0-2'}}</span></small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flight-list">
+          <div class="flight-item shadow-box1 blue-bg mb-3">
+            <div class="row d-flex p-3">
+              <div class="col-md-12">
+                <div class="d-flex justify-content-between">
+                  <h5 class="text-danger mb-1">{{'package-summary.label-package' | translate }}</h5>
+                  <a class="text-danger"
+                     routerLink="/packages/optional">{{'package-summary.label-remove' | translate }}</a>
+                </div>
+              </div>
+              <div class="col-md-4">
+
+                  <div class="hotel-img h-100" [errorImage]="defaultHotelImage" [defaultImage]="defaultHotelImage"
+                  [lazyLoad]="selectedPackage?.hotelImage" [useSrcset]="true">
+                </div>
+                <!-- </div> -->
+              </div>
+              <div class="col-md-8 pl-md-0 pt-3 pt-md-0">
+                <div class="row">
+                  <div class="col-8">
+                    <h5 class="hotel-title textTitle">{{selectedPackage?.name}}</h5>
+                    <p style="font-size: 12px;"><i class="fa fa-map-marker"></i> {{selectedPackage.cityName}}</p>
+                    <div class="d-none d-md-block">
+                      <div
+                        style="color:#666666;font-size: 14px;font-weight: bold;">{{selectedPackage?.dayCount}} {{'package-summary.label-days-due' | translate }}
+                        , {{selectedPackage?.dayCount - 1}} {{'package-summary.label-nights' | translate }}</div>
+                      <p style="color:#666666;margin-bottom:10px;line-height: 15px;">
+                        {{selectedPackage?.cityName}}, {{selectedPackage?.regionName}}</p>
+
+                      <div style="color:#666666;font-size: 14px;font-weight: bold;">{{selectedRoom?.roomType}}</div>
+                      <p style="color:#666666;margin-bottom:10px;line-height: 15px;">
+                        {{selectedRoom?.roomDescription}}</p>
+                    </div>
+                  </div>
+                  <div class="col-4 text-right">
+                    <span
+                      class="hotel-price mt-md-2">{{selectedPackage?.price | currency:currency:'symbol':'.0-2'}}</span>
+                    <div style="margin-bottom:15px">{{'package-summary.label-tax' | translate }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-danger float-right px-5 float-right mb-4"
+                (click)="continueBooking()"> {{'package-summary.button-continue-booking' | translate }}</button>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <img class="sticky mt-5 w-100 d-none d-md-block" style="height: auto; margin-top: 0px !important;top: 65px;"
+           src="/assets/ads.jpg">
+    </div>
+  </div>
+</div>
+<app-packages-summary-skeleton *ngIf="fetching"></app-packages-summary-skeleton>
+

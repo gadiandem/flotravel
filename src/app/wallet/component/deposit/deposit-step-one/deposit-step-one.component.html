@@ -1,0 +1,72 @@
+<div class="card card-outline card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{'wallet-deposit-funds.deposit-title' | translate }}</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="isCollapsed = !isCollapsed">
+        <i *ngIf="!isCollapsed" class="fas fa-minus"></i>
+        <i *ngIf="isCollapsed" class="fas fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <div [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="card-body">
+      <form [formGroup]="depositForm" class="form-horizontal clearfix" (ngSubmit)="depositNext()">
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label text-sm-right">{{'wallet-deposit-funds.deposit-country' | translate }}</label>
+          <div class="col-sm-4">
+            <input [(ngModel)]="searchFlyFrom" [typeaheadItemTemplate]="customItemTemplate" typeaheadOptionField="name"
+              [typeahead]="sugFlyFrom$" [typeaheadAsync]="true" [typeaheadOptionsLimit]="7"
+              (typeaheadOnSelect)="selectResidenceCountry($event.item)" type="text" class="form-control"
+              formControlName="country" placeholder=""
+              [ngClass]="{ 'is-invalid': formSubmitError && depositForm.get('country').errors }" />
+            <span class="invalid-feedback">
+              <span *ngIf="depositForm.get('country').errors?.required">
+                {{'wallet-deposit-funds.deposit-invalid-country' | translate }}
+              </span>
+            </span>
+            <ng-template #customItemTemplate let-model="item" let-index="index">
+              {{model.name}} - {{model?.code}}
+            </ng-template>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label text-sm-right">{{'wallet-deposit-funds.deposit-currency' | translate }}</label>
+          <div class="col-sm-4">
+            <input formControlName="currency" [typeahead]="currencies" [typeaheadItemTemplate]="currencyTemplate"
+              typeaheadOptionField="code" [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0" placeholder=""
+              class="form-control" [ngClass]="{ 'is-invalid': formSubmitError && depositForm.get('currency').errors }">
+            <span class="invalid-feedback">
+              <span *ngIf="depositForm.get('currency').errors?.required">
+                {{'wallet-deposit-funds.deposit-invalid-currency' | translate }}
+              </span>
+            </span>
+            <ng-template #currencyTemplate let-model="item" let-index="index">
+              {{model?.code}} - {{model?.name}}
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-4 col-form-label text-sm-right">{{'wallet-deposit-funds.deposit-amount' | translate }}</label>
+          <div class="col-sm-4">
+            <input type="text" formControlName="amount" class="form-control"
+              [ngClass]="{ 'is-invalid': formSubmitError && depositForm.get('amount').errors }">
+            <span class="invalid-feedback">
+              <span *ngIf="depositForm.get('amount').errors?.required">
+                {{'wallet-deposit-funds.deposit-invalid-amount' | translate }}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="box-footer clearfix">
+          <div class="pull-right">
+            <button type="submit" class="btn btn-success">{{'wallet-deposit-funds.deposit-next' | translate }}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
