@@ -3,19 +3,29 @@
     <button class="navbar-toggler navbar-light" type="button" (click)="toggleNavbar()">
       <i class='fas fa-bars'></i>
     </button>
-    <a class="navbar-brand" routerLink="/dashboard">
+    <a class="navbar-brand" routerLink="/admin/agency">
       <img class="img-responsive mr-2" src="assets/flotravel-logo.png" alt="" height="30"
            (click)="homePage()">
     </a>
-    <a routerLink="/" class="d-block d-md-none" style="width:46px;font-size: 22px;text-align: center;color: #FFF;">
+    <a routerLink="/admin/agency" class="d-block d-md-none" style="width:46px;font-size: 22px;text-align: center;color: #FFF;">
       <i class='lni lni-user'></i>
     </a>
     <div class="collapse navbar-light navbar-collapse justify-content-between" [ngClass]="{ 'show': navbarOpen }">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" routerLink="/dashboard">{{'main-header.link-search' | translate }} <span class="sr-only">(current)</span></a>
+          <a class="nav-link" routerLink="/admin/agency">{{'main-header.link-search' | translate }} <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item dropdown d-flex align-items-center mr-2">
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/admin/agency">{{'main-header.link-admin-agency' | translate }} <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/admin/user">{{'main-header.link-admin-users' | translate }} <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/admin/report">{{'dashboard-header.link-admin-report' | translate }} <span class="sr-only">(current)</span></a>
+        </li>
+
+        <!-- <li class="nav-item dropdown d-flex align-items-center mr-2">
           <div dropdown>
             <a  id="button-basic-2" dropdownToggle type="button"  class="dropdown-toggle" aria-controls="dropdown-basic">
               {{'main-header.customer-booking'  | translate  | uppercase}}
@@ -83,22 +93,18 @@
               <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/combine-configure">{{'main-header.combine-configure' | translate }}</a></li>
               <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/setting">{{'main-header.link-admin-setting' | translate }}</a></li>
               <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/flight/list"> FloAir</a></li>
-          <!--    <li *ngIf="isSAdmin && enableDemo" role="menuitem"><a class="dropdown-item" routerLink="/simulator"> Hotel Simulator</a></li> -->
               <li  *ngIf="user"><a class="dropdown-item" (click)="walletNav()" style="cursor: pointer;">{{'main-header.link-admin-wallet' | translate }}</a></li>
-              <!-- <li  *ngIf="user"><a class="dropdown-item" routerLink="/wallet"  style="cursor: pointer;">Wallet</a></li> -->
               <li  *ngIf="enableAgent"><a class="dropdown-item" (click)="userNav()" style="cursor: pointer;">{{'main-header.link-admin-users' | translate }}</a></li>
               <li *ngIf="enableAgent" role="menuitem"><a class="dropdown-item" (click)="agentNav()" style="cursor: pointer;">{{'main-header.link-admin-agency' | translate }}</a></li>
               <li role="menuitem" (click)="profileNav()" style="cursor: pointer;"><a class="dropdown-item">{{'main-header.link-admin-profile' | translate }}</a></li>
               <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/userGroup">{{'main-header.link-admin-user-group' | translate }}</a></li>
-              <!-- <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/tour/admin">Extras Insert</a></li> -->
               <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/flotravelLogs">{{'main-header.link-admin-flotravel-logs' | translate }}</a></li>
               <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/transactions/hotel-transactions"> Transactions </a></li>
               <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/packagesProvider">{{'main-header.link-admin-packages' | translate }}</a></li>
               <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/specialPackagesProvider">{{'main-header.link-admin-special-packages' | translate }}</a></li>
-              <!-- <li *ngIf="isSAdmin" role="menuitem"><a class="dropdown-item" routerLink="/admin/merchants">Merchants</a></li> -->
             </ul>
           </div>
-        </li>
+        </li> -->
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item" *ngIf="isDemo && enableDemo" style="cursor: pointer;">

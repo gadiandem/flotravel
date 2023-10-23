@@ -6,9 +6,9 @@ export const environment = {
 
   production: false,
   // sandbox
-  // baseUrl: 'https://flotravel-test.flocash.com/api/',
+  baseUrl: 'https://flotravel-test.flocash.com/api/',
   // localhost
-  baseUrl: 'http://localhost:8080/api/',
+  // baseUrl: 'http://localhost:8080/api/',
   paymentEnvironment: 'sandbox',
   googleMapApi: 'AIzaSyABjXfn-rMfnmu7VOq10VRqjtOkmV1P_us',
   demo: false,

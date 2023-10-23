@@ -129,7 +129,8 @@ export class AuthEffects {
       if (authSuccessAction.payload.redirect) {
         if (authSuccessAction.payload.callbackUrl) {
           // sessionStorage.setItem(appConstant.ACCOUNT_INFO, JSON.stringify(authSuccessAction.payload.user));
-          this.router.navigate([authSuccessAction.payload.callbackUrl]);
+          // this.router.navigate([authSuccessAction.payload.callbackUrl]);
+          this.router.navigate(["../../admin/agency"]);
         }
         // return;
       }
